@@ -4,301 +4,320 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wort — Logistics Management</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#f5f6fa;
-  --white:#ffffff;
-  --sidebar:#ffffff;
-  --border:#e8eaef;
-  --border-light:#f0f1f5;
-  --text:#0f1523;
-  --text-2:#4a5068;
-  --text-3:#8c93a8;
-  --accent:#1a56db;
-  --accent-dim:#eff4ff;
-  --accent-border:#c3d5fc;
-  --green:#0d9f6e;
-  --green-dim:#ecfdf5;
-  --green-border:#a7f3d0;
-  --amber:#c27803;
-  --amber-dim:#fffbeb;
-  --amber-border:#fde68a;
-  --red:#e02424;
-  --red-dim:#fef2f2;
-  --red-border:#fecaca;
-  --violet:#7e3af2;
-  --violet-dim:#f5f3ff;
-  --violet-border:#ddd6fe;
-  --teal:#0694a2;
-  --teal-dim:#ecfeff;
-  --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
-  --shadow:0 4px 12px rgba(0,0,0,0.06),0 2px 4px rgba(0,0,0,0.04);
-  --shadow-md:0 8px 24px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.04);
-  --radius:10px;
-  --radius-sm:7px;
+  --bg:#f5f6fa;--white:#fff;--border:#e8eaef;--bl:#f0f1f5;
+  --text:#0f1523;--t2:#4a5068;--t3:#8c93a8;
+  --accent:#1a56db;--ad:#eff4ff;--ab:#c3d5fc;
+  --green:#0d9f6e;--gd:#ecfdf5;--gb:#a7f3d0;
+  --amber:#c27803;--amd:#fffbeb;--amb:#fde68a;
+  --red:#e02424;--rd:#fef2f2;--rb2:#fecaca;
+  --violet:#7e3af2;--vd:#f5f3ff;--vb:#ddd6fe;
+  --teal:#0694a2;--td2:#ecfeff;
+  --orange:#ea580c;--od:#fff7ed;--ob:#fed7aa;
+  --s1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --s2:0 4px 14px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
+  --s3:0 8px 28px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.05);
+  --r:10px;--rs:7px;
 }
 html{scroll-behavior:smooth;}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;}
 
-/* ─── LOGIN ─── */
-#login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0f4ff 0%,#fafbff 50%,#f5f6fa 100%);}
-.login-wrap{width:440px;}
-.login-header{text-align:center;margin-bottom:2rem;}
-.login-logo{font-size:2rem;font-weight:800;color:var(--text);letter-spacing:-0.5px;margin-bottom:0.25rem;}
-.login-logo span{color:var(--accent);}
-.login-sub{font-size:0.82rem;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
-.login-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--shadow);}
-.lbl{display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-2);margin-bottom:0.5rem;}
-.role-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.5rem;}
-.role-btn{border:1.5px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:all 0.15s;background:var(--white);text-align:left;}
-.role-btn:hover{border-color:var(--accent);background:var(--accent-dim);}
-.role-btn.sel{border-color:var(--accent);background:var(--accent-dim);}
-.role-btn-icon{width:34px;height:34px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;margin-bottom:0.6rem;}
-.role-btn-icon svg{width:18px;height:18px;stroke:var(--text-2);}
-.role-btn.sel .role-btn-icon{background:var(--accent);}
-.role-btn.sel .role-btn-icon svg{stroke:#fff;}
-.role-btn-name{font-size:0.88rem;font-weight:700;color:var(--text);}
-.role-btn-desc{font-size:0.72rem;color:var(--text-3);margin-top:0.1rem;}
-.inp{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:0.65rem 0.9rem;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.15s;margin-bottom:1rem;}
-.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,86,219,0.08);}
-.inp::placeholder{color:var(--text-3);}
+/* ── LOADING ── */
+#loading{position:fixed;inset:0;background:var(--white);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:.75rem;}
+.spin{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:.8rem;color:var(--t3);font-family:'JetBrains Mono',monospace;}
+
+/* ── LOGIN ── */
+#login{min-height:100vh;display:none;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0f4ff,#fafbff 50%,#f5f6fa);}
+.lw{width:440px;}
+.lh{text-align:center;margin-bottom:1.75rem;}
+.ll{font-size:2rem;font-weight:800;letter-spacing:-.5px;}
+.ll span{color:var(--accent);}
+.ls{font-size:.76rem;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-top:.2rem;}
+.lc{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--s2);}
+.lbl{display:block;font-size:.68rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t2);margin-bottom:.45rem;}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.2rem;}
+.rb{border:1.5px solid var(--border);border-radius:var(--r);padding:.9rem;cursor:pointer;transition:all .15s;background:var(--white);}
+.rb:hover{border-color:var(--accent);background:var(--ad);}
+.rb.sel{border-color:var(--accent);background:var(--ad);}
+.rb-ico{width:30px;height:30px;border-radius:7px;background:var(--bg);display:flex;align-items:center;justify-content:center;margin-bottom:.45rem;}
+.rb-ico svg{width:15px;height:15px;stroke:var(--t2);}
+.rb.sel .rb-ico{background:var(--accent);}
+.rb.sel .rb-ico svg{stroke:#fff;}
+.rb-name{font-size:.84rem;font-weight:700;}
+.rb-desc{font-size:.69rem;color:var(--t3);margin-top:.1rem;}
+.inp{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:var(--rs);padding:.62rem .88rem;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;outline:none;transition:all .15s;margin-bottom:.85rem;}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,86,219,.07);}
+.inp::placeholder{color:var(--t3);}
 select.inp option{background:var(--white);}
-textarea.inp{resize:vertical;min-height:80px;margin-bottom:0;}
-.btn-main{width:100%;padding:0.75rem;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.15s;}
-.btn-main:hover{background:#1447c4;box-shadow:0 4px 12px rgba(26,86,219,0.25);}
+textarea.inp{resize:vertical;min-height:72px;margin-bottom:0;}
+.btn-enter{width:100%;padding:.7rem;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .15s;margin-top:.2rem;}
+.btn-enter:hover{background:#1447c4;box-shadow:0 4px 14px rgba(26,86,219,.28);}
 
-/* ─── APP ─── */
-#app{display:none;min-height:100vh;display:none;}
+/* ── LAYOUT ── */
+#app{display:none;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
-
-/* ─── SIDEBAR ─── */
-.sidebar{width:220px;flex-shrink:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:40;}
-.sb-brand{padding:1.25rem 1.25rem 0.75rem;border-bottom:1px solid var(--border-light);}
-.sb-logo{font-size:1.3rem;font-weight:800;color:var(--text);letter-spacing:-0.3px;}
+.sidebar{width:216px;flex-shrink:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:40;}
+.sb-top{padding:1.15rem 1.15rem .75rem;border-bottom:1px solid var(--bl);}
+.sb-logo{font-size:1.22rem;font-weight:800;letter-spacing:-.3px;}
 .sb-logo span{color:var(--accent);}
-.sb-tag{display:inline-block;margin-top:0.25rem;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border:1px solid var(--accent-border);padding:0.15rem 0.5rem;border-radius:4px;}
-.sb-nav{flex:1;padding:0.75rem 0;overflow-y:auto;}
-.sb-section{padding:0.75rem 1.25rem 0.25rem;font-size:0.62rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-3);}
-.sb-item{display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1.25rem;font-size:0.84rem;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 0.12s;border-radius:0;position:relative;}
+.sb-tag{display:inline-block;margin-top:.22rem;font-size:.59rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);background:var(--ad);border:1px solid var(--ab);padding:.12rem .42rem;border-radius:4px;}
+.sb-nav{flex:1;padding:.55rem 0;overflow-y:auto;}
+.sb-sec{padding:.55rem 1.15rem .18rem;font-size:.59rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--t3);}
+.sb-item{display:flex;align-items:center;gap:.52rem;padding:.5rem 1.15rem;font-size:.81rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .12s;border-left:2px solid transparent;position:relative;}
 .sb-item:hover{background:var(--bg);color:var(--text);}
-.sb-item.active{color:var(--accent);background:var(--accent-dim);font-weight:600;}
-.sb-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:0 2px 2px 0;}
-.sb-icon{width:17px;height:17px;flex-shrink:0;}
-.sb-icon svg{width:100%;height:100%;stroke:currentColor;}
-.sb-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:0.62rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:10px;font-family:'JetBrains Mono',monospace;}
-.sb-user{padding:0.9rem 1.25rem;border-top:1px solid var(--border);}
-.sb-user-row{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;}
-.avatar{width:32px;height:32px;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;color:var(--accent);flex-shrink:0;font-family:'JetBrains Mono',monospace;}
-.sb-uname{font-size:0.82rem;font-weight:700;}
-.sb-urole{font-size:0.68rem;color:var(--text-3);}
-.sign-out{width:100%;padding:0.4rem 0.75rem;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-3);font-size:0.78rem;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:all 0.12s;text-align:left;}
-.sign-out:hover{border-color:var(--red);color:var(--red);}
+.sb-item.active{color:var(--accent);background:var(--ad);font-weight:600;border-left-color:var(--accent);}
+.sb-ico{width:15px;height:15px;flex-shrink:0;}
+.sb-ico svg{width:100%;height:100%;stroke:currentColor;}
+.n-dot{width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:auto;flex-shrink:0;animation:pulse 1.8s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.sb-bottom{padding:.8rem 1.15rem;border-top:1px solid var(--border);}
+.sb-ur{display:flex;align-items:center;gap:.52rem;margin-bottom:.5rem;}
+.av{width:28px;height:28px;background:var(--ad);border:1px solid var(--ab);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:var(--accent);flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.sb-un{font-size:.78rem;font-weight:700;}
+.sb-ur2{font-size:.64rem;color:var(--t3);}
+.signout{width:100%;padding:.36rem .65rem;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--t3);font-size:.73rem;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:all .12s;text-align:left;}
+.signout:hover{border-color:var(--red);color:var(--red);}
 
-/* ─── MAIN ─── */
-.main{margin-left:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
-.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;}
-.tb-left{display:flex;align-items:center;gap:0.75rem;}
-.tb-title{font-size:1rem;font-weight:700;color:var(--text);}
-.tb-sep{color:var(--border);font-size:1rem;}
-.tb-sub{font-size:0.8rem;color:var(--text-3);}
-.tb-right{display:flex;align-items:center;gap:0.5rem;}
-.page-body{padding:1.5rem 2rem;flex:1;}
+/* ── MAIN ── */
+.main{margin-left:216px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.75rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;}
+.tb-l{display:flex;align-items:center;gap:.6rem;}
+.tb-title{font-size:.92rem;font-weight:700;}
+.tb-sep{color:var(--border);}
+.tb-sub{font-size:.75rem;color:var(--t3);}
+.tb-r{display:flex;align-items:center;gap:.42rem;}
+.pb{padding:1.4rem 1.75rem;flex:1;}
 
-/* ─── BUTTONS ─── */
-.btn{display:inline-flex;align-items:center;gap:0.35rem;padding:0.5rem 1rem;border-radius:var(--radius-sm);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;}
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:.28rem;padding:.44rem .9rem;border-radius:var(--rs);font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s;border:none;white-space:nowrap;}
 .btn-blue{background:var(--accent);color:#fff;}
-.btn-blue:hover{background:#1447c4;box-shadow:0 3px 8px rgba(26,86,219,0.2);}
-.btn-outline{background:var(--white);color:var(--text-2);border:1.5px solid var(--border);}
+.btn-blue:hover{background:#1447c4;box-shadow:0 3px 10px rgba(26,86,219,.22);}
+.btn-outline{background:var(--white);color:var(--t2);border:1.5px solid var(--border);}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
-.btn-ghost{background:transparent;color:var(--text-2);}
+.btn-ghost{background:transparent;color:var(--t2);}
 .btn-ghost:hover{background:var(--bg);}
-.btn-sm{padding:0.35rem 0.75rem;font-size:0.78rem;}
-.btn-icon{width:28px;height:28px;padding:0;border-radius:6px;background:transparent;border:1px solid var(--border);color:var(--text-3);display:flex;align-items:center;justify-content:center;font-size:0.75rem;cursor:pointer;transition:all 0.12s;}
-.btn-icon:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
-.btn-icon.red:hover{border-color:var(--red);color:var(--red);background:var(--red-dim);}
+.btn-green{background:var(--gd);color:var(--green);border:1px solid var(--gb);}
+.btn-green:hover{background:var(--green);color:#fff;}
+.btn-red{background:var(--rd);color:var(--red);border:1px solid var(--rb2);}
+.btn-red:hover{background:var(--red);color:#fff;}
+.btn-sm{padding:.3rem .65rem;font-size:.74rem;}
+.bi{width:27px;height:27px;padding:0;border-radius:5px;background:transparent;border:1px solid var(--border);color:var(--t3);display:flex;align-items:center;justify-content:center;font-size:.74rem;cursor:pointer;transition:all .12s;}
+.bi:hover{border-color:var(--accent);color:var(--accent);background:var(--ad);}
+.bi.del:hover{border-color:var(--red);color:var(--red);background:var(--rd);}
 
-/* ─── STATS ─── */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
-.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow-sm);}
-.sc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;}
-.sc-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
-.sc-icon svg{width:18px;height:18px;stroke:currentColor;}
-.sc-delta{font-size:0.72rem;font-weight:600;padding:0.2rem 0.5rem;border-radius:20px;}
-.delta-up{background:var(--green-dim);color:var(--green);}
-.delta-n{background:var(--bg);color:var(--text-3);}
-.sc-val{font-size:1.9rem;font-weight:800;letter-spacing:-0.5px;line-height:1;margin-bottom:0.2rem;font-family:'JetBrains Mono',monospace;}
-.sc-lbl{font-size:0.78rem;color:var(--text-3);font-weight:500;}
+/* ── STAT CARDS ── */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.4rem;}
+.sc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;box-shadow:var(--s1);}
+.sc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.75rem;}
+.sc-ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.sc-ico svg{width:16px;height:16px;stroke:currentColor;}
+.sc-v{font-size:1.75rem;font-weight:800;letter-spacing:-.5px;line-height:1;margin-bottom:.16rem;font-family:'JetBrains Mono',monospace;}
+.sc-l{font-size:.73rem;color:var(--t3);font-weight:500;}
 
-/* ─── CHARTS ─── */
-.chart-row{display:grid;grid-template-columns:1.2fr 1fr;gap:1rem;margin-bottom:1.5rem;}
-.chart-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow-sm);}
-.cc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
-.cc-title{font-size:0.82rem;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;}
-.bar-list{display:flex;flex-direction:column;gap:0.6rem;}
-.bar-row{display:flex;align-items:center;gap:0.75rem;}
-.bar-lbl{font-size:0.78rem;color:var(--text-2);width:105px;flex-shrink:0;font-weight:500;}
-.bar-track{flex:1;height:8px;background:var(--bg);border-radius:100px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:100px;transition:width 0.8s cubic-bezier(.4,0,.2,1);}
-.bar-n{font-size:0.72rem;font-family:'JetBrains Mono',monospace;color:var(--text-3);width:22px;text-align:right;font-weight:500;}
-.donut-wrap{display:flex;align-items:center;gap:1.5rem;}
-.donut-svg{width:120px;height:120px;flex-shrink:0;}
-.legend{display:flex;flex-direction:column;gap:0.5rem;}
-.leg-row{display:flex;align-items:center;gap:0.5rem;}
-.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
-.leg-lbl{font-size:0.78rem;color:var(--text-2);flex:1;}
-.leg-val{font-size:0.72rem;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text);}
-
-/* ─── TABLE ─── */
-.table-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:1.5rem;}
-.tc-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;}
-.tc-title{font-size:0.95rem;font-weight:700;}
-.tc-tools{display:flex;gap:0.5rem;align-items:center;}
-.search{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:0.45rem 0.75rem;font-size:0.8rem;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);outline:none;width:190px;transition:all 0.15s;}
-.search:focus{border-color:var(--accent);background:var(--white);}
-.search::placeholder{color:var(--text-3);}
-.filter-sel{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:0.45rem 0.65rem;font-size:0.78rem;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-2);outline:none;cursor:pointer;}
-.filter-sel option{background:var(--white);}
-.tc-scroll{overflow-x:auto;}
+/* ── TABLE ── */
+.tc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--s1);overflow:hidden;margin-bottom:1.2rem;}
+.tc-h{padding:.85rem 1.15rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;}
+.tc-title{font-size:.88rem;font-weight:700;}
+.tc-tools{display:flex;gap:.4rem;align-items:center;}
+.srch{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);padding:.4rem .65rem;font-size:.77rem;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);outline:none;width:175px;transition:all .15s;}
+.srch:focus{border-color:var(--accent);background:var(--white);}
+.srch::placeholder{color:var(--t3);}
+.fsel{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);padding:.4rem .58rem;font-size:.75rem;font-family:'Plus Jakarta Sans',sans-serif;color:var(--t2);outline:none;cursor:pointer;}
+.fsel option{background:var(--white);}
+.ts{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;}
 thead tr{border-bottom:1px solid var(--border);}
-th{padding:0.6rem 1rem;text-align:left;font-size:0.68rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);white-space:nowrap;background:var(--bg);}
-td{padding:0.85rem 1rem;font-size:0.82rem;border-bottom:1px solid var(--border-light);vertical-align:middle;}
-tbody tr{transition:background 0.1s;}
+th{padding:.55rem .88rem;text-align:left;font-size:.63rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);white-space:nowrap;background:var(--bg);}
+td{padding:.78rem .88rem;font-size:.79rem;border-bottom:1px solid var(--bl);vertical-align:middle;}
+tbody tr{transition:background .1s;}
 tbody tr:hover{background:#fafbff;}
 tbody tr:last-child td{border-bottom:none;}
 
-/* ─── BADGES ─── */
-.badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.72rem;font-weight:600;white-space:nowrap;}
-.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.bs{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);}
-.bq{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);}
-.ba{background:var(--violet-dim);color:var(--violet);border:1px solid var(--violet-border);}
-.bc{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);}
-.bl{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border);}
-.bair{background:var(--violet-dim);color:var(--violet);border:1px solid var(--violet-border);}
-.bsea{background:var(--teal-dim);color:var(--teal);border:1px solid #a5f3fc;}
-.broad{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);}
+/* ── BADGES ── */
+.bdg{display:inline-flex;align-items:center;gap:.22rem;padding:.16rem .5rem;border-radius:20px;font-size:.67rem;font-weight:600;white-space:nowrap;}
+.bdg::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.bs{background:var(--ad);color:var(--accent);border:1px solid var(--ab);}
+.bq{background:var(--amd);color:var(--amber);border:1px solid var(--amb);}
+.ba{background:var(--vd);color:var(--violet);border:1px solid var(--vb);}
+.bc{background:var(--gd);color:var(--green);border:1px solid var(--gb);}
+.bl2{background:var(--rd);color:var(--red);border:1px solid var(--rb2);}
+.bair{background:var(--vd);color:var(--violet);border:1px solid var(--vb);}
+.bsea{background:var(--td2);color:var(--teal);border:1px solid #a5f3fc;}
+.broad{background:var(--amd);color:var(--amber);border:1px solid var(--amb);}
+.bonl{background:var(--od);color:var(--orange);border:1px solid var(--ob);}
 
-/* ─── PIPELINE BAR ─── */
-.pipeline-bar{display:flex;height:8px;border-radius:100px;overflow:hidden;margin-bottom:1.5rem;gap:2px;}
-.pb-seg{height:100%;transition:flex 0.5s ease;}
+/* ── COLLAB CHIPS ── */
+.chip{display:inline-flex;align-items:center;gap:.22rem;background:var(--gd);border:1px solid var(--gb);color:var(--green);padding:.14rem .45rem;border-radius:4px;font-size:.65rem;font-weight:600;}
+.chip-pending{background:var(--od);border-color:var(--ob);color:var(--orange);}
+.chip-view{background:var(--ad);border-color:var(--ab);color:var(--accent);}
 
-/* ─── MODAL ─── */
-.overlay{position:fixed;inset:0;background:rgba(15,21,35,0.4);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:3rem 1rem;overflow-y:auto;}
-.overlay.open{display:flex;}
-.modal{background:var(--white);border:1px solid var(--border);border-radius:14px;width:100%;max-width:560px;box-shadow:var(--shadow-md);margin:auto;}
-.modal-lg{max-width:680px;}
-.mh{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1;border-radius:14px 14px 0 0;}
-.mh-title{font-size:0.95rem;font-weight:700;}
-.mh-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-3);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;}
-.mh-close:hover{border-color:var(--red);color:var(--red);}
-.mb{padding:1.5rem;}
-.mf{padding:0.9rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:0.5rem;border-radius:0 0 14px 14px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.form-grid .full{grid-column:1/-1;}
-.fg{display:flex;flex-direction:column;gap:0.3rem;}
+/* ── CHARTS ── */
+.chart-row{display:grid;grid-template-columns:1.2fr 1fr;gap:.9rem;margin-bottom:1.2rem;}
+.cc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;box-shadow:var(--s1);}
+.cc-title{font-size:.72rem;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.9rem;}
+.bar-list{display:flex;flex-direction:column;gap:.5rem;}
+.br{display:flex;align-items:center;gap:.6rem;}
+.br-lbl{font-size:.73rem;color:var(--t2);width:100px;flex-shrink:0;font-weight:500;}
+.br-track{flex:1;height:7px;background:var(--bg);border-radius:100px;overflow:hidden;}
+.br-fill{height:100%;border-radius:100px;transition:width .75s cubic-bezier(.4,0,.2,1);}
+.br-n{font-size:.7rem;font-family:'JetBrains Mono',monospace;color:var(--t3);width:18px;text-align:right;}
+.donut-wrap{display:flex;align-items:center;gap:1.2rem;}
+.dsvg{width:110px;height:110px;flex-shrink:0;}
+.leg{display:flex;flex-direction:column;gap:.4rem;}
+.leg-r{display:flex;align-items:center;gap:.38rem;}
+.leg-d{width:6px;height:6px;border-radius:2px;flex-shrink:0;}
+.leg-l{font-size:.73rem;color:var(--t2);flex:1;}
+.leg-v{font-size:.69rem;font-family:'JetBrains Mono',monospace;font-weight:600;}
 
-/* ─── DETAIL PANEL ─── */
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;}
-.detail-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;}
-.df{margin-bottom:0.75rem;}
+/* ── PERF ── */
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;}
+.pc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;box-shadow:var(--s1);}
+.pc-top{display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem;padding-bottom:.85rem;border-bottom:1px solid var(--bl);}
+.pc-name{font-size:.84rem;font-weight:700;}
+.pc-role{font-size:.65rem;color:var(--t3);}
+.pc-nums{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;margin-bottom:.85rem;}
+.pn{text-align:center;background:var(--bg);border-radius:5px;padding:.42rem .18rem;}
+.pn-v{font-size:.92rem;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.pn-l{font-size:.59rem;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-top:.08rem;}
+.pw{margin-bottom:.35rem;}
+.pw-h{display:flex;justify-content:space-between;margin-bottom:.2rem;}
+.pw-n{font-size:.68rem;color:var(--t3);}
+.pw-p{font-size:.68rem;font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;}
+.pw-t{height:4px;background:var(--bg);border-radius:100px;overflow:hidden;}
+.pw-f{height:100%;border-radius:100px;background:var(--accent);transition:width .75s cubic-bezier(.4,0,.2,1);}
+
+/* ── MODAL ── */
+.ov{position:fixed;inset:0;background:rgba(15,21,35,.38);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:2.5rem 1rem;overflow-y:auto;}
+.ov.open{display:flex;}
+.modal{background:var(--white);border:1px solid var(--border);border-radius:13px;width:100%;max-width:560px;box-shadow:var(--s3);margin:auto;}
+.modal-lg{max-width:660px;}
+.mh{padding:.95rem 1.35rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1;border-radius:13px 13px 0 0;}
+.mh-t{font-size:.9rem;font-weight:700;}
+.mh-x{width:25px;height:25px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--t3);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.mh-x:hover{border-color:var(--red);color:var(--red);}
+.mb{padding:1.35rem;}
+.mf{padding:.8rem 1.35rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.4rem;border-radius:0 0 13px 13px;}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.fg .full{grid-column:1/-1;}
+.fl{display:flex;flex-direction:column;gap:.26rem;}
+.sec-lbl{font-size:.75rem;font-weight:700;color:var(--t2);margin:1rem 0 .5rem;display:flex;align-items:center;gap:.4rem;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── DETAIL ── */
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:.9rem;}
+.db{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:.88rem;}
+.df{margin-bottom:.6rem;}
 .df:last-child{margin-bottom:0;}
-.dk{font-size:0.68rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-3);margin-bottom:0.2rem;}
-.dv{font-size:0.85rem;font-weight:500;color:var(--text);}
-.quote-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.85rem 1rem;margin-bottom:0.6rem;}
-.qi-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;}
-.qi-price{font-size:1rem;font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace;}
-.qi-meta{font-size:0.72rem;color:var(--text-3);}
+.dk{font-size:.63rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:.16rem;}
+.dv{font-size:.82rem;font-weight:500;}
+.qi{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:.76rem .88rem;margin-bottom:.45rem;}
+.qi-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.22rem;}
+.qi-price{font-size:.92rem;font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace;}
+.qi-meta{font-size:.68rem;color:var(--t3);}
 
-/* ─── PERF ─── */
-.perf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
-.perf-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow-sm);}
-.pc-top{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border-light);}
-.pc-name{font-size:0.88rem;font-weight:700;}
-.pc-role{font-size:0.7rem;color:var(--text-3);}
-.pc-nums{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-bottom:1rem;}
-.pn-box{text-align:center;background:var(--bg);border-radius:6px;padding:0.5rem 0.25rem;}
-.pn-val{font-size:1rem;font-weight:800;font-family:'JetBrains Mono',monospace;}
-.pn-lbl{font-size:0.62rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-top:0.1rem;}
-.prog-wrap{margin-bottom:0.5rem;}
-.prog-head{display:flex;justify-content:space-between;margin-bottom:0.25rem;}
-.prog-name{font-size:0.72rem;color:var(--text-3);}
-.prog-pct{font-size:0.72rem;font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;}
-.prog-track{height:5px;background:var(--bg);border-radius:100px;overflow:hidden;}
-.prog-fill{height:100%;border-radius:100px;background:var(--accent);transition:width 0.8s cubic-bezier(.4,0,.2,1);}
+/* ── NOTIFICATIONS ── */
+.notif-list{display:flex;flex-direction:column;gap:.55rem;}
+.notif-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.7rem;box-shadow:var(--s1);}
+.notif-card.urgent{border-color:var(--amb);}
+.ni{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ni svg{width:15px;height:15px;stroke:currentColor;}
+.nb{flex:1;}
+.nb-title{font-size:.8rem;font-weight:700;margin-bottom:.18rem;}
+.nb-meta{font-size:.7rem;color:var(--t3);line-height:1.5;}
+.nb-actions{display:flex;gap:.38rem;margin-top:.48rem;}
 
-/* ─── PIPELINE VIEW ─── */
-.pipeline-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:0.75rem;}
-.pcol{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem;min-height:300px;}
-.pcol-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
-.pcol-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
-.pcol-count{font-size:0.68rem;font-family:'JetBrains Mono',monospace;background:var(--white);border:1px solid var(--border);padding:0.1rem 0.4rem;border-radius:10px;font-weight:600;}
-.pcard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:0.75rem;margin-bottom:0.5rem;box-shadow:var(--shadow-sm);cursor:pointer;transition:all 0.12s;}
-.pcard:hover{border-color:var(--accent);box-shadow:0 4px 12px rgba(26,86,219,0.1);}
-.pcard-id{font-size:0.65rem;font-family:'JetBrains Mono',monospace;color:var(--text-3);margin-bottom:0.3rem;}
-.pcard-client{font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:0.3rem;}
-.pcard-route{font-size:0.72rem;color:var(--text-3);}
-.pcard-footer{display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem;}
-.pcard-val{font-size:0.72rem;font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;}
+/* ── INVITE GRID ── */
+.inv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.55rem;}
+.inv-card{border:1.5px solid var(--border);border-radius:var(--rs);padding:.7rem;cursor:pointer;transition:all .15s;text-align:center;position:relative;}
+.inv-card:hover{border-color:var(--accent);background:var(--ad);}
+.inv-card.on{border-color:var(--green);background:var(--gd);}
+.inv-card.on .ic-name{color:var(--green);}
+.inv-tick{position:absolute;top:.3rem;right:.3rem;width:14px;height:14px;background:var(--green);border-radius:50%;display:none;align-items:center;justify-content:center;}
+.inv-card.on .inv-tick{display:flex;}
+.inv-tick svg{width:8px;height:8px;stroke:#fff;stroke-width:3;}
+.ic-av{width:28px;height:28px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;font-family:'JetBrains Mono',monospace;margin:0 auto .35rem;}
+.ic-name{font-size:.75rem;font-weight:700;}
+.ic-role{font-size:.62rem;color:var(--t3);}
 
-/* ─── TABS ─── */
-.tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.5rem;background:var(--white);padding:0 1.5rem;border-radius:var(--radius) var(--radius) 0 0;}
-.tab{padding:0.75rem 1rem;font-size:0.82rem;font-weight:600;color:var(--text-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;white-space:nowrap;}
-.tab:hover{color:var(--text);}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+/* ── SHARE PANEL ── */
+.share-box{background:linear-gradient(135deg,var(--ad),#f0f9ff);border:1.5px solid var(--ab);border-radius:var(--r);padding:.9rem 1.05rem;margin-bottom:.85rem;}
+.share-box-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
+.share-box-title{font-size:.78rem;font-weight:700;color:var(--accent);}
+.share-code{font-family:'JetBrains Mono',monospace;font-size:.7rem;background:var(--white);border:1px solid var(--ab);padding:.22rem .55rem;border-radius:4px;color:var(--accent);font-weight:600;}
+.share-desc{font-size:.74rem;color:var(--t2);line-height:1.55;}
+.share-link-row{display:flex;gap:.45rem;margin-top:.6rem;}
+.share-link-inp{flex:1;background:var(--white);border:1px solid var(--border);border-radius:5px;padding:.34rem .65rem;font-size:.7rem;font-family:'JetBrains Mono',monospace;color:var(--t2);outline:none;}
+.collab-list{display:flex;flex-wrap:wrap;gap:.35rem;margin:.5rem 0 1rem;}
 
-/* ─── EMPTY ─── */
-.empty{padding:3rem;text-align:center;}
-.empty-icon{width:44px;height:44px;background:var(--bg);border:1px solid var(--border);border-radius:10px;margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;}
-.empty-icon svg{width:22px;height:22px;stroke:var(--text-3);}
-.empty-txt{font-size:0.85rem;color:var(--text-3);}
+/* ── ACCESS REQUEST BANNER ── */
+.access-banner{border-radius:var(--rs);padding:.7rem .9rem;font-size:.76rem;margin-bottom:.9rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
+.banner-amber{background:var(--amd);border:1px solid var(--amb);color:var(--amber);}
+.banner-blue{background:var(--ad);border:1px solid var(--ab);color:var(--accent);}
+.banner-green{background:var(--gd);border:1px solid var(--gb);color:var(--green);}
 
-/* ─── PAGES ─── */
+/* ── EMPTY ── */
+.empty{padding:2.5rem;text-align:center;}
+.empty-ico{width:38px;height:38px;background:var(--bg);border:1px solid var(--border);border-radius:9px;margin:0 auto .6rem;display:flex;align-items:center;justify-content:center;}
+.empty-ico svg{width:19px;height:19px;stroke:var(--t3);}
+.empty-t{font-size:.8rem;color:var(--t3);}
+
+/* ── PAGES ── */
 .page{display:none;}
 .page.active{display:block;}
 
-/* ─── TOAST ─── */
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;display:flex;align-items:center;gap:0.6rem;z-index:999;box-shadow:var(--shadow-md);transform:translateY(60px);opacity:0;transition:all 0.2s;max-width:280px;}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.35rem;right:1.35rem;background:var(--white);border:1px solid var(--border);border-radius:9px;padding:.65rem .9rem;display:flex;align-items:center;gap:.5rem;z-index:999;box-shadow:var(--s3);transform:translateY(60px);opacity:0;transition:all .2s;max-width:270px;}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.ok{border-left:3px solid var(--green);}
 .toast.err{border-left:3px solid var(--red);}
-.toast-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.ok .toast-dot{background:var(--green);}
-.err .toast-dot{background:var(--red);}
-.toast-msg{font-size:0.82rem;font-weight:500;}
+.toast.info{border-left:3px solid var(--accent);}
+.td{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ok .td{background:var(--green);}
+.err .td{background:var(--red);}
+.info .td{background:var(--accent);}
+.tm{font-size:.78rem;font-weight:500;}
 
-@media(max-width:1200px){.stats-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
-@media(max-width:900px){.perf-grid{grid-template-columns:1fr 1fr}.pipeline-cols{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1100px){.sg{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.pg{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 
+<!-- LOADING -->
+<div id="loading">
+  <div style="font-size:1.4rem;font-weight:800;letter-spacing:-.3px">W<span style="color:#1a56db">o</span>rt</div>
+  <div class="spin"></div>
+  <div class="load-txt">Loading shared workspace...</div>
+</div>
+
 <!-- LOGIN -->
-<div id="login">
-  <div class="login-wrap">
-    <div class="login-header">
-      <div class="login-logo">W<span>o</span>rt</div>
-      <div class="login-sub">// Internal Logistics Management</div>
+<div id="login" style="display:none">
+  <div class="lw">
+    <div class="lh">
+      <div class="ll">W<span>o</span>rt</div>
+      <div class="ls">// Collaborative Logistics Management</div>
     </div>
-    <div class="login-card">
+    <div class="lc">
       <label class="lbl">Select your role</label>
-      <div class="role-row">
-        <div class="role-btn" id="rb-admin" onclick="pickRole('admin')">
-          <div class="role-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg></div>
-          <div class="role-btn-name">Admin</div>
-          <div class="role-btn-desc">Full access and analytics</div>
+      <div class="rg">
+        <div class="rb" id="rb-admin" onclick="pickRole('admin')">
+          <div class="rb-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg></div>
+          <div class="rb-name">Admin</div>
+          <div class="rb-desc">Full access · invite employees to leads</div>
         </div>
-        <div class="role-btn" id="rb-employee" onclick="pickRole('employee')">
-          <div class="role-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
-          <div class="role-btn-name">Employee</div>
-          <div class="role-btn-desc">Leads, quotes and my analytics</div>
+        <div class="rb" id="rb-employee" onclick="pickRole('employee')">
+          <div class="rb-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+          <div class="rb-name">Employee</div>
+          <div class="rb-desc">Create leads · share · request access</div>
         </div>
       </div>
       <label class="lbl">Your name</label>
       <input class="inp" type="text" id="login-name" placeholder="Enter your full name">
-      <button class="btn-main" onclick="doLogin()">Enter System &rarr;</button>
+      <button class="btn-enter" onclick="doLogin()">Enter Workspace &rarr;</button>
     </div>
   </div>
 </div>
@@ -306,176 +325,165 @@ tbody tr:last-child td{border-bottom:none;}
 <!-- APP -->
 <div id="app">
   <div class="layout">
-
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="sb-brand">
+      <div class="sb-top">
         <div class="sb-logo">W<span>o</span>rt</div>
         <div class="sb-tag" id="sb-tag">Admin</div>
       </div>
       <nav class="sb-nav" id="sb-nav"></nav>
-      <div class="sb-user">
-        <div class="sb-user-row">
-          <div class="avatar" id="uav">R</div>
-          <div><div class="sb-uname" id="uname">User</div><div class="sb-urole" id="urole">Administrator</div></div>
+      <div class="sb-bottom">
+        <div class="sb-ur">
+          <div class="av" id="uav">R</div>
+          <div><div class="sb-un" id="uname">User</div><div class="sb-ur2" id="urole">Administrator</div></div>
         </div>
-        <button class="sign-out" onclick="doLogout()">Sign out</button>
+        <button class="signout" onclick="doLogout()">Sign out</button>
       </div>
     </aside>
 
-    <!-- MAIN -->
     <div class="main">
       <div class="topbar">
-        <div class="tb-left">
+        <div class="tb-l">
           <div class="tb-title" id="tb-title">Dashboard</div>
           <span class="tb-sep">/</span>
           <div class="tb-sub" id="tb-sub">Overview</div>
         </div>
-        <div class="tb-right" id="tb-right"></div>
+        <div class="tb-r" id="tb-r"></div>
       </div>
+      <div class="pb">
 
-      <div class="page-body">
-
-        <!-- DASHBOARD -->
+        <!-- DASHBOARD (admin) -->
         <div class="page" id="page-dashboard">
-          <div class="stats-grid" id="dash-stats"></div>
+          <div class="sg" id="dash-stats"></div>
           <div class="chart-row">
-            <div class="chart-card">
-              <div class="cc-header"><div class="cc-title">Leads by Source</div></div>
-              <div class="bar-list" id="src-bars"></div>
-            </div>
-            <div class="chart-card">
-              <div class="cc-header"><div class="cc-title">Pipeline Status</div></div>
-              <div class="donut-wrap">
-                <svg class="donut-svg" viewBox="0 0 120 120" id="donut"></svg>
-                <div class="legend" id="donut-leg"></div>
-              </div>
-            </div>
+            <div class="cc"><div class="cc-title">Leads by Source</div><div class="bar-list" id="src-bars"></div></div>
+            <div class="cc"><div class="cc-title">Pipeline Status</div><div class="donut-wrap"><svg class="dsvg" viewBox="0 0 110 110" id="donut"></svg><div class="leg" id="donut-leg"></div></div></div>
           </div>
-          <div style="font-size:0.88rem;font-weight:700;margin-bottom:0.75rem;color:var(--text)">Team Performance</div>
-          <div class="perf-grid" id="dash-perf"></div>
+          <div style="font-size:.84rem;font-weight:700;margin-bottom:.7rem">Team Performance</div>
+          <div class="pg" id="dash-perf"></div>
         </div>
 
-        <!-- LEADS -->
+        <!-- ALL LEADS (admin) -->
         <div class="page" id="page-leads">
-          <div class="tab-bar">
-            <div class="tab active" onclick="switchLeadTab('table',this)">Table View</div>
-            <div class="tab" onclick="switchLeadTab('pipeline',this)">Pipeline View</div>
-          </div>
-          <div id="leads-table-view">
-            <div class="table-card">
-              <div class="tc-header">
-                <div class="tc-title">All Leads <span style="font-size:0.78rem;font-weight:500;color:var(--text-3)" id="lead-count"></span></div>
-                <div class="tc-tools">
-                  <input class="search" placeholder="Search leads..." oninput="filterLeads(this.value)">
-                  <select class="filter-sel" onchange="filterByStatus(this.value)">
-                    <option value="">All Status</option>
-                    <option>Submitted</option><option>Quoted</option><option>Accepted</option><option>Completed</option><option>Lost</option>
-                  </select>
-                  <select class="filter-sel" onchange="filterByMode(this.value)">
-                    <option value="">All Modes</option>
-                    <option>Air</option><option>Sea</option><option>Road</option>
-                  </select>
-                  <button class="btn btn-blue btn-sm" onclick="openAdd()">+ Add Lead</button>
-                </div>
-              </div>
-              <div class="tc-scroll">
-                <table><thead><tr>
-                  <th>Lead ID</th><th>Client</th><th>Route</th><th>Mode</th><th>Source</th><th>Status</th><th>Value</th><th>Assigned To</th><th>Date</th><th>Actions</th>
-                </tr></thead><tbody id="leads-tbody"></tbody></table>
+          <div class="tc">
+            <div class="tc-h">
+              <div class="tc-title">All Leads <span style="font-size:.73rem;color:var(--t3);font-weight:500" id="lead-count"></span></div>
+              <div class="tc-tools">
+                <input class="srch" placeholder="Search..." oninput="fText=this.value;renderLeads()">
+                <select class="fsel" onchange="fSt=this.value;renderLeads()"><option value="">All Status</option><option>Submitted</option><option>Quoted</option><option>Accepted</option><option>Completed</option><option>Lost</option></select>
+                <button class="btn btn-blue btn-sm" onclick="openCreate()">+ Create Lead</button>
               </div>
             </div>
-          </div>
-          <div id="leads-pipeline-view" style="display:none">
-            <div class="pipeline-cols" id="pipeline-cols"></div>
+            <div class="ts"><table><thead><tr><th>Lead ID</th><th>Client</th><th>Route</th><th>Mode</th><th>Source</th><th>Status</th><th>Value</th><th>Owner</th><th>Collaborators</th><th>Actions</th></tr></thead><tbody id="leads-tbody"></tbody></table></div>
           </div>
         </div>
 
-        <!-- MY LEADS (employee) -->
-        <div class="page" id="page-myleads">
-          <div class="table-card">
-            <div class="tc-header">
-              <div class="tc-title">My Leads</div>
-              <div class="tc-tools"><button class="btn btn-blue btn-sm" onclick="openAdd()">+ Add Lead</button></div>
-            </div>
-            <div class="tc-scroll">
-              <table><thead><tr>
-                <th>Lead ID</th><th>Client</th><th>Route</th><th>Mode</th><th>Source</th><th>Status</th><th>Value</th><th>Date</th><th>Actions</th>
-              </tr></thead><tbody id="myleads-tbody"></tbody></table>
-            </div>
+        <!-- MY WORKSPACE (employee) -->
+        <div class="page" id="page-mywork">
+          <!-- My own leads -->
+          <div style="font-size:.84rem;font-weight:700;margin-bottom:.6rem;display:flex;align-items:center;justify-content:space-between">
+            <span>My Leads</span>
+            <button class="btn btn-blue btn-sm" onclick="openCreate()">+ Create Lead</button>
+          </div>
+          <div class="tc" style="margin-bottom:1.4rem">
+            <div class="ts"><table><thead><tr><th>Lead ID</th><th>Client</th><th>Route</th><th>Mode</th><th>Status</th><th>Value</th><th>Shared With</th><th>Requests</th><th>Actions</th></tr></thead><tbody id="myleads-tbody"></tbody></table></div>
+          </div>
+          <!-- Leads I collaborate on -->
+          <div style="font-size:.84rem;font-weight:700;margin-bottom:.6rem">Leads I Collaborate On</div>
+          <div class="tc">
+            <div class="ts"><table><thead><tr><th>Lead ID</th><th>Client</th><th>Route</th><th>Status</th><th>Owner</th><th>My Role</th><th>Actions</th></tr></thead><tbody id="collab-tbody"></tbody></table></div>
           </div>
         </div>
 
-        <!-- MY ANALYTICS (employee) -->
+        <!-- DISCOVER (employee — see all leads, request access) -->
+        <div class="page" id="page-discover">
+          <div class="tc">
+            <div class="tc-h">
+              <div class="tc-title">All Company Leads</div>
+              <div class="tc-tools">
+                <input class="srch" placeholder="Search..." oninput="fDiscover=this.value;renderDiscover()">
+                <select class="fsel" onchange="fDiscoverSt=this.value;renderDiscover()"><option value="">All Status</option><option>Submitted</option><option>Quoted</option><option>Accepted</option><option>Completed</option><option>Lost</option></select>
+              </div>
+            </div>
+            <div class="ts"><table><thead><tr><th>Lead ID</th><th>Client</th><th>Route</th><th>Mode</th><th>Status</th><th>Owner</th><th>My Access</th><th>Action</th></tr></thead><tbody id="discover-tbody"></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="page" id="page-notifications">
+          <div style="font-size:.84rem;font-weight:700;margin-bottom:.7rem">Notifications &amp; Requests</div>
+          <div id="notif-list" class="notif-list"></div>
+        </div>
+
+        <!-- MY ANALYTICS -->
         <div class="page" id="page-myanalytics">
-          <div class="stats-grid" id="my-stats"></div>
+          <div class="sg" id="my-stats"></div>
           <div class="chart-row">
-            <div class="chart-card">
-              <div class="cc-header"><div class="cc-title">My Leads by Status</div></div>
-              <div class="bar-list" id="my-status-bars"></div>
-            </div>
-            <div class="chart-card">
-              <div class="cc-header"><div class="cc-title">My Leads by Mode</div></div>
-              <div class="bar-list" id="my-mode-bars"></div>
-            </div>
+            <div class="cc"><div class="cc-title">My Leads by Status</div><div class="bar-list" id="my-s-bars"></div></div>
+            <div class="cc"><div class="cc-title">My Leads by Mode</div><div class="bar-list" id="my-m-bars"></div></div>
           </div>
         </div>
 
         <!-- REPORTS (admin) -->
-        <div class="page" id="page-reports">
-          <div class="perf-grid" id="report-grid"></div>
-        </div>
+        <div class="page" id="page-reports"><div class="pg" id="report-grid"></div></div>
 
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODALS -->
-<!-- Add/Edit Lead -->
-<div class="overlay" id="m-lead">
+<!-- ══════════════════════════════════════ MODALS ════════════════════════════════ -->
+
+<!-- CREATE / EDIT LEAD -->
+<div class="ov" id="m-lead">
   <div class="modal">
-    <div class="mh"><div class="mh-title" id="m-lead-title">Add New Lead</div><button class="mh-close" onclick="closeM('m-lead')">&#215;</button></div>
+    <div class="mh"><div class="mh-t" id="ml-title">Create Lead</div><button class="mh-x" onclick="closeM('m-lead')">&#215;</button></div>
     <div class="mb">
-      <div class="form-grid">
-        <div class="fg"><label class="lbl">Client Name *</label><input class="inp" id="f-client" placeholder="Company or contact name" style="margin:0"></div>
-        <div class="fg"><label class="lbl">Contact Number</label><input class="inp" id="f-contact" placeholder="+91 00000 00000" style="margin:0"></div>
-        <div class="fg"><label class="lbl">Origin *</label><input class="inp" id="f-origin" placeholder="e.g. Mumbai" style="margin:0"></div>
-        <div class="fg"><label class="lbl">Destination *</label><input class="inp" id="f-dest" placeholder="e.g. Dubai, UAE" style="margin:0"></div>
-        <div class="fg"><label class="lbl">Cargo / Product *</label><input class="inp" id="f-cargo" placeholder="e.g. Heavy Machinery" style="margin:0"></div>
-        <div class="fg"><label class="lbl">Container Type</label><select class="inp" id="f-container" style="margin:0"><option value="">Select</option><option>20ft FCL</option><option>40ft FCL</option><option>LCL</option><option>Bulk</option><option>Break Bulk</option><option>N/A</option></select></div>
-        <div class="fg"><label class="lbl">Shipment Mode *</label><select class="inp" id="f-mode" style="margin:0"><option value="">Select</option><option>Air</option><option>Sea</option><option>Road</option><option>Multimodal</option></select></div>
-        <div class="fg"><label class="lbl">Lead Source *</label><select class="inp" id="f-source" style="margin:0"><option value="">Select</option><option>Mouth to Mouth</option><option>Sales Visit</option><option>Repeat Client</option><option>Newspaper / Magazine</option><option>Cold Call</option><option>Reference</option><option>Online Enquiry</option><option>Trade Fair</option><option>Other</option></select></div>
-        <div class="fg"><label class="lbl">Status</label><select class="inp" id="f-status" style="margin:0"><option>Submitted</option><option>Quoted</option><option>Accepted</option><option>Completed</option><option>Lost</option></select></div>
-        <div class="fg"><label class="lbl">Estimated Value (INR)</label><input class="inp" type="number" id="f-value" placeholder="e.g. 250000" style="margin:0"></div>
-        <div class="fg full"><label class="lbl">Remarks</label><textarea class="inp" id="f-notes" placeholder="Any additional notes or remarks..." style="margin:0"></textarea></div>
+      <div class="fg">
+        <div class="fl"><label class="lbl">Client Name *</label><input class="inp" id="f-client" placeholder="Company or contact" style="margin:0"></div>
+        <div class="fl"><label class="lbl">Contact</label><input class="inp" id="f-contact" placeholder="+91 00000 00000" style="margin:0"></div>
+        <div class="fl"><label class="lbl">Origin *</label><input class="inp" id="f-origin" placeholder="e.g. Mumbai" style="margin:0"></div>
+        <div class="fl"><label class="lbl">Destination *</label><input class="inp" id="f-dest" placeholder="e.g. Dubai, UAE" style="margin:0"></div>
+        <div class="fl"><label class="lbl">Cargo / Product *</label><input class="inp" id="f-cargo" placeholder="e.g. Heavy Machinery" style="margin:0"></div>
+        <div class="fl"><label class="lbl">Container</label><select class="inp" id="f-cont" style="margin:0"><option value="">Select</option><option>20ft FCL</option><option>40ft FCL</option><option>LCL</option><option>Bulk</option><option>Break Bulk</option><option>N/A</option></select></div>
+        <div class="fl"><label class="lbl">Mode *</label><select class="inp" id="f-mode" style="margin:0"><option value="">Select</option><option>Air</option><option>Sea</option><option>Road</option><option>Multimodal</option></select></div>
+        <div class="fl"><label class="lbl">Lead Source *</label><select class="inp" id="f-src" style="margin:0"><option value="">Select</option><option>Mouth to Mouth</option><option>Sales Visit</option><option>Repeat Client</option><option>Newspaper / Magazine</option><option>Cold Call</option><option>Reference</option><option>Online Enquiry</option><option>Trade Fair</option><option>Other</option></select></div>
+        <div class="fl"><label class="lbl">Status</label><select class="inp" id="f-status" style="margin:0"><option>Submitted</option><option>Quoted</option><option>Accepted</option><option>Completed</option><option>Lost</option></select></div>
+        <div class="fl"><label class="lbl">Est. Value (INR)</label><input class="inp" type="number" id="f-value" placeholder="e.g. 250000" style="margin:0"></div>
+        <div class="fl full"><label class="lbl">Remarks</label><textarea class="inp" id="f-notes" placeholder="Additional notes..." style="margin:0"></textarea></div>
+      </div>
+
+      <!-- ★ ADMIN: INVITE EMPLOYEES TO LEAD ★ -->
+      <div id="invite-wrap" style="display:none">
+        <div class="sec-lbl">Invite Employees to this Lead</div>
+        <div style="font-size:.73rem;color:var(--t3);margin-bottom:.55rem">Invited employees get immediate edit &amp; quote access. You can change this later.</div>
+        <div class="inv-grid" id="inv-grid"></div>
       </div>
     </div>
     <div class="mf">
       <button class="btn btn-ghost" onclick="closeM('m-lead')">Cancel</button>
-      <button class="btn btn-blue" onclick="saveLead()">Save Lead</button>
+      <button class="btn btn-blue" id="ml-save-btn" onclick="saveLead()">Create Lead</button>
     </div>
   </div>
 </div>
 
-<!-- Detail -->
-<div class="overlay" id="m-detail">
+<!-- LEAD DETAIL -->
+<div class="ov" id="m-detail">
   <div class="modal modal-lg">
-    <div class="mh"><div class="mh-title" id="m-detail-title">Lead Details</div><button class="mh-close" onclick="closeM('m-detail')">&#215;</button></div>
-    <div class="mb" id="m-detail-body"></div>
+    <div class="mh"><div class="mh-t" id="md-title">Lead Details</div><button class="mh-x" onclick="closeM('m-detail')">&#215;</button></div>
+    <div class="mb" id="md-body"></div>
   </div>
 </div>
 
-<!-- Quote -->
-<div class="overlay" id="m-quote">
+<!-- SUBMIT QUOTE -->
+<div class="ov" id="m-quote">
   <div class="modal" style="max-width:420px">
-    <div class="mh"><div class="mh-title">Submit Quote</div><button class="mh-close" onclick="closeM('m-quote')">&#215;</button></div>
+    <div class="mh"><div class="mh-t">Submit Quote</div><button class="mh-x" onclick="closeM('m-quote')">&#215;</button></div>
     <div class="mb">
-      <div class="form-grid">
-        <div class="fg"><label class="lbl">Quote Value *</label><input class="inp" type="number" id="q-val" placeholder="e.g. 185000" style="margin:0"></div>
-        <div class="fg"><label class="lbl">Currency</label><select class="inp" id="q-cur" style="margin:0"><option>INR</option><option>USD</option><option>EUR</option><option>AED</option></select></div>
-        <div class="fg full"><label class="lbl">ETA / Delivery Estimate</label><input class="inp" id="q-eta" placeholder="e.g. 12–15 working days" style="margin:0"></div>
-        <div class="fg full"><label class="lbl">Quote Remarks</label><textarea class="inp" id="q-notes" placeholder="Breakdown, inclusions, special terms..." style="margin:0"></textarea></div>
+      <div class="fg">
+        <div class="fl"><label class="lbl">Quote Value *</label><input class="inp" type="number" id="q-val" placeholder="e.g. 185000" style="margin:0"></div>
+        <div class="fl"><label class="lbl">Currency</label><select class="inp" id="q-cur" style="margin:0"><option>INR</option><option>USD</option><option>EUR</option><option>AED</option></select></div>
+        <div class="fl full"><label class="lbl">ETA / Delivery Estimate</label><input class="inp" id="q-eta" placeholder="e.g. 12–15 working days" style="margin:0"></div>
+        <div class="fl full"><label class="lbl">Remarks</label><textarea class="inp" id="q-notes" placeholder="Breakdown, inclusions, terms..." style="margin:0"></textarea></div>
       </div>
     </div>
     <div class="mf">
@@ -485,43 +493,133 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"><div class="toast-dot"></div><div class="toast-msg" id="toast-msg">Done</div></div>
+<!-- REQUEST EDIT ACCESS (employee) -->
+<div class="ov" id="m-req-access">
+  <div class="modal" style="max-width:430px">
+    <div class="mh"><div class="mh-t">Request Edit Access</div><button class="mh-x" onclick="closeM('m-req-access')">&#215;</button></div>
+    <div class="mb">
+      <div style="background:var(--ad);border:1px solid var(--ab);border-radius:var(--rs);padding:.7rem .9rem;font-size:.77rem;color:var(--t2);margin-bottom:1rem;line-height:1.6">
+        Your request will be sent to the lead owner. Once approved, you'll be able to edit this lead, add quotes, and update its status.
+      </div>
+      <div class="fl"><label class="lbl">Reason for Request *</label><textarea class="inp" id="req-reason" placeholder="Why do you need edit access to this lead?" style="margin:0"></textarea></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-ghost" onclick="closeM('m-req-access')">Cancel</button>
+      <button class="btn btn-blue" onclick="submitReq()">Send Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE LEAD (owner view) -->
+<div class="ov" id="m-share">
+  <div class="modal" style="max-width:500px">
+    <div class="mh"><div class="mh-t">Share &amp; Manage Access</div><button class="mh-x" onclick="closeM('m-share')">&#215;</button></div>
+    <div class="mb" id="ms-body"></div>
+    <div class="mf"><button class="btn btn-ghost" onclick="closeM('m-share')">Close</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><div class="td"></div><div class="tm" id="toast-msg">Done</div></div>
 
 <script>
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
 // STATE
-// ──────────────────────────────
-let role=null,user=null,selRole=null,editId=null,quoteId=null,fText='',fStatus='',fMode='';
+// ════════════════════════════════════════════════════════════
+let role=null, user=null, selRole=null;
+let editId=null, quoteId=null, reqLeadId=null, shareLeadId=null;
+let fText='', fSt='', fDiscover='', fDiscoverSt='';
+let invSet=new Set();
 
-let leads=[
-  {id:'WRT-'+Date.now()+1,client:'Sharma Textiles Pvt Ltd',contact:'+91 98123 45678',origin:'Surat',dest:'Frankfurt, Germany',cargo:'Textiles & Fabric',container:'40ft FCL',mode:'Sea',source:'Repeat Client',status:'Completed',value:420000,notes:'Regular client. Priority handling agreed.',by:'Raj Kumar',date:'2025-01-15',quotes:[{val:385000,cur:'INR',eta:'18-22 days',notes:'Direct vessel booking',by:'Raj Kumar',date:'2025-01-16'}]},
-  {id:'WRT-'+Date.now()+2,client:'Metro Infra Ltd',contact:'+91 98234 56789',origin:'Mumbai',dest:'Dubai, UAE',cargo:'Heavy Machinery',container:'Break Bulk',mode:'Sea',source:'Sales Visit',status:'Quoted',value:1200000,notes:'Special crane handling required at destination.',by:'Priya Singh',date:'2025-01-18',quotes:[{val:1100000,cur:'INR',eta:'10-12 days',notes:'Break bulk vessel. Port charges excluded.',by:'Priya Singh',date:'2025-01-19'}]},
-  {id:'WRT-'+Date.now()+3,client:'Rajput Spices Co.',contact:'+91 98345 67890',origin:'Rajkot',dest:'London, UK',cargo:'Spices & Condiments',container:'LCL',mode:'Sea',source:'Mouth to Mouth',status:'Submitted',value:85000,notes:'First time exporter. Needs guidance on docs.',by:'Raj Kumar',date:'2025-01-22',quotes:[]},
-  {id:'WRT-'+Date.now()+4,client:'Pune Auto Components',contact:'+91 98456 78901',origin:'Pune',dest:'Lagos, Nigeria',cargo:'Auto Parts',container:'20ft FCL',mode:'Sea',source:'Cold Call',status:'Lost',value:310000,notes:'Lost to competitor on pricing.',by:'Amit Verma',date:'2025-01-25',quotes:[{val:295000,cur:'INR',eta:'22-25 days',notes:'Transhipment via Colombo.',by:'Amit Verma',date:'2025-01-26'}]},
-  {id:'WRT-'+Date.now()+5,client:'Delhi Handicrafts',contact:'+91 98567 89012',origin:'Delhi',dest:'New York, USA',cargo:'Handicrafts & Decor',container:'LCL',mode:'Air',source:'Trade Fair',status:'Accepted',value:145000,notes:'Urgent delivery for trade show.',by:'Priya Singh',date:'2025-01-28',quotes:[{val:142000,cur:'INR',eta:'3-5 days',notes:'Priority air freight. Door to door.',by:'Priya Singh',date:'2025-01-28'}]},
-  {id:'WRT-'+Date.now()+6,client:'Chennai Pharma Ltd',contact:'+91 98678 90123',origin:'Chennai',dest:'Nairobi, Kenya',cargo:'Pharmaceuticals',container:'20ft FCL',mode:'Sea',source:'Reference',status:'Submitted',value:560000,notes:'Reefer container required. GDP compliant.',by:'Amit Verma',date:'2025-02-01',quotes:[]},
+const TEAM=['Raj Kumar','Priya Singh','Amit Verma','Sneha Patel','Dev Sharma'];
+const STORAGE_KEY='wort-leads-v4';
+const NOTIF_KEY='wort-notifs-v4';
+
+const SC={Submitted:'bs',Quoted:'bq',Accepted:'ba',Completed:'bc',Lost:'bl2'};
+const MC={Air:'bair',Sea:'bsea',Road:'broad',Multimodal:'bs'};
+const SC_C={Submitted:'#3b82f6',Quoted:'#d97706',Accepted:'#7c3aed',Completed:'#059669',Lost:'#dc2626'};
+const SRC_C=['#1a56db','#0d9f6e','#c27803','#7e3af2','#0694a2','#e02424','#d97706','#059669'];
+
+// ════════════════════════════════════════════════════════════
+// PERSISTENT STORAGE — shared across all users via window.storage
+// ════════════════════════════════════════════════════════════
+let leads=[];
+let notifs=[];
+
+const SEED=[
+  {id:'WRT-001',client:'Sharma Textiles Pvt Ltd',contact:'+91 98123 45678',origin:'Surat',dest:'Frankfurt, Germany',cargo:'Textiles & Fabric',container:'40ft FCL',mode:'Sea',source:'Repeat Client',status:'Completed',value:420000,notes:'Regular client.',owner:'Raj Kumar',invitees:['Priya Singh'],accessRequests:[],quotes:[{val:385000,cur:'INR',eta:'18-22 days',notes:'Direct vessel',by:'Raj Kumar',date:'2025-01-16'}],date:'2025-01-15'},
+  {id:'WRT-002',client:'Metro Infra Ltd',contact:'+91 98234 56789',origin:'Mumbai',dest:'Dubai, UAE',cargo:'Heavy Machinery',container:'Break Bulk',mode:'Sea',source:'Sales Visit',status:'Quoted',value:1200000,notes:'Special handling.',owner:'Priya Singh',invitees:[],accessRequests:[{by:'Amit Verma',reason:'Know the client personally.',status:'pending',date:'2025-01-20'}],quotes:[{val:1100000,cur:'INR',eta:'10-12 days',notes:'Break bulk vessel',by:'Priya Singh',date:'2025-01-19'}],date:'2025-01-18'},
+  {id:'WRT-003',client:'Rajput Spices Co.',contact:'+91 98345 67890',origin:'Rajkot',dest:'London, UK',cargo:'Spices',container:'LCL',mode:'Sea',source:'Mouth to Mouth',status:'Submitted',value:85000,notes:'First-time exporter.',owner:'Raj Kumar',invitees:[],accessRequests:[],quotes:[],date:'2025-01-22'},
+  {id:'WRT-004',client:'Delhi Handicrafts',contact:'+91 98567 89012',origin:'Delhi',dest:'New York, USA',cargo:'Handicrafts',container:'LCL',mode:'Air',source:'Trade Fair',status:'Accepted',value:145000,notes:'Urgent delivery.',owner:'Priya Singh',invitees:['Raj Kumar'],accessRequests:[],quotes:[{val:142000,cur:'INR',eta:'3-5 days',notes:'Priority air',by:'Priya Singh',date:'2025-01-28'}],date:'2025-01-28'},
+  {id:'WRT-005',client:'Chennai Pharma Ltd',contact:'+91 98678 90123',origin:'Chennai',dest:'Nairobi, Kenya',cargo:'Pharmaceuticals',container:'20ft FCL',mode:'Sea',source:'Reference',status:'Submitted',value:560000,notes:'Reefer container.',owner:'Amit Verma',invitees:[],accessRequests:[],quotes:[],date:'2025-02-01'},
 ];
 
-const team=['Raj Kumar','Priya Singh','Amit Verma'];
-const SC={Submitted:'bs',Quoted:'bq',Accepted:'ba',Completed:'bc',Lost:'bl'};
-const MC={Air:'bair',Sea:'bsea',Road:'broad',Multimodal:'bs'};
-const SC_COL={Submitted:'#3b82f6',Quoted:'#d97706',Accepted:'#7c3aed',Completed:'#059669',Lost:'#dc2626'};
-const SRC_COL=['#1a56db','#0d9f6e','#c27803','#7e3af2','#0694a2','#e02424','#d97706','#059669'];
+async function loadData(){
+  try{
+    const r=await window.storage.get(STORAGE_KEY,true);
+    leads=r?JSON.parse(r.value):JSON.parse(JSON.stringify(SEED));
+  }catch(e){leads=JSON.parse(JSON.stringify(SEED));}
+  try{
+    const r=await window.storage.get(NOTIF_KEY,true);
+    notifs=r?JSON.parse(r.value):[];
+  }catch(e){notifs=[];}
+}
 
-function bdg(t,c){return`<span class="badge ${c}">${t}</span>`;}
+async function saveData(){
+  try{await window.storage.set(STORAGE_KEY,JSON.stringify(leads),true);}catch(e){}
+  try{await window.storage.set(NOTIF_KEY,JSON.stringify(notifs),true);}catch(e){}
+}
+
+// ════════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════════
+function bdg(t,c){return`<span class="bdg ${c}">${t}</span>`;}
 function money(n){return n?'&#8377;'+Number(n).toLocaleString('en-IN'):'&mdash;';}
 function toast(m,t='ok'){const e=document.getElementById('toast');document.getElementById('toast-msg').textContent=m;e.className=`toast ${t} show`;setTimeout(()=>e.classList.remove('show'),2800);}
+function emptyH(m='No records.'){return`<div class="empty"><div class="empty-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div><div class="empty-t">${m}</div></div>`;}
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
-// ──────────────────────────────
-// LOGIN
-// ──────────────────────────────
-function pickRole(r){selRole=r;document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('rb-'+r).classList.add('sel');}
+function canEdit(l){
+  if(role==='admin') return true;
+  if(l.owner===user) return true;
+  if(l.invitees.includes(user)) return true;
+  if(l.accessRequests.some(r=>r.by===user&&r.status==='approved')) return true;
+  return false;
+}
+function myAccessLabel(l){
+  if(l.owner===user) return '<span class="chip">Owner</span>';
+  if(l.invitees.includes(user)) return '<span class="chip">Invited</span>';
+  const req=l.accessRequests.find(r=>r.by===user);
+  if(req&&req.status==='approved') return '<span class="chip">Approved</span>';
+  if(req&&req.status==='pending') return '<span class="chip chip-pending">Pending</span>';
+  return '<span class="chip chip-view">View only</span>';
+}
+function collabsOf(l){
+  const out=[];
+  l.invitees.forEach(e=>out.push({name:e,type:'invited'}));
+  l.accessRequests.filter(r=>r.status==='approved').forEach(r=>out.push({name:r.by,type:'approved'}));
+  return out;
+}
+function pendingReqsForMe(){
+  // leads I own with pending requests
+  return leads.filter(l=>l.owner===user).reduce((s,l)=>s+l.accessRequests.filter(r=>r.status==='pending').length,0);
+}
+function pendingReqsAdmin(){
+  return leads.reduce((s,l)=>s+l.accessRequests.filter(r=>r.status==='pending').length,0);
+}
+function pendingCount(){return role==='admin'?pendingReqsAdmin():pendingReqsForMe();}
+
+// ════════════════════════════════════════════════════════════
+// LOGIN / LOGOUT
+// ════════════════════════════════════════════════════════════
+function pickRole(r){selRole=r;document.querySelectorAll('.rb').forEach(b=>b.classList.remove('sel'));document.getElementById('rb-'+r).classList.add('sel');}
+
 function doLogin(){
   const n=document.getElementById('login-name').value.trim();
-  if(!selRole)return toast('Please select a role','err');
-  if(!n)return toast('Please enter your name','err');
-  role=selRole;user=n;
+  if(!selRole) return toast('Select a role','err');
+  if(!n) return toast('Enter your name','err');
+  role=selRole; user=n;
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('sb-tag').textContent=role==='admin'?'Admin':'Employee';
@@ -529,40 +627,61 @@ function doLogin(){
   document.getElementById('uname').textContent=n;
   document.getElementById('urole').textContent=role==='admin'?'Administrator':'Employee';
   buildNav();
-  goTo(role==='admin'?'dashboard':'myleads');
+  goTo(role==='admin'?'dashboard':'mywork');
 }
-function doLogout(){role=null;user=null;selRole=null;document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';document.getElementById('login-name').value='';document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('sel'));}
 
-// ──────────────────────────────
+function doLogout(){
+  role=null; user=null; selRole=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.getElementById('login-name').value='';
+  document.querySelectorAll('.rb').forEach(b=>b.classList.remove('sel'));
+}
+
+// ════════════════════════════════════════════════════════════
 // NAV
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
 const NAVS={
   admin:[
     {id:'dashboard',label:'Dashboard',svg:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'},
-    {id:'leads',label:'All Leads',svg:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>'},
+    {id:'leads',label:'All Leads',svg:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'},
+    {id:'notifications',label:'Requests',svg:'<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>',notif:true},
     {id:'reports',label:'Reports',svg:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>'},
   ],
   employee:[
-    {id:'myleads',label:'My Leads',svg:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'},
+    {id:'mywork',label:'My Workspace',svg:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'},
+    {id:'discover',label:'Discover Leads',svg:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'},
+    {id:'notifications',label:'Notifications',svg:'<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>',notif:true},
     {id:'myanalytics',label:'My Analytics',svg:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>'},
   ]
 };
 const META={
   dashboard:['Dashboard','Company overview'],
-  leads:['Lead Management','All shipment leads'],
-  reports:['Team Reports','Employee performance'],
-  myleads:['My Leads','Leads submitted by me'],
+  leads:['All Leads','Every lead across the company'],
+  notifications:['Requests','Permission requests & notifications'],
+  reports:['Reports','Team performance'],
+  mywork:['My Workspace','My leads & collaborations'],
+  discover:['Discover Leads','Browse & request access'],
   myanalytics:['My Analytics','Personal performance'],
 };
+
 function buildNav(){
   const nav=document.getElementById('sb-nav');
-  nav.innerHTML='<div class="sb-section">Navigation</div>'+NAVS[role].map(n=>`
+  nav.innerHTML='<div class="sb-sec">Navigation</div>'+NAVS[role].map(n=>`
     <div class="sb-item" id="n-${n.id}" onclick="goTo('${n.id}')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${n.svg}</svg></div>
+      <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${n.svg}</svg></div>
       ${n.label}
-    </div>
-  `).join('');
+      ${n.notif?`<div class="n-dot" id="nd-${n.id}" style="display:none"></div>`:''}
+    </div>`).join('');
+  refreshDots();
 }
+
+function refreshDots(){
+  const cnt=pendingCount();
+  const el=document.getElementById('nd-notifications');
+  if(el) el.style.display=cnt>0?'block':'none';
+}
+
 function goTo(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -571,328 +690,593 @@ function goTo(id){
   const[t,s]=META[id]||['',''];
   document.getElementById('tb-title').textContent=t;
   document.getElementById('tb-sub').textContent=s;
-  document.getElementById('tb-right').innerHTML='';
-  if(id==='dashboard')renderDash();
-  if(id==='leads'){renderLeadsTable();document.getElementById('tb-right').innerHTML='<button class="btn btn-blue btn-sm" onclick="openAdd()">+ Add Lead</button>';}
-  if(id==='myleads')renderMyLeads();
-  if(id==='myanalytics')renderMyAnalytics();
-  if(id==='reports')renderReports();
+  document.getElementById('tb-r').innerHTML='';
+  const actions={
+    leads:()=>{ document.getElementById('tb-r').innerHTML='<button class="btn btn-blue btn-sm" onclick="openCreate()">+ Create Lead</button>'; renderLeads(); },
+    dashboard:renderDash,
+    notifications:renderNotifications,
+    reports:renderReports,
+    mywork:renderMyWork,
+    discover:renderDiscover,
+    myanalytics:renderMyAnalytics,
+  };
+  (actions[id]||Function)();
+  refreshDots();
 }
 
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
 // DASHBOARD
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
 function renderDash(){
-  const tot=leads.length,done=leads.filter(l=>l.status==='Completed').length,quot=leads.filter(l=>l.status==='Quoted').length,acc=leads.filter(l=>l.status==='Accepted').length;
-  const pipe=leads.reduce((s,l)=>s+(l.value||0),0);
-  const rate=tot?Math.round(done/tot*100):0;
+  const tot=leads.length, done=leads.filter(l=>l.status==='Completed').length;
+  const pipe=leads.reduce((s,l)=>s+(l.value||0),0), rate=tot?Math.round(done/tot*100):0;
   document.getElementById('dash-stats').innerHTML=[
-    {v:tot,l:'Total Leads',d:'All time',col:'var(--accent-dim)',ic:'var(--accent)',svg:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'},
-    {v:done,l:'Completed',d:`${rate}% rate`,col:'var(--green-dim)',ic:'var(--green)',svg:'<polyline points="20 6 9 17 4 12"/>'},
-    {v:quot+acc,l:'Active Quotes',d:`${quot} quoted · ${acc} accepted`,col:'var(--amber-dim)',ic:'var(--amber)',svg:'<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>'},
-    {v:'&#8377;'+(pipe/100000).toFixed(1)+'L',l:'Pipeline Value',d:'Total est. value',col:'var(--violet-dim)',ic:'var(--violet)',svg:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>'},
-  ].map(s=>`
-    <div class="stat-card">
-      <div class="sc-top">
-        <div class="sc-icon" style="background:${s.col};color:${s.ic}"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${s.svg}</svg></div>
-        <div class="sc-delta delta-n">${s.d}</div>
-      </div>
-      <div class="sc-val">${s.v}</div>
-      <div class="sc-lbl">${s.l}</div>
-    </div>
-  `).join('');
+    {v:tot,l:'Total Leads',bg:'var(--ad)',c:'var(--accent)',ico:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'},
+    {v:done,l:'Completed',bg:'var(--gd)',c:'var(--green)',ico:'<polyline points="20 6 9 17 4 12"/>'},
+    {v:rate+'%',l:'Conversion Rate',bg:'var(--amd)',c:'var(--amber)',ico:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>'},
+    {v:'&#8377;'+(pipe/100000).toFixed(1)+'L',l:'Pipeline Value',bg:'var(--vd)',c:'var(--violet)',ico:'<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>'},
+  ].map(s=>`<div class="sc"><div class="sc-top"><div class="sc-ico" style="background:${s.bg};color:${s.c}"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${s.ico}</svg></div></div><div class="sc-v">${s.v}</div><div class="sc-l">${s.l}</div></div>`).join('');
 
-  // Source bars
   const src={};leads.forEach(l=>src[l.source]=(src[l.source]||0)+1);
   const maxS=Math.max(...Object.values(src),1);
   document.getElementById('src-bars').innerHTML=Object.entries(src).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>`
-    <div class="bar-row">
-      <div class="bar-lbl">${k}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${v/maxS*100}%;background:${SRC_COL[i%SRC_COL.length]}"></div></div>
-      <div class="bar-n">${v}</div>
-    </div>
-  `).join('');
+    <div class="br"><div class="br-lbl">${k}</div><div class="br-track"><div class="br-fill" style="width:${v/maxS*100}%;background:${SRC_C[i%SRC_C.length]}"></div></div><div class="br-n">${v}</div></div>`).join('');
 
-  // Donut
   const st={Submitted:0,Quoted:0,Accepted:0,Completed:0,Lost:0};
   leads.forEach(l=>st[l.status]=(st[l.status]||0)+1);
-  const tot2=Object.values(st).reduce((a,b)=>a+b,0)||1;
+  const t2=Object.values(st).reduce((a,b)=>a+b,0)||1;
   let off=0,paths='';
-  Object.entries(st).forEach(([k,v])=>{
-    const pct=v/tot2,r=48,c=2*Math.PI*r;
-    if(v>0){paths+=`<circle cx="60" cy="60" r="${r}" fill="none" stroke="${SC_COL[k]}" stroke-width="14" stroke-dasharray="${pct*c} ${c}" stroke-dashoffset="${-off*c}" transform="rotate(-90 60 60)"/>`;}
-    off+=pct;
-  });
-  document.getElementById('donut').innerHTML=paths+`<text x="60" y="65" text-anchor="middle" fill="${'var(--text)'}" font-size="18" font-family="JetBrains Mono,monospace" font-weight="700">${tot2}</text>`;
-  document.getElementById('donut-leg').innerHTML=Object.entries(st).map(([k,v])=>`
-    <div class="leg-row"><div class="leg-dot" style="background:${SC_COL[k]}"></div><div class="leg-lbl">${k}</div><div class="leg-val">${v}</div></div>
-  `).join('');
-
-  document.getElementById('dash-perf').innerHTML=team.map(e=>perfCard(e)).join('');
+  Object.entries(st).forEach(([k,v])=>{const pct=v/t2,r=44,c=2*Math.PI*r;if(v>0){paths+=`<circle cx="55" cy="55" r="${r}" fill="none" stroke="${SC_C[k]}" stroke-width="13" stroke-dasharray="${pct*c} ${c}" stroke-dashoffset="${-off*c}" transform="rotate(-90 55 55)"/>`;}off+=pct;});
+  document.getElementById('donut').innerHTML=paths+`<text x="55" y="60" text-anchor="middle" fill="var(--text)" font-size="15" font-family="JetBrains Mono,monospace" font-weight="700">${t2}</text>`;
+  document.getElementById('donut-leg').innerHTML=Object.entries(st).map(([k,v])=>`<div class="leg-r"><div class="leg-d" style="background:${SC_C[k]}"></div><div class="leg-l">${k}</div><div class="leg-v">${v}</div></div>`).join('');
+  document.getElementById('dash-perf').innerHTML=TEAM.slice(0,3).map(e=>perfCard(e)).join('');
 }
 
 function perfCard(emp){
-  const el=leads.filter(l=>l.by===emp),done=el.filter(l=>l.status==='Completed').length,lost=el.filter(l=>l.status==='Lost').length;
-  const rate=el.length?Math.round(done/el.length*100):0,val=el.reduce((s,l)=>s+(l.value||0),0);
-  const srcMap={};el.forEach(l=>srcMap[l.source]=(srcMap[l.source]||0)+1);
-  const top=Object.entries(srcMap).sort((a,b)=>b[1]-a[1])[0];
-  return`<div class="perf-card">
-    <div class="pc-top">
-      <div class="avatar">${emp[0]}</div>
-      <div><div class="pc-name">${emp}</div><div class="pc-role">Logistics Executive</div></div>
-    </div>
-    <div class="pc-nums">
-      <div class="pn-box"><div class="pn-val">${el.length}</div><div class="pn-lbl">Leads</div></div>
-      <div class="pn-box"><div class="pn-val" style="color:var(--green)">${done}</div><div class="pn-lbl">Closed</div></div>
-      <div class="pn-box"><div class="pn-val" style="color:var(--red)">${lost}</div><div class="pn-lbl">Lost</div></div>
-    </div>
-    <div class="prog-wrap">
-      <div class="prog-head"><span class="prog-name">Conversion Rate</span><span class="prog-pct">${rate}%</span></div>
-      <div class="prog-track"><div class="prog-fill" style="width:${rate}%"></div></div>
-    </div>
-    <div style="font-size:0.72rem;color:var(--text-3);margin-top:0.5rem">
-      Pipeline: <span style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:600">&#8377;${(val/1000).toFixed(0)}K</span>
-      ${top?` &nbsp;&middot;&nbsp; Top: <strong style="color:var(--text)">${top[0]}</strong>`:''}
-    </div>
-  </div>`;
+  const el=leads.filter(l=>l.owner===emp), done=el.filter(l=>l.status==='Completed').length, lost=el.filter(l=>l.status==='Lost').length;
+  const rate=el.length?Math.round(done/el.length*100):0, val=el.reduce((s,l)=>s+(l.value||0),0);
+  const sm={};el.forEach(l=>sm[l.source]=(sm[l.source]||0)+1);const top=Object.entries(sm).sort((a,b)=>b[1]-a[1])[0];
+  return`<div class="pc"><div class="pc-top"><div class="av">${emp[0]}</div><div><div class="pc-name">${emp}</div><div class="pc-role">Logistics Executive</div></div></div><div class="pc-nums"><div class="pn"><div class="pn-v">${el.length}</div><div class="pn-l">Leads</div></div><div class="pn"><div class="pn-v" style="color:var(--green)">${done}</div><div class="pn-l">Closed</div></div><div class="pn"><div class="pn-v" style="color:var(--red)">${lost}</div><div class="pn-l">Lost</div></div></div><div class="pw"><div class="pw-h"><span class="pw-n">Conversion</span><span class="pw-p">${rate}%</span></div><div class="pw-t"><div class="pw-f" style="width:${rate}%"></div></div></div><div style="font-size:.68rem;color:var(--t3);margin-top:.38rem">Pipeline: <span style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:600">&#8377;${(val/1000).toFixed(0)}K</span>${top?` &middot; Top: <strong style="color:var(--t2)">${top[0]}</strong>`:''}</div></div>`;
 }
 
-// ──────────────────────────────
-// LEADS TABLE
-// ──────────────────────────────
-function getFiltered(){
-  return leads.filter(l=>
-    (!fText||[l.client,l.id,l.origin,l.dest,l.cargo].some(s=>s?.toLowerCase().includes(fText.toLowerCase())))&&
-    (!fStatus||l.status===fStatus)&&
-    (!fMode||l.mode===fMode)
-  );
-}
-
-function renderLeadsTable(){
-  const list=getFiltered();
+// ════════════════════════════════════════════════════════════
+// ALL LEADS (admin table)
+// ════════════════════════════════════════════════════════════
+function renderLeads(){
+  const list=leads.filter(l=>(!fText||[l.client,l.id,l.origin,l.dest].some(s=>s?.toLowerCase().includes(fText.toLowerCase())))&&(!fSt||l.status===fSt));
   document.getElementById('lead-count').textContent=`(${list.length})`;
   const tb=document.getElementById('leads-tbody');
-  if(!list.length){tb.innerHTML=`<tr><td colspan="10">${emptyHTML()}</td></tr>`;return;}
-  tb.innerHTML=list.map(l=>rowHTML(l,true)).join('');
-}
-
-function renderMyLeads(){
-  const list=leads.filter(l=>l.by===user);
-  const tb=document.getElementById('myleads-tbody');
-  if(!list.length){tb.innerHTML=`<tr><td colspan="9">${emptyHTML('No leads yet. Add your first lead.')}</td></tr>`;return;}
-  tb.innerHTML=list.map(l=>rowHTML(l,false)).join('');
-}
-
-function rowHTML(l,showBy){
-  return`<tr>
-    <td><span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--accent);font-weight:600">${l.id.substring(0,12)}</span></td>
-    <td><div style="font-weight:600;color:var(--text)">${l.client}</div><div style="font-size:0.7rem;color:var(--text-3)">${l.contact||''}</div></td>
-    <td><div style="font-size:0.78rem;font-weight:500">${l.origin}</div><div style="font-size:0.72rem;color:var(--text-3)">&rarr; ${l.dest}</div></td>
-    <td>${bdg(l.mode,MC[l.mode]||'bs')}</td>
-    <td style="font-size:0.78rem;color:var(--text-2)">${l.source}</td>
-    <td>${bdg(l.status,SC[l.status]||'bs')}</td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-2);font-weight:600">${money(l.value)}</td>
-    ${showBy?`<td style="font-size:0.78rem">${l.by}</td>`:''}
-    <td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-3)">${l.date}</td>
-    <td><div style="display:flex;gap:0.3rem">
-      <button class="btn-icon" onclick="viewLead('${l.id}')" title="View">&#9654;</button>
-      <button class="btn-icon" onclick="editLead('${l.id}')" title="Edit">&#9998;</button>
-      <button class="btn-icon" onclick="openQuote('${l.id}')" title="Add Quote">&#36;</button>
-      ${role==='admin'?`<button class="btn-icon red" onclick="delLead('${l.id}')" title="Delete">&times;</button>`:''}
-    </div></td>
-  </tr>`;
-}
-
-function filterLeads(v){fText=v;renderLeadsTable();}
-function filterByStatus(v){fStatus=v;renderLeadsTable();}
-function filterByMode(v){fMode=v;renderLeadsTable();}
-
-function emptyHTML(msg='No leads found.'){return`<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div><div class="empty-txt">${msg}</div></div>`;}
-
-// ──────────────────────────────
-// PIPELINE VIEW
-// ──────────────────────────────
-function switchLeadTab(tab,el){
-  document.querySelectorAll('.tab-bar .tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('leads-table-view').style.display=tab==='table'?'block':'none';
-  document.getElementById('leads-pipeline-view').style.display=tab==='pipeline'?'block':'none';
-  if(tab==='pipeline')renderPipeline();
-}
-
-function renderPipeline(){
-  const stages=['Submitted','Quoted','Accepted','Completed','Lost'];
-  const stageColors={Submitted:'var(--accent)',Quoted:'var(--amber)',Accepted:'var(--violet)',Completed:'var(--green)',Lost:'var(--red)'};
-  document.getElementById('pipeline-cols').innerHTML=stages.map(s=>{
-    const sl=leads.filter(l=>l.status===s);
-    return`<div class="pcol">
-      <div class="pcol-header">
-        <div class="pcol-title" style="color:${stageColors[s]}">${s}</div>
-        <div class="pcol-count">${sl.length}</div>
-      </div>
-      ${sl.length?sl.map(l=>`
-        <div class="pcard" onclick="viewLead('${l.id}')">
-          <div class="pcard-id">${l.id.substring(0,12)}</div>
-          <div class="pcard-client">${l.client}</div>
-          <div class="pcard-route">${l.origin} &rarr; ${l.dest}</div>
-          <div class="pcard-footer">
-            <div class="pcard-val">${money(l.value)}</div>
-            ${bdg(l.mode,MC[l.mode]||'bs')}
-          </div>
-        </div>
-      `).join(''):`<div style="font-size:0.75rem;color:var(--text-3);text-align:center;padding:1rem">No leads</div>`}
-    </div>`;
+  if(!list.length){tb.innerHTML=`<tr><td colspan="10">${emptyH()}</td></tr>`;return;}
+  tb.innerHTML=list.map(l=>{
+    const collabs=collabsOf(l);
+    const pendingReqs=l.accessRequests.filter(r=>r.status==='pending').length;
+    return`<tr>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);font-weight:600">${l.id}</span></td>
+      <td><div style="font-weight:600;font-size:.8rem">${l.client}</div><div style="font-size:.67rem;color:var(--t3)">${l.contact||''}</div></td>
+      <td style="font-size:.76rem"><span style="font-weight:500">${l.origin}</span><br><span style="color:var(--t3)">&rarr; ${l.dest}</span></td>
+      <td>${bdg(l.mode,MC[l.mode]||'bs')}</td>
+      <td style="font-size:.75rem;color:var(--t2)">${l.source}</td>
+      <td>${bdg(l.status,SC[l.status]||'bs')}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--t2)">${money(l.value)}</td>
+      <td><div style="display:flex;align-items:center;gap:.28rem"><div class="av" style="width:22px;height:22px;font-size:.6rem;border-radius:4px">${l.owner[0]}</div><span style="font-size:.75rem">${l.owner}</span></div></td>
+      <td>
+        ${collabs.map(c=>`<span class="chip" style="margin-right:.2rem">${c.name.split(' ')[0]}</span>`).join('')}
+        ${pendingReqs?`<span class="chip chip-pending" style="cursor:pointer" onclick="openShare('${l.id}')">${pendingReqs} req</span>`:''}
+        ${!collabs.length&&!pendingReqs?`<span style="font-size:.68rem;color:var(--t3)">—</span>`:''}
+      </td>
+      <td><div style="display:flex;gap:.25rem">
+        <button class="bi" onclick="viewLead('${l.id}')" title="View">&#9654;</button>
+        <button class="bi" onclick="editLead('${l.id}')" title="Edit">&#9998;</button>
+        <button class="bi" onclick="openQuote('${l.id}')" title="Add Quote">&#36;</button>
+        <button class="bi" onclick="openShare('${l.id}')" title="Manage Access">&#8599;</button>
+        <button class="bi del" onclick="delLead('${l.id}')" title="Delete">&times;</button>
+      </div></td>
+    </tr>`;
   }).join('');
 }
 
-// ──────────────────────────────
-// ADD / EDIT LEAD
-// ──────────────────────────────
-function clearForm(){['f-client','f-contact','f-origin','f-dest','f-cargo','f-notes'].forEach(id=>document.getElementById(id).value='');['f-container','f-mode','f-source'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-status').value='Submitted';document.getElementById('f-value').value='';}
-function openAdd(){editId=null;document.getElementById('m-lead-title').textContent='Add New Lead';clearForm();openM('m-lead');}
-function editLead(id){
-  const l=leads.find(x=>x.id===id);if(!l)return;editId=id;
-  document.getElementById('m-lead-title').textContent='Edit Lead';
-  document.getElementById('f-client').value=l.client;document.getElementById('f-contact').value=l.contact||'';
-  document.getElementById('f-origin').value=l.origin;document.getElementById('f-dest').value=l.dest;
-  document.getElementById('f-cargo').value=l.cargo||'';document.getElementById('f-container').value=l.container||'';
-  document.getElementById('f-mode').value=l.mode;document.getElementById('f-source').value=l.source;
-  document.getElementById('f-status').value=l.status;document.getElementById('f-value').value=l.value||'';
-  document.getElementById('f-notes').value=l.notes||'';openM('m-lead');
+// ════════════════════════════════════════════════════════════
+// MY WORKSPACE (employee)
+// ════════════════════════════════════════════════════════════
+function renderMyWork(){
+  // My own leads
+  const mine=leads.filter(l=>l.owner===user);
+  const tb1=document.getElementById('myleads-tbody');
+  if(!mine.length){tb1.innerHTML=`<tr><td colspan="9">${emptyH('No leads yet. Create your first lead.')}</td></tr>`;}
+  else tb1.innerHTML=mine.map(l=>{
+    const collabs=collabsOf(l);
+    const pendingReqs=l.accessRequests.filter(r=>r.status==='pending').length;
+    return`<tr>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);font-weight:600">${l.id}</span></td>
+      <td style="font-weight:600;font-size:.8rem">${l.client}</td>
+      <td style="font-size:.75rem">${l.origin} &rarr; ${l.dest}</td>
+      <td>${bdg(l.mode,MC[l.mode]||'bs')}</td>
+      <td>${bdg(l.status,SC[l.status]||'bs')}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.75rem">${money(l.value)}</td>
+      <td>${collabs.map(c=>`<span class="chip" style="margin-right:.2rem">${c.name.split(' ')[0]}</span>`).join('')||'<span style="font-size:.68rem;color:var(--t3)">None</span>'}</td>
+      <td>${pendingReqs?`<button class="btn btn-sm" style="background:var(--od);color:var(--orange);border:1px solid var(--ob)" onclick="openShare('${l.id}')">${pendingReqs} pending</button>`:`<span style="font-size:.68rem;color:var(--t3)">—</span>`}</td>
+      <td><div style="display:flex;gap:.25rem">
+        <button class="bi" onclick="viewLead('${l.id}')">&#9654;</button>
+        <button class="bi" onclick="editLead('${l.id}')">&#9998;</button>
+        <button class="bi" onclick="openQuote('${l.id}')">&#36;</button>
+        <button class="bi" onclick="openShare('${l.id}')" title="Share">&#8599;</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+
+  // Leads I collaborate on (invited or approved)
+  const collab=leads.filter(l=>l.owner!==user&&(l.invitees.includes(user)||l.accessRequests.some(r=>r.by===user&&r.status==='approved')));
+  const tb2=document.getElementById('collab-tbody');
+  if(!collab.length){tb2.innerHTML=`<tr><td colspan="7">${emptyH('No shared leads yet. Browse Discover Leads to request access.')}</td></tr>`;}
+  else tb2.innerHTML=collab.map(l=>`<tr>
+    <td><span style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);font-weight:600">${l.id}</span></td>
+    <td style="font-weight:600;font-size:.8rem">${l.client}</td>
+    <td style="font-size:.75rem">${l.origin} &rarr; ${l.dest}</td>
+    <td>${bdg(l.status,SC[l.status]||'bs')}</td>
+    <td style="font-size:.76rem">${l.owner}</td>
+    <td>${myAccessLabel(l)}</td>
+    <td><div style="display:flex;gap:.25rem">
+      <button class="bi" onclick="viewLead('${l.id}')">&#9654;</button>
+      <button class="bi" onclick="editLead('${l.id}')">&#9998;</button>
+      <button class="bi" onclick="openQuote('${l.id}')">&#36;</button>
+    </div></td>
+  </tr>`).join('');
 }
-function saveLead(){
-  const client=document.getElementById('f-client').value.trim(),origin=document.getElementById('f-origin').value.trim(),dest=document.getElementById('f-dest').value.trim(),cargo=document.getElementById('f-cargo').value.trim(),mode=document.getElementById('f-mode').value,source=document.getElementById('f-source').value;
-  if(!client||!origin||!dest||!cargo||!mode||!source)return toast('Fill all required fields','err');
-  const data={client,contact:document.getElementById('f-contact').value,origin,dest,cargo,container:document.getElementById('f-container').value,mode,source,status:document.getElementById('f-status').value,value:Number(document.getElementById('f-value').value)||0,notes:document.getElementById('f-notes').value};
-  if(editId){Object.assign(leads.find(l=>l.id===editId),data);toast('Lead updated successfully');}
-  else{leads.unshift({id:'WRT-'+Date.now(),...data,by:user,date:new Date().toISOString().split('T')[0],quotes:[]});toast('Lead added successfully');}
+
+// ════════════════════════════════════════════════════════════
+// DISCOVER LEADS (employee — browse + request access)
+// ════════════════════════════════════════════════════════════
+function renderDiscover(){
+  const list=leads.filter(l=>
+    (!fDiscover||[l.client,l.origin,l.dest,l.cargo].some(s=>s?.toLowerCase().includes(fDiscover.toLowerCase())))&&
+    (!fDiscoverSt||l.status===fDiscoverSt)
+  );
+  const tb=document.getElementById('discover-tbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="8">${emptyH()}</td></tr>`;return;}
+  tb.innerHTML=list.map(l=>{
+    const isMine=l.owner===user;
+    const isInvited=l.invitees.includes(user);
+    const req=l.accessRequests.find(r=>r.by===user);
+    const isApproved=req&&req.status==='approved';
+    const isPending=req&&req.status==='pending';
+    let accessCell='', actionCell='';
+    if(isMine){accessCell='<span class="chip">Owner</span>';actionCell=`<button class="bi" onclick="viewLead('${l.id}')">&#9654;</button>`;}
+    else if(isInvited){accessCell='<span class="chip">Invited</span>';actionCell=`<button class="bi" onclick="viewLead('${l.id}')">&#9654;</button><button class="bi" onclick="editLead('${l.id}')">&#9998;</button>`;}
+    else if(isApproved){accessCell='<span class="chip">Approved</span>';actionCell=`<button class="bi" onclick="viewLead('${l.id}')">&#9654;</button><button class="bi" onclick="editLead('${l.id}')">&#9998;</button>`;}
+    else if(isPending){accessCell='<span class="chip chip-pending">Requested</span>';actionCell=`<button class="bi" onclick="viewLead('${l.id}')">&#9654;</button>`;}
+    else{accessCell='<span class="chip chip-view">View only</span>';actionCell=`<button class="bi" onclick="viewLead('${l.id}')">&#9654;</button><button class="btn btn-outline btn-sm" onclick="openReqAccess('${l.id}')">Request Access</button>`;}
+    return`<tr>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);font-weight:600">${l.id}</span></td>
+      <td style="font-weight:600;font-size:.8rem">${l.client}</td>
+      <td style="font-size:.75rem">${l.origin} &rarr; ${l.dest}</td>
+      <td>${bdg(l.mode,MC[l.mode]||'bs')}</td>
+      <td>${bdg(l.status,SC[l.status]||'bs')}</td>
+      <td style="font-size:.76rem">${l.owner}</td>
+      <td>${accessCell}</td>
+      <td><div style="display:flex;gap:.25rem;align-items:center">${actionCell}</div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ════════════════════════════════════════════════════════════
+function renderNotifications(){
+  const list=document.getElementById('notif-list');
+  let items=[];
+
+  if(role==='admin'){
+    // Admin sees ALL pending requests
+    leads.forEach(l=>l.accessRequests.filter(r=>r.status==='pending').forEach(r=>items.push({type:'req',lead:l,req:r})));
+    // And all approved/rejected for context
+    leads.forEach(l=>l.accessRequests.filter(r=>r.status!=='pending').forEach(r=>items.push({type:'resolved',lead:l,req:r})));
+  } else {
+    // Employee: requests on their own leads
+    leads.filter(l=>l.owner===user).forEach(l=>l.accessRequests.filter(r=>r.status==='pending').forEach(r=>items.push({type:'req',lead:l,req:r})));
+    // Status of their own requests
+    leads.forEach(l=>{const req=l.accessRequests.find(r=>r.by===user&&r.status!=='pending');if(req)items.push({type:'my-resolved',lead:l,req});});
+    // Invitations they received
+    leads.filter(l=>l.invitees.includes(user)).forEach(l=>items.push({type:'invite',lead:l}));
+  }
+
+  if(!items.length){list.innerHTML=`<div class="empty"><div class="empty-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div><div class="empty-t">No notifications</div></div>`;return;}
+
+  list.innerHTML=items.map(item=>{
+    if(item.type==='req'){
+      return`<div class="notif-card urgent">
+        <div class="ni" style="background:var(--amd)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/><line x1="20" y1="8" x2="20" y2="14"/></svg></div>
+        <div class="nb">
+          <div class="nb-title"><strong>${item.req.by}</strong> requested edit access to "${item.lead.client}"</div>
+          <div class="nb-meta">Lead ${item.lead.id} &nbsp;&middot;&nbsp; ${item.lead.origin} &rarr; ${item.lead.dest} &nbsp;&middot;&nbsp; ${item.req.date}</div>
+          <div class="nb-meta" style="margin-top:.18rem">Reason: <em>"${item.req.reason||'Not specified'}"</em></div>
+          <div class="nb-actions">
+            <button class="btn btn-green btn-sm" onclick="resolveReq('${item.lead.id}','${item.req.by}','approved')">Approve Access</button>
+            <button class="btn btn-red btn-sm" onclick="resolveReq('${item.lead.id}','${item.req.by}','rejected')">Reject</button>
+            <button class="btn btn-ghost btn-sm" onclick="viewLead('${item.lead.id}')">View Lead</button>
+          </div>
+        </div>
+      </div>`;
+    }
+    if(item.type==='resolved'){
+      const ok=item.req.status==='approved';
+      return`<div class="notif-card">
+        <div class="ni" style="background:${ok?'var(--gd)':'var(--rd)'}"><svg viewBox="0 0 24 24" fill="none" stroke="${ok?'var(--green)':'var(--red)'}" stroke-width="2" stroke-linecap="round">${ok?'<polyline points="20 6 9 17 4 12"/>':'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'}</svg></div>
+        <div class="nb">
+          <div class="nb-title">${item.req.by}'s request was <strong style="color:${ok?'var(--green)':'var(--red)'}">${item.req.status}</strong> — "${item.lead.client}"</div>
+          <div class="nb-meta">Lead ${item.lead.id} &nbsp;&middot;&nbsp; ${item.req.date}</div>
+        </div>
+      </div>`;
+    }
+    if(item.type==='my-resolved'){
+      const ok=item.req.status==='approved';
+      return`<div class="notif-card">
+        <div class="ni" style="background:${ok?'var(--gd)':'var(--rd)'}"><svg viewBox="0 0 24 24" fill="none" stroke="${ok?'var(--green)':'var(--red)'}" stroke-width="2" stroke-linecap="round">${ok?'<polyline points="20 6 9 17 4 12"/>':'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'}</svg></div>
+        <div class="nb">
+          <div class="nb-title">Your access request was <strong style="color:${ok?'var(--green)':'var(--red)'}">${item.req.status}</strong></div>
+          <div class="nb-meta">Lead: ${item.lead.client} (${item.lead.origin} &rarr; ${item.lead.dest})</div>
+          ${ok?`<div class="nb-actions"><button class="btn btn-outline btn-sm" onclick="editLead('${item.lead.id}')">Open Lead</button></div>`:''}
+        </div>
+      </div>`;
+    }
+    if(item.type==='invite'){
+      return`<div class="notif-card">
+        <div class="ni" style="background:var(--ad)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.17 9.54"/><path d="M16 11.37A4 4 0 1112.63 8"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+        <div class="nb">
+          <div class="nb-title">You were invited to collaborate on "${item.lead.client}"</div>
+          <div class="nb-meta">Lead ${item.lead.id} &nbsp;&middot;&nbsp; Owner: ${item.lead.owner} &nbsp;&middot;&nbsp; ${item.lead.origin} &rarr; ${item.lead.dest}</div>
+          <div class="nb-actions"><button class="btn btn-blue btn-sm" onclick="editLead('${item.lead.id}')">Open Lead</button><button class="btn btn-ghost btn-sm" onclick="viewLead('${item.lead.id}')">View Details</button></div>
+        </div>
+      </div>`;
+    }
+    return'';
+  }).join('');
+}
+
+function resolveReq(leadId,reqBy,status){
+  const l=leads.find(x=>x.id===leadId); if(!l) return;
+  const r=l.accessRequests.find(x=>x.by===reqBy); if(!r) return;
+  r.status=status;
+  if(status==='approved' && !l.invitees.includes(reqBy)) l.invitees.push(reqBy);
+  saveData();
+  toast(status==='approved'?`Access granted to ${reqBy}`:`Request from ${reqBy} rejected`, status==='approved'?'ok':'err');
+  renderNotifications();
+  refreshDots();
+}
+
+// ════════════════════════════════════════════════════════════
+// CREATE / EDIT LEAD
+// ════════════════════════════════════════════════════════════
+function openCreate(){
+  editId=null; invSet=new Set();
+  document.getElementById('ml-title').textContent='Create New Lead';
+  document.getElementById('ml-save-btn').textContent='Create Lead';
+  ['f-client','f-contact','f-origin','f-dest','f-cargo','f-notes'].forEach(id=>document.getElementById(id).value='');
+  ['f-cont','f-mode','f-src'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-status').value='Submitted';
+  document.getElementById('f-value').value='';
+
+  const wrap=document.getElementById('invite-wrap');
+  if(role==='admin'){
+    wrap.style.display='block';
+    buildInviteGrid(TEAM.filter(e=>e!==user));
+  } else wrap.style.display='none';
+
+  openM('m-lead');
+}
+
+function editLead(id){
+  const l=leads.find(x=>x.id===id); if(!l) return;
+  editId=id; invSet=new Set(l.invitees);
+  document.getElementById('ml-title').textContent='Edit Lead';
+  document.getElementById('ml-save-btn').textContent='Save Changes';
+  document.getElementById('f-client').value=l.client;
+  document.getElementById('f-contact').value=l.contact||'';
+  document.getElementById('f-origin').value=l.origin;
+  document.getElementById('f-dest').value=l.dest;
+  document.getElementById('f-cargo').value=l.cargo||'';
+  document.getElementById('f-cont').value=l.container||'';
+  document.getElementById('f-mode').value=l.mode;
+  document.getElementById('f-src').value=l.source;
+  document.getElementById('f-status').value=l.status;
+  document.getElementById('f-value').value=l.value||'';
+  document.getElementById('f-notes').value=l.notes||'';
+
+  const wrap=document.getElementById('invite-wrap');
+  if(role==='admin'){
+    wrap.style.display='block';
+    buildInviteGrid(TEAM.filter(e=>e!==l.owner));
+  } else wrap.style.display='none';
+
+  openM('m-lead');
+}
+
+function buildInviteGrid(employees){
+  document.getElementById('inv-grid').innerHTML=employees.map(e=>`
+    <div class="inv-card ${invSet.has(e)?'on':''}" id="ic-${e.replace(/ /g,'-')}" onclick="toggleInv('${e}')">
+      <div class="inv-tick"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="ic-av" style="color:var(--accent)">${e[0]}</div>
+      <div class="ic-name">${e}</div>
+      <div class="ic-role">Executive</div>
+    </div>`).join('');
+}
+
+function toggleInv(emp){
+  const card=document.getElementById('ic-'+emp.replace(/ /g,'-'));
+  if(invSet.has(emp)){invSet.delete(emp);card.classList.remove('on');}
+  else{invSet.add(emp);card.classList.add('on');}
+}
+
+async function saveLead(){
+  const client=document.getElementById('f-client').value.trim();
+  const origin=document.getElementById('f-origin').value.trim();
+  const dest=document.getElementById('f-dest').value.trim();
+  const cargo=document.getElementById('f-cargo').value.trim();
+  const mode=document.getElementById('f-mode').value;
+  const src=document.getElementById('f-src').value;
+  if(!client||!origin||!dest||!cargo||!mode||!src) return toast('Fill all required fields','err');
+
+  const data={client,contact:document.getElementById('f-contact').value,origin,dest,cargo,container:document.getElementById('f-cont').value,mode,source:src,status:document.getElementById('f-status').value,value:Number(document.getElementById('f-value').value)||0,notes:document.getElementById('f-notes').value,invitees:[...invSet]};
+
+  if(editId){
+    const old=leads.find(l=>l.id===editId);
+    // Detect newly invited employees and notify them
+    const newInvites=data.invitees.filter(e=>!old.invitees.includes(e));
+    Object.assign(old,data);
+    await saveData();
+    toast(newInvites.length?`Lead updated. ${newInvites.length} new collaborator(s) added.`:'Lead updated');
+  } else {
+    const newLead={id:'WRT-'+String(Date.now()).slice(-6),...data,owner:user,accessRequests:[],quotes:[],date:new Date().toISOString().split('T')[0]};
+    leads.unshift(newLead);
+    await saveData();
+    const invCount=invSet.size;
+    toast(invCount?`Lead created and shared with ${invCount} employee${invCount>1?'s':''}!`:'Lead created successfully','ok');
+  }
+
   closeM('m-lead');
   const ap=document.querySelector('.page.active')?.id;
-  if(ap==='page-leads')renderLeadsTable();
-  if(ap==='page-myleads')renderMyLeads();
-  if(ap==='page-dashboard')renderDash();
+  if(ap==='page-leads') renderLeads();
+  if(ap==='page-mywork') renderMyWork();
+  if(ap==='page-dashboard') renderDash();
+  refreshDots();
 }
-function delLead(id){if(!confirm('Delete this lead permanently?'))return;leads=leads.filter(l=>l.id!==id);renderLeadsTable();toast('Lead deleted');}
 
-// ──────────────────────────────
+async function delLead(id){
+  if(!confirm('Delete this lead permanently?')) return;
+  leads=leads.filter(l=>l.id!==id);
+  await saveData();
+  renderLeads();
+  toast('Lead deleted');
+}
+
+// ════════════════════════════════════════════════════════════
 // VIEW LEAD
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
 function viewLead(id){
-  const l=leads.find(x=>x.id===id);if(!l)return;
-  document.getElementById('m-detail-title').textContent=l.client+' — '+l.id.substring(0,12);
-  const quotes=l.quotes.length?l.quotes.map(q=>`
-    <div class="quote-item">
-      <div class="qi-top">
-        <div class="qi-price">${q.cur} ${Number(q.val).toLocaleString('en-IN')}</div>
-        ${bdg(l.status==='Completed'||l.status==='Accepted'?'Accepted':'Submitted',l.status==='Completed'||l.status==='Accepted'?'ba':'bs')}
-      </div>
-      <div class="qi-meta">ETA: ${q.eta||'&mdash;'} &nbsp;&middot;&nbsp; By: ${q.by} &nbsp;&middot;&nbsp; ${q.date}</div>
-      ${q.notes?`<div style="font-size:0.75rem;color:var(--text-3);margin-top:0.35rem">${q.notes}</div>`:''}
-    </div>
-  `).join(''):emptyHTML('No quotes submitted yet.');
-  document.getElementById('m-detail-body').innerHTML=`
-    <div class="detail-grid">
-      <div class="detail-box">
+  const l=leads.find(x=>x.id===id); if(!l) return;
+  const editable=canEdit(l);
+  const req=l.accessRequests.find(r=>r.by===user);
+  const collabs=collabsOf(l);
+  document.getElementById('md-title').textContent=l.client+' / '+l.id;
+
+  let banner='';
+  if(role==='employee'&&!editable&&!req){
+    banner=`<div class="access-banner banner-amber"><span>You have <strong>view-only</strong> access to this lead.</span><button class="btn btn-outline btn-sm" onclick="closeM('m-detail');setTimeout(()=>openReqAccess('${l.id}'),100)">Request Edit Access</button></div>`;
+  } else if(role==='employee'&&req&&req.status==='pending'&&!editable){
+    banner=`<div class="access-banner banner-blue"><span>Your access request is pending approval from <strong>${l.owner}</strong>.</span></div>`;
+  } else if(editable&&l.owner!==user&&role==='employee'){
+    banner=`<div class="access-banner banner-green"><span>You have <strong>edit access</strong> to this lead.</span></div>`;
+  }
+
+  document.getElementById('md-body').innerHTML=`
+    ${banner}
+    <div class="dg">
+      <div class="db">
         <div class="df"><div class="dk">Client</div><div class="dv">${l.client}</div></div>
         <div class="df"><div class="dk">Contact</div><div class="dv">${l.contact||'&mdash;'}</div></div>
-        <div class="df"><div class="dk">Cargo / Product</div><div class="dv">${l.cargo||'&mdash;'}</div></div>
+        <div class="df"><div class="dk">Cargo</div><div class="dv">${l.cargo||'&mdash;'}</div></div>
         <div class="df"><div class="dk">Container</div><div class="dv">${l.container||'&mdash;'}</div></div>
       </div>
-      <div class="detail-box">
+      <div class="db">
         <div class="df"><div class="dk">Route</div><div class="dv">${l.origin} &rarr; ${l.dest}</div></div>
-        <div class="df"><div class="dk">Shipment Mode</div><div class="dv">${bdg(l.mode,MC[l.mode])}</div></div>
+        <div class="df"><div class="dk">Mode</div><div class="dv">${bdg(l.mode,MC[l.mode])}</div></div>
         <div class="df"><div class="dk">Status</div><div class="dv">${bdg(l.status,SC[l.status])}</div></div>
         <div class="df"><div class="dk">Est. Value</div><div class="dv" style="font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:700">${money(l.value)}</div></div>
       </div>
     </div>
-    <div class="detail-box" style="margin-bottom:1.25rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem">
+    <div class="db" style="margin-bottom:.9rem">
       <div class="df"><div class="dk">Lead Source</div><div class="dv">${l.source}</div></div>
-      <div class="df"><div class="dk">Assigned To</div><div class="dv">${l.by} &nbsp;&middot;&nbsp; ${l.date}</div></div>
-      ${l.notes?`<div class="df"><div class="dk">Remarks</div><div class="dv" style="color:var(--text-2)">${l.notes}</div></div>`:''}
+      <div class="df"><div class="dk">Owner</div><div class="dv">${l.owner} &nbsp;&middot;&nbsp; ${l.date}</div></div>
+      <div class="df"><div class="dk">Collaborators</div><div class="dv">${collabs.length?collabs.map(c=>`<span class="chip" style="margin-right:.2rem">${c.name}</span>`).join(''):'None'}</div></div>
+      ${l.notes?`<div class="df"><div class="dk">Remarks</div><div class="dv" style="color:var(--t2)">${l.notes}</div></div>`:''}
     </div>
-    <div style="font-size:0.82rem;font-weight:700;margin-bottom:0.75rem">Quotes (${l.quotes.length})</div>
-    ${quotes}
-    <div style="margin-top:1rem"><button class="btn btn-outline btn-sm" onclick="openQuoteFromDetail('${l.id}')">+ Submit New Quote</button></div>
+    <div style="font-size:.8rem;font-weight:700;margin-bottom:.55rem">Quotes (${l.quotes.length})</div>
+    ${l.quotes.length?l.quotes.map(q=>`<div class="qi"><div class="qi-top"><div class="qi-price">${q.cur} ${Number(q.val).toLocaleString('en-IN')}</div>${bdg('Submitted','bs')}</div><div class="qi-meta">ETA: ${q.eta||'&mdash;'} &nbsp;&middot;&nbsp; By: ${q.by} &nbsp;&middot;&nbsp; ${q.date}</div>${q.notes?`<div style="font-size:.7rem;color:var(--t3);margin-top:.25rem">${q.notes}</div>`:''}</div>`).join(''):emptyH('No quotes yet.')}
+    ${editable?`<div style="margin-top:.75rem;display:flex;gap:.4rem">
+      <button class="btn btn-outline btn-sm" onclick="closeM('m-detail');setTimeout(()=>openQuote('${l.id}'),120)">+ Add Quote</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeM('m-detail');setTimeout(()=>editLead('${l.id}'),120)">Edit Lead</button>
+      ${(l.owner===user||role==='admin')?`<button class="btn btn-ghost btn-sm" onclick="closeM('m-detail');setTimeout(()=>openShare('${l.id}'),120)">Manage Access &#8599;</button>`:''}
+    </div>`:''}
   `;
   openM('m-detail');
 }
 
-function openQuoteFromDetail(id){closeM('m-detail');setTimeout(()=>openQuote(id),150);}
+// ════════════════════════════════════════════════════════════
+// REQUEST ACCESS
+// ════════════════════════════════════════════════════════════
+function openReqAccess(id){reqLeadId=id;document.getElementById('req-reason').value='';openM('m-req-access');}
 
-// ──────────────────────────────
-// QUOTES
-// ──────────────────────────────
-function openQuote(id){quoteId=id;['q-val','q-eta','q-notes'].forEach(f=>document.getElementById(f).value='');document.getElementById('q-cur').value='INR';openM('m-quote');}
-function saveQuote(){
-  const v=document.getElementById('q-val').value;if(!v)return toast('Enter a quote value','err');
-  const l=leads.find(x=>x.id===quoteId);if(!l)return;
-  l.quotes.push({val:Number(v),cur:document.getElementById('q-cur').value,eta:document.getElementById('q-eta').value,notes:document.getElementById('q-notes').value,by:user,date:new Date().toISOString().split('T')[0]});
-  if(l.status==='Submitted')l.status='Quoted';
-  closeM('m-quote');toast('Quote submitted');
+async function submitReq(){
+  const l=leads.find(x=>x.id===reqLeadId); if(!l) return;
+  const reason=document.getElementById('req-reason').value.trim();
+  if(!reason) return toast('Please provide a reason','err');
+  if(l.accessRequests.some(r=>r.by===user&&r.status==='pending')) return toast('You already have a pending request','err');
+  l.accessRequests.push({by:user,reason,status:'pending',date:new Date().toISOString().split('T')[0]});
+  await saveData();
+  closeM('m-req-access');
+  toast(`Request sent to ${l.owner}. They'll be notified.`,'info');
+  refreshDots();
   const ap=document.querySelector('.page.active')?.id;
-  if(ap==='page-leads')renderLeadsTable();
-  if(ap==='page-myleads')renderMyLeads();
+  if(ap==='page-discover') renderDiscover();
+  if(ap==='page-mywork') renderMyWork();
 }
 
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
+// SHARE / MANAGE ACCESS MODAL (owner or admin)
+// ════════════════════════════════════════════════════════════
+function openShare(id){
+  shareLeadId=id;
+  renderShareModal();
+  openM('m-share');
+}
+
+function renderShareModal(){
+  const l=leads.find(x=>x.id===shareLeadId); if(!l) return;
+  const collabs=collabsOf(l);
+  const pending=l.accessRequests.filter(r=>r.status==='pending');
+  const shareCode=`${l.id}`;
+
+  document.getElementById('ms-body').innerHTML=`
+    <!-- Lead summary -->
+    <div class="share-box">
+      <div class="share-box-top">
+        <div class="share-box-title">Lead Share &amp; Access</div>
+        <div class="share-code">${shareCode}</div>
+      </div>
+      <div class="share-desc"><strong>${l.client}</strong> &nbsp;&middot;&nbsp; ${l.origin} &rarr; ${l.dest} &nbsp;&middot;&nbsp; ${bdg(l.status,SC[l.status]||'bs')}<br>Owner: <strong>${l.owner}</strong></div>
+      <div class="share-link-row">
+        <input class="share-link-inp" id="share-inp" value="Lead ID: ${shareCode} — share this with colleagues so they can find and request access" readonly>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('share-inp').select();document.execCommand('copy');toast('Copied!','info')">Copy</button>
+      </div>
+    </div>
+
+    <!-- Current collaborators -->
+    <div class="sec-lbl" style="margin-top:0">Current Collaborators (${collabs.length})</div>
+    ${collabs.length?`<div class="collab-list">${collabs.map(c=>`
+      <div style="display:flex;align-items:center;gap:.38rem;background:var(--gd);border:1px solid var(--gb);border-radius:6px;padding:.28rem .55rem">
+        <div class="av" style="width:20px;height:20px;font-size:.55rem;border-radius:4px">${c.name[0]}</div>
+        <span style="font-size:.74rem;font-weight:600;color:var(--green)">${c.name}</span>
+        <span style="font-size:.65rem;color:var(--t3)">${c.type==='invited'?'(invited)':'(approved)'}</span>
+        ${(role==='admin'||l.owner===user)?`<button onclick="removeCollab('${l.id}','${c.name}')" style="margin-left:auto;font-size:.65rem;color:var(--red);background:none;border:none;cursor:pointer">Remove</button>`:''}
+      </div>`).join('')}</div>`:
+    `<div style="font-size:.76rem;color:var(--t3);margin-bottom:1rem">No collaborators yet.</div>`}
+
+    <!-- ★ ADMIN QUICK INVITE ★ -->
+    ${role==='admin'?`
+    <div class="sec-lbl">Quick Invite</div>
+    <div style="font-size:.72rem;color:var(--t3);margin-bottom:.5rem">Add employees directly without waiting for a request.</div>
+    <div class="inv-grid" id="quick-inv-grid" style="grid-template-columns:repeat(4,1fr)"></div>
+    <div style="margin-top:.75rem;display:flex;justify-content:flex-end">
+      <button class="btn btn-blue btn-sm" onclick="applyQuickInvite('${l.id}')">Add Selected</button>
+    </div>`:''}
+
+    <!-- Pending requests -->
+    <div class="sec-lbl">Pending Requests (${pending.length})</div>
+    ${pending.length?pending.map(r=>`
+      <div class="notif-card urgent" style="margin-bottom:.5rem">
+        <div class="ni" style="background:var(--amd)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+        <div class="nb">
+          <div class="nb-title"><strong>${r.by}</strong> wants edit access</div>
+          <div class="nb-meta">"${r.reason||'No reason given'}" &nbsp;&middot;&nbsp; ${r.date}</div>
+          <div class="nb-actions">
+            <button class="btn btn-green btn-sm" onclick="resolveReq('${l.id}','${r.by}','approved');renderShareModal()">Approve</button>
+            <button class="btn btn-red btn-sm" onclick="resolveReq('${l.id}','${r.by}','rejected');renderShareModal()">Reject</button>
+          </div>
+        </div>
+      </div>`).join(''):`<div style="font-size:.76rem;color:var(--t3)">No pending requests.</div>`}
+  `;
+
+  // Build quick invite grid for admin
+  if(role==='admin'){
+    const l2=leads.find(x=>x.id===shareLeadId);
+    const already=[l2.owner,...l2.invitees,...l2.accessRequests.filter(r=>r.status==='approved').map(r=>r.by)];
+    const available=TEAM.filter(e=>!already.includes(e));
+    const grid=document.getElementById('quick-inv-grid');
+    if(grid) grid.innerHTML=available.length?available.map(e=>`
+      <div class="inv-card" id="qi-${e.replace(/ /g,'-')}" onclick="this.classList.toggle('on')">
+        <div class="inv-tick"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="ic-av">${e[0]}</div>
+        <div class="ic-name">${e}</div>
+      </div>`).join(''):`<div style="font-size:.75rem;color:var(--t3);grid-column:1/-1">All team members already have access.</div>`;
+  }
+}
+
+async function applyQuickInvite(leadId){
+  const l=leads.find(x=>x.id===leadId); if(!l) return;
+  const selected=TEAM.filter(e=>{const c=document.getElementById('qi-'+e.replace(/ /g,'-'));return c&&c.classList.contains('on');});
+  if(!selected.length) return toast('Select at least one employee','err');
+  selected.forEach(e=>{if(!l.invitees.includes(e))l.invitees.push(e);});
+  await saveData();
+  toast(`Invited ${selected.length} employee${selected.length>1?'s':''}!`,'ok');
+  renderShareModal();
+  refreshDots();
+}
+
+async function removeCollab(leadId,emp){
+  const l=leads.find(x=>x.id===leadId); if(!l) return;
+  l.invitees=l.invitees.filter(e=>e!==emp);
+  l.accessRequests=l.accessRequests.filter(r=>r.by!==emp);
+  await saveData();
+  toast(`${emp} removed from lead`,'ok');
+  renderShareModal();
+}
+
+// ════════════════════════════════════════════════════════════
+// QUOTES
+// ════════════════════════════════════════════════════════════
+function openQuote(id){quoteId=id;['q-val','q-eta','q-notes'].forEach(f=>document.getElementById(f).value='');document.getElementById('q-cur').value='INR';openM('m-quote');}
+
+async function saveQuote(){
+  const v=document.getElementById('q-val').value; if(!v) return toast('Enter a value','err');
+  const l=leads.find(x=>x.id===quoteId); if(!l) return;
+  l.quotes.push({val:Number(v),cur:document.getElementById('q-cur').value,eta:document.getElementById('q-eta').value,notes:document.getElementById('q-notes').value,by:user,date:new Date().toISOString().split('T')[0]});
+  if(l.status==='Submitted') l.status='Quoted';
+  await saveData();
+  closeM('m-quote');
+  toast('Quote submitted');
+  const ap=document.querySelector('.page.active')?.id;
+  if(ap==='page-leads') renderLeads();
+  if(ap==='page-mywork') renderMyWork();
+  if(ap==='page-discover') renderDiscover();
+}
+
+// ════════════════════════════════════════════════════════════
 // MY ANALYTICS
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
 function renderMyAnalytics(){
-  const ml=leads.filter(l=>l.by===user),done=ml.filter(l=>l.status==='Completed').length,rate=ml.length?Math.round(done/ml.length*100):0,val=ml.reduce((s,l)=>s+(l.value||0),0);
+  const ml=leads.filter(l=>l.owner===user), done=ml.filter(l=>l.status==='Completed').length;
+  const rate=ml.length?Math.round(done/ml.length*100):0, val=ml.reduce((s,l)=>s+(l.value||0),0);
   document.getElementById('my-stats').innerHTML=[
-    {v:ml.length,l:'My Total Leads'},{v:done,l:'Completed'},{v:rate+'%',l:'Conversion Rate'},{v:'&#8377;'+(val/1000).toFixed(0)+'K',l:'My Pipeline'},
-  ].map(s=>`<div class="stat-card"><div class="sc-val">${s.v}</div><div class="sc-lbl">${s.l}</div></div>`).join('');
-  const st={Submitted:0,Quoted:0,Accepted:0,Completed:0,Lost:0};
-  const mo={Air:0,Sea:0,Road:0,Multimodal:0};
+    {v:ml.length,l:'My Leads'},{v:done,l:'Completed'},{v:rate+'%',l:'Conv. Rate'},{v:'&#8377;'+(val/1000).toFixed(0)+'K',l:'Pipeline'},
+  ].map(s=>`<div class="sc"><div class="sc-v">${s.v}</div><div class="sc-l">${s.l}</div></div>`).join('');
+  const st={Submitted:0,Quoted:0,Accepted:0,Completed:0,Lost:0},mo={Air:0,Sea:0,Road:0,Multimodal:0};
   ml.forEach(l=>{st[l.status]=(st[l.status]||0)+1;mo[l.mode]=(mo[l.mode]||0)+1;});
   const maxS=Math.max(...Object.values(st),1);
-  document.getElementById('my-status-bars').innerHTML=Object.entries(st).map(([k,v])=>`
-    <div class="bar-row"><div class="bar-lbl">${k}</div><div class="bar-track"><div class="bar-fill" style="width:${v/maxS*100}%;background:${SC_COL[k]}"></div></div><div class="bar-n">${v}</div></div>
-  `).join('');
+  document.getElementById('my-s-bars').innerHTML=Object.entries(st).map(([k,v])=>`<div class="br"><div class="br-lbl">${k}</div><div class="br-track"><div class="br-fill" style="width:${v/maxS*100}%;background:${SC_C[k]}"></div></div><div class="br-n">${v}</div></div>`).join('');
   const MC2={Air:'var(--violet)',Sea:'var(--teal)',Road:'var(--amber)',Multimodal:'var(--green)'};
   const maxM=Math.max(...Object.values(mo),1);
-  document.getElementById('my-mode-bars').innerHTML=Object.entries(mo).map(([k,v])=>`
-    <div class="bar-row"><div class="bar-lbl">${k}</div><div class="bar-track"><div class="bar-fill" style="width:${v/maxM*100}%;background:${MC2[k]}"></div></div><div class="bar-n">${v}</div></div>
-  `).join('');
+  document.getElementById('my-m-bars').innerHTML=Object.entries(mo).map(([k,v])=>`<div class="br"><div class="br-lbl">${k}</div><div class="br-track"><div class="br-fill" style="width:${v/maxM*100}%;background:${MC2[k]}"></div></div><div class="br-n">${v}</div></div>`).join('');
 }
 
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
 // REPORTS
-// ──────────────────────────────
+// ════════════════════════════════════════════════════════════
 function renderReports(){
-  document.getElementById('report-grid').innerHTML=team.map(emp=>{
-    const el=leads.filter(l=>l.by===emp),done=el.filter(l=>l.status==='Completed').length,lost=el.filter(l=>l.status==='Lost').length;
-    const rate=el.length?Math.round(done/el.length*100):0,val=el.reduce((s,l)=>s+(l.value||0),0);
-    const srcMap={};el.forEach(l=>srcMap[l.source]=(srcMap[l.source]||0)+1);
-    const top=Object.entries(srcMap).sort((a,b)=>b[1]-a[1])[0];
-    return`<div class="perf-card">
-      <div class="pc-top">
-        <div class="avatar">${emp[0]}</div>
-        <div><div class="pc-name">${emp}</div><div class="pc-role">Logistics Executive</div></div>
-      </div>
-      <div class="pc-nums">
-        <div class="pn-box"><div class="pn-val">${el.length}</div><div class="pn-lbl">Total</div></div>
-        <div class="pn-box"><div class="pn-val" style="color:var(--green)">${done}</div><div class="pn-lbl">Closed</div></div>
-        <div class="pn-box"><div class="pn-val" style="color:var(--red)">${lost}</div><div class="pn-lbl">Lost</div></div>
-      </div>
-      <div class="prog-wrap">
-        <div class="prog-head"><span class="prog-name">Conversion Rate</span><span class="prog-pct">${rate}%</span></div>
-        <div class="prog-track"><div class="prog-fill" style="width:${rate}%"></div></div>
-      </div>
-      <div style="font-size:0.72rem;color:var(--text-3);margin-top:0.5rem">
-        Pipeline: <span style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:600">&#8377;${(val/1000).toFixed(0)}K</span>
-        ${top?` &nbsp;&middot;&nbsp; Top: <strong style="color:var(--text-2)">${top[0]}</strong>`:''}
-      </div>
-    </div>`;
+  document.getElementById('report-grid').innerHTML=TEAM.slice(0,3).map(emp=>{
+    const el=leads.filter(l=>l.owner===emp), done=el.filter(l=>l.status==='Completed').length, lost=el.filter(l=>l.status==='Lost').length;
+    const rate=el.length?Math.round(done/el.length*100):0, val=el.reduce((s,l)=>s+(l.value||0),0);
+    const sm={};el.forEach(l=>sm[l.source]=(sm[l.source]||0)+1); const top=Object.entries(sm).sort((a,b)=>b[1]-a[1])[0];
+    return`<div class="pc"><div class="pc-top"><div class="av">${emp[0]}</div><div><div class="pc-name">${emp}</div><div class="pc-role">Logistics Executive</div></div></div><div class="pc-nums"><div class="pn"><div class="pn-v">${el.length}</div><div class="pn-l">Total</div></div><div class="pn"><div class="pn-v" style="color:var(--green)">${done}</div><div class="pn-l">Closed</div></div><div class="pn"><div class="pn-v" style="color:var(--red)">${lost}</div><div class="pn-l">Lost</div></div></div><div class="pw"><div class="pw-h"><span class="pw-n">Conversion</span><span class="pw-p">${rate}%</span></div><div class="pw-t"><div class="pw-f" style="width:${rate}%"></div></div></div><div style="font-size:.68rem;color:var(--t3);margin-top:.38rem">Pipeline: <span style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:600">&#8377;${(val/1000).toFixed(0)}K</span>${top?` &middot; <strong>${top[0]}</strong>`:''}</div></div>`;
   }).join('');
 }
 
-// ──────────────────────────────
-// MODAL HELPERS
-// ──────────────────────────────
-function openM(id){document.getElementById(id).classList.add('open');}
-function closeM(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+// ════════════════════════════════════════════════════════════
+// BOOT — load shared data then show login
+// ════════════════════════════════════════════════════════════
+(async()=>{
+  await loadData();
+  document.getElementById('loading').style.display='none';
+  document.getElementById('login').style.display='flex';
+})();
 </script>
 </body>
 </html>
