@@ -1056,5 +1056,46 @@ window.addEventListener('load', () => {
   // These are assigned from module scope via window.* assignments
 });
 </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Firebase App</title>
+</head>
+<body>
+
+    <h1>My Firebase App</h1>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+
+    <!-- Add the services you need -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+    <!-- Your Firebase Config & Code -->
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsUPszv_P8B6y7POHI-fwviKnOVwBIAGo",
+    authDomain: "wort-b848f.firebaseapp.com",
+    projectId: "wort-b848f",
+    storageBucket: "wort-b848f.firebasestorage.app",
+    messagingSenderId: "371737860780",
+    appId: "1:371737860780:web:ae8f0a088535b6d088dd09",
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Initialize services
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        console.log("Firebase is connected! 🔥");
+    </script>
+
 </body>
 </html>
