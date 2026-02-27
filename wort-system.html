@@ -69,7 +69,6 @@ onAuthStateChanged(auth, async user => {
 
 // ... Keep your enterApp, doLogin, and doRegister functions below this ...
 </script>
-
 // ── GLOBALS ──
 let currentUser = null, userProfile = null;
 let leads = [], allUsers = [];
@@ -236,7 +235,7 @@ function enterApp() {
   console.log("App Screen should now be visible.");
 }
 }
-
+<script>
 // ── FIRESTORE REAL-TIME ──
 function subscribeLeads() {
   if(unsubLeads)unsubLeads();
