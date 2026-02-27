@@ -7,16 +7,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js';
 import {
   getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
   signOut, onAuthStateChanged, updateProfile
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+} from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js';
 import {
   getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
   updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp,
   arrayUnion, arrayRemove
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js';
 
 // ══════════════════════════════════════════════════════════
 //  🔥 YOUR FIREBASE CONFIG — ACTIVE & CONNECTED
