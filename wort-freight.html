@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wort — Freight Configurator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0a1628; --navy-mid:#112240; --navy-light:#1c304f;
+  --gold:#c9a84c; --gold-light:#e8c97a; --gold-dim:rgba(201,168,76,0.1);
+  --white:#fff; --gray:#8892a4;
+  --green:#22c55e; --green-dim:rgba(34,197,94,0.09);
+  --blue:#60a5fa; --blue-dim:rgba(96,165,250,0.09);
+  --amber:#f59e0b;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+  --muted:rgba(255,255,255,0.38); --dim:rgba(255,255,255,0.58);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+/* ── INLINE SVG ICON SYSTEM ── */
+.ico{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.ico svg{display:block}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:rgba(7,16,31,0.98);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(201,168,76,0.18);
+  height:52px;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+}
+.tb-logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;letter-spacing:-0.5px}
+.tb-logo span{color:var(--gold)}
+.tb-pill{
+  display:flex;align-items:center;gap:0.7rem;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
+  border-radius:6px;padding:0.38rem 1rem;
+  font-family:'DM Mono',monospace;font-size:0.75rem;
+}
+.tb-pill .sep{color:var(--gold);opacity:0.5}
+.tb-pill .meta{color:var(--muted);font-size:0.68rem}
+.tb-right{display:flex;align-items:center;gap:0.85rem}
+.live-dot{
+  display:flex;align-items:center;gap:0.4rem;
+  font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:1.2px;
+  color:var(--green);background:var(--green-dim);
+  border:1px solid rgba(34,197,94,0.18);border-radius:4px;
+  padding:0.2rem 0.6rem;
+}
+.live-dot::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.tb-av{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--gold-dim);border:1px solid rgba(201,168,76,0.22);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:700;color:var(--gold);cursor:pointer;
+}
+
+/* ── LAYOUT ── */
+.shell{display:grid;grid-template-columns:1fr 308px;min-height:calc(100vh - 52px);align-items:start}
+.main-col{border-right:1px solid var(--border)}
+.side-col{
+  background:rgba(7,16,31,0.5);
+  position:sticky;top:52px;height:calc(100vh - 52px);
+  overflow-y:auto;display:flex;flex-direction:column;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;
+}
+
+/* ── SEARCH ── */
+.search-wrap{
+  background:linear-gradient(150deg,var(--navy-mid),#0c1d35);
+  border-bottom:1px solid var(--border);padding:1.25rem 1.75rem;
+}
+.s-eyebrow{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);opacity:0.75;margin-bottom:0.9rem}
+.s-fields{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:0.55rem;align-items:end}
+.s-field{display:flex;flex-direction:column;gap:0.25rem}
+.s-lbl{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.s-inp{
+  background:rgba(255,255,255,0.04);border:1.5px solid var(--border2);
+  border-radius:6px;padding:0.58rem 0.7rem;
+  font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;
+  color:var(--white);outline:none;transition:border-color 0.15s;
+}
+.s-inp:focus{border-color:var(--gold)}
+.s-inp::placeholder{color:var(--muted)}
+select.s-inp option{background:var(--navy-mid)}
+.s-btn{
+  background:var(--gold);color:var(--navy);border:none;border-radius:6px;
+  padding:0.58rem 1.35rem;height:38px;
+  font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;
+  cursor:pointer;transition:all 0.15s;white-space:nowrap;
+}
+.s-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+
+/* ── RATE BANNER ── */
+.rate-banner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.85rem 1.75rem;
+  background:rgba(201,168,76,0.04);border-bottom:1px solid rgba(201,168,76,0.1);
+}
+.rb-group{display:flex;align-items:baseline;gap:1rem}
+.rb-lbl{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.rb-range{font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:500;color:var(--gold);line-height:1}
+.rb-sub{font-size:0.6rem;color:var(--muted);margin-top:0.15rem}
+.rb-trend{
+  display:flex;align-items:center;gap:0.35rem;
+  font-family:'DM Mono',monospace;font-size:0.63rem;color:var(--green);
+}
+.rb-right{display:flex;align-items:center;gap:0.6rem}
+.c-stack{display:flex}
+.c-avatar{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--navy-light);border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:0.48rem;font-weight:700;color:var(--dim);
+  margin-left:-7px;
+}
+.c-avatar:first-child{margin-left:0}
+.c-count{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted)}
+
+/* ── MAP ── */
+.map-wrap{
+  height:200px;position:relative;overflow:hidden;
+  background:linear-gradient(150deg,#07101f,#0a1628);
+  border-bottom:1px solid var(--border);
+}
+.map-svg{position:absolute;inset:0;width:100%;height:100%}
+.map-ov{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;pointer-events:none;
+}
+.map-port{display:flex;flex-direction:column;align-items:center;gap:0.4rem}
+.port-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 10px rgba(201,168,76,0.5);position:relative;
+}
+.port-dot::after{
+  content:'';position:absolute;inset:-5px;border-radius:50%;
+  border:1.5px solid rgba(201,168,76,0.2);animation:ring 2.5s ease-in-out infinite;
+}
+@keyframes ring{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:0}}
+.port-dot.dest{background:var(--green);box-shadow:0 0 10px rgba(34,197,94,0.5)}
+.port-dot.dest::after{border-color:rgba(34,197,94,0.2)}
+.port-name{font-size:0.68rem;font-weight:600}
+.port-code{font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--muted)}
+.vessel-box{text-align:center}
+.vessel-icon-wrap{
+  width:36px;height:36px;border-radius:7px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 0.3rem;
+  animation:sail 5s ease-in-out infinite;
+}
+@keyframes sail{0%,100%{transform:translateX(-18px)}50%{transform:translateX(18px)}}
+.vessel-lbl{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted)}
+.vessel-eta{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--gold);margin-top:0.08rem}
+.map-foot{position:absolute;bottom:0.55rem;right:1rem;font-family:'DM Mono',monospace;font-size:0.48rem;color:rgba(255,255,255,0.18)}
+
+/* ── SECTION ── */
+.sec{border-bottom:1px solid var(--border);padding:1.3rem 1.75rem}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
+.sec-title{
+  display:flex;align-items:center;gap:0.5rem;
+  font-size:0.7rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;
+  color:rgba(255,255,255,0.85);
+}
+.sec-icon{
+  width:22px;height:22px;border-radius:5px;
+  background:rgba(255,255,255,0.05);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.sec-icon svg{width:12px;height:12px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sec-badge{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted)}
+
+/* ── CARGO ── */
+.cargo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:0.8rem}
+.cf{background:rgba(255,255,255,0.03);border:1.5px solid var(--border2);border-radius:7px;padding:0.68rem 0.8rem;transition:border-color 0.15s}
+.cf:focus-within{border-color:rgba(201,168,76,0.45)}
+.cf-lbl{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.28rem}
+.cf-val{font-size:0.87rem;font-weight:600}
+.cf-val input,.cf-val select{background:transparent;border:none;outline:none;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.87rem;font-weight:600;width:100%}
+.cf-val select option{background:var(--navy-mid)}
+.cf-hint{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);margin-top:0.25rem}
+.cf-hint.ok{color:var(--green)}.cf-hint.warn{color:var(--amber)}
+.chips{display:flex;gap:0.38rem;flex-wrap:wrap}
+.chip{
+  padding:0.26rem 0.65rem;border-radius:5px;
+  border:1.5px solid var(--border2);
+  font-family:'DM Mono',monospace;font-size:0.63rem;font-weight:500;
+  color:var(--muted);cursor:pointer;transition:all 0.12s;
+}
+.chip:hover{border-color:var(--gold);color:var(--gold)}
+.chip.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.38);color:var(--gold)}
+
+/* ── SERVICES ── */
+.svc-cols{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem}
+.svc-grp-lbl{
+  font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:0.45rem;
+  padding-bottom:0.38rem;border-bottom:1px solid var(--border);
+}
+.svc{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.02);border:1.5px solid var(--border);
+  border-radius:7px;padding:0.58rem 0.8rem;
+  cursor:pointer;transition:all 0.12s;user-select:none;margin-bottom:0.38rem;
+}
+.svc:hover{border-color:var(--border2)}
+.svc.on{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.04)}
+.svc-left{display:flex;align-items:center;gap:0.55rem}
+.svc-ico{
+  width:28px;height:28px;border-radius:5px;flex-shrink:0;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+}
+.svc-ico svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.svc.on .svc-ico{background:var(--gold-dim);border-color:rgba(201,168,76,0.28)}
+.svc.on .svc-ico svg{stroke:var(--gold)}
+.svc-name{font-size:0.75rem;font-weight:600;color:var(--dim)}
+.svc-desc{font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);margin-top:0.07rem}
+.svc.on .svc-name{color:var(--white)}
+.svc-r{display:flex;align-items:center;gap:0.6rem;flex-shrink:0}
+.svc-price{font-family:'DM Mono',monospace;font-size:0.73rem;color:var(--gold)}
+.tog{
+  width:30px;height:17px;border-radius:9px;
+  background:var(--border2);position:relative;transition:background 0.15s;flex-shrink:0;
+}
+.tog::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:13px;height:13px;border-radius:50%;
+  background:rgba(255,255,255,0.3);transition:all 0.15s;
+}
+.svc.on .tog{background:var(--gold)}
+.svc.on .tog::after{left:15px;background:var(--navy)}
+
+.doc-notice{
+  display:none;align-items:center;gap:0.55rem;
+  padding:0.45rem 0.7rem;margin-top:0.35rem;
+  background:var(--blue-dim);border:1px solid rgba(96,165,250,0.13);
+  border-radius:5px;font-size:0.63rem;color:rgba(96,165,250,0.8);cursor:pointer;
+}
+.doc-notice:hover{border-color:rgba(96,165,250,0.28)}
+.dn-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0}
+.dn-link{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--blue);white-space:nowrap}
+
+.freedays-box{
+  margin-top:0.85rem;padding:0.78rem 0.88rem;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:7px;
+}
+.fdb-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.5rem}
+.fdb-title{font-size:0.7rem;font-weight:600;color:var(--dim)}
+.fdb-sub{font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted)}
+.fd-row{display:flex;align-items:center;gap:0.38rem}
+.fd-chip{
+  padding:0.25rem 0.6rem;border-radius:5px;
+  border:1.5px solid var(--border2);
+  font-family:'DM Mono',monospace;font-size:0.63rem;font-weight:500;
+  color:var(--muted);cursor:pointer;transition:all 0.12s;
+}
+.fd-chip:hover{border-color:var(--gold);color:var(--gold)}
+.fd-chip.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.38);color:var(--gold)}
+.fd-custom-inp{
+  background:transparent;border:1.5px solid var(--border2);border-radius:5px;
+  padding:0.25rem 0.6rem;font-family:'DM Mono',monospace;font-size:0.63rem;
+  color:var(--muted);outline:none;width:70px;display:none;transition:border-color 0.12s;
+}
+.fd-custom-inp:focus{border-color:var(--gold)}
+
+/* ── CARRIERS ── */
+.carrier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.45rem}
+.c-card{
+  background:rgba(255,255,255,0.02);border:1.5px solid var(--border);
+  border-radius:7px;padding:0.72rem 0.6rem;
+  cursor:pointer;transition:all 0.15s;text-align:center;position:relative;
+}
+.c-card:hover{border-color:var(--border2);background:rgba(255,255,255,0.04)}
+.c-card.sel{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.05)}
+.c-badge{
+  position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+  font-family:'DM Mono',monospace;font-size:0.46rem;font-weight:700;letter-spacing:0.5px;
+  padding:0.07rem 0.42rem;border-radius:3px;white-space:nowrap;
+}
+.b-assured{background:var(--green);color:var(--navy)}
+.b-pop{background:var(--navy-light);color:var(--gold);border:1px solid rgba(201,168,76,0.25)}
+.c-monogram{
+  width:32px;height:32px;border-radius:5px;
+  background:var(--navy-light);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 0.42rem;
+  font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:700;
+  color:var(--dim);letter-spacing:-0.5px;
+}
+.c-card.sel .c-monogram{border-color:rgba(201,168,76,0.28);color:var(--gold)}
+.c-name{font-size:0.7rem;font-weight:700;color:var(--dim);margin-bottom:0.15rem}
+.c-card.sel .c-name{color:var(--white)}
+.c-price{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--gold);font-weight:500}
+.c-eta{font-family:'DM Mono',monospace;font-size:0.53rem;color:var(--muted);margin-top:0.1rem}
+.more-link{
+  margin-top:0.62rem;text-align:center;
+  font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);
+  padding:0.42rem;border:1px dashed var(--border2);border-radius:5px;
+  cursor:pointer;transition:all 0.12s;
+}
+.more-link:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── INSURANCE ── */
+.ins-row{
+  display:flex;align-items:center;
+  background:rgba(255,255,255,0.02);border:1.5px solid var(--border);
+  border-radius:7px;padding:0.78rem 0.95rem;
+}
+.ins-ico{
+  width:34px;height:34px;border-radius:6px;flex-shrink:0;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;margin-right:0.82rem;
+}
+.ins-ico svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ins-name{font-size:0.82rem;font-weight:600;margin-bottom:0.1rem}
+.ins-desc{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted)}
+.ins-price{font-family:'DM Mono',monospace;font-size:0.73rem;color:var(--gold);margin-left:auto;margin-right:0.85rem}
+.big-tog{
+  width:44px;height:24px;border-radius:12px;
+  background:var(--border2);position:relative;cursor:pointer;
+  transition:background 0.18s;flex-shrink:0;
+}
+.big-tog::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;
+  background:rgba(255,255,255,0.32);transition:all 0.18s;
+}
+.big-tog.on{background:var(--gold)}
+.big-tog.on::after{left:23px;background:var(--navy)}
+.ins-note{margin-top:0.58rem;font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted);line-height:1.65}
+
+/* ── UPLOAD DOCS ── */
+.upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.45rem}
+.upl{
+  border:1.5px dashed var(--border2);border-radius:7px;
+  padding:0.72rem;text-align:center;cursor:pointer;transition:all 0.12s;
+}
+.upl:hover{border-color:var(--gold);background:rgba(201,168,76,0.03)}
+.upl.done{border-style:solid;border-color:rgba(201,168,76,0.32);background:rgba(201,168,76,0.04)}
+.upl-ico{
+  width:28px;height:28px;border-radius:5px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 0.42rem;
+}
+.upl-ico svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.upl.done .upl-ico svg{stroke:var(--gold)}
+.upl-name{font-size:0.66rem;font-weight:600;color:var(--dim)}
+.upl-sub{font-family:'DM Mono',monospace;font-size:0.53rem;color:var(--muted);margin-top:0.07rem}
+.bl-row{display:flex;gap:0.38rem;margin-top:0.72rem}
+.bl-opt{
+  flex:1;padding:0.42rem 0.5rem;text-align:center;
+  border:1.5px solid var(--border2);border-radius:5px;
+  font-size:0.65rem;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:all 0.12s;
+}
+.bl-opt:hover{border-color:var(--gold);color:var(--gold)}
+.bl-opt.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.38);color:var(--gold)}
+
+/* ── SIDEBAR ── */
+.s-top{padding:1.1rem 1.2rem;border-bottom:1px solid var(--border)}
+.s-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:0.48rem}
+.s-total{font-family:'DM Mono',monospace;font-size:1.85rem;font-weight:500;color:var(--gold);line-height:1}
+.s-sub{font-size:0.58rem;color:var(--muted);margin-top:0.2rem}
+.s-route{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.45rem;display:flex;align-items:center;gap:0.38rem}
+.s-route .arr{color:var(--gold);opacity:0.5}
+
+.s-sec{padding:0.9rem 1.2rem;border-bottom:1px solid var(--border)}
+.s-sec-title{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.65rem}
+
+.bp-row{display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0;font-size:0.68rem}
+.bp-name{color:var(--dim)}
+.bp-val{font-family:'DM Mono',monospace;color:var(--white);font-weight:500}
+.bp-val.gold{color:var(--gold)}.bp-val.off{color:var(--muted)}
+.bp-div{height:1px;background:var(--border);margin:0.35rem 0}
+.bp-total{display:flex;justify-content:space-between;align-items:center;padding:0.42rem 0}
+.bpt-n{font-size:0.76rem;font-weight:700}
+.bpt-v{font-family:'DM Mono',monospace;color:var(--gold);font-size:0.92rem;font-weight:700}
+
+.incentive{
+  background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.13);
+  border-radius:7px;padding:0.78rem 0.85rem;
+}
+.inc-title{
+  font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--green);margin-bottom:0.58rem;
+  display:flex;align-items:center;gap:0.32rem;
+}
+.inc-row{display:flex;justify-content:space-between;padding:0.23rem 0;font-size:0.67rem}
+.inc-lbl{color:var(--muted)}.inc-val{font-family:'DM Mono',monospace;color:var(--green);font-weight:600}
+.inc-net{
+  display:flex;justify-content:space-between;
+  padding-top:0.45rem;margin-top:0.38rem;
+  border-top:1px solid rgba(34,197,94,0.1);
+  font-size:0.7rem;font-weight:700;
+}
+.inc-net-lbl{color:var(--dim)}.inc-net-val{font-family:'DM Mono',monospace;color:var(--gold)}
+
+.ds-list{display:flex;flex-direction:column;gap:0.32rem}
+.ds-row{
+  display:flex;align-items:center;gap:0.48rem;
+  padding:0.35rem 0.58rem;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:5px;
+  font-size:0.64rem;
+}
+.ds-ico{
+  width:18px;height:18px;border-radius:3px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ds-ico svg{width:10px;height:10px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ds-name{flex:1;color:var(--dim)}
+.ds-badge{font-family:'DM Mono',monospace;font-size:0.5rem;padding:0.06rem 0.36rem;border-radius:3px}
+.st-done{background:var(--green-dim);color:var(--green)}
+.st-need{background:rgba(201,168,76,0.09);color:var(--gold)}
+.st-linked{background:var(--blue-dim);color:var(--blue)}
+.ds-link{
+  margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:0.58rem;
+  color:rgba(201,168,76,0.6);cursor:pointer;transition:color 0.12s;
+  display:flex;align-items:center;gap:0.32rem;
+}
+.ds-link:hover{color:var(--gold)}
+
+.side-cta{padding:1.1rem 1.2rem;margin-top:auto}
+.book-btn{
+  width:100%;background:var(--gold);color:var(--navy);border:none;border-radius:7px;
+  padding:0.82rem;font-family:'DM Sans',sans-serif;font-size:0.87rem;font-weight:700;
+  cursor:pointer;transition:all 0.15s;letter-spacing:0.15px;
+}
+.book-btn:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 8px 22px rgba(201,168,76,0.18)}
+.book-note{text-align:center;font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted);margin-top:0.52rem}
+
+@media(max-width:960px){
+  .shell{grid-template-columns:1fr}
+  .side-col{position:static;height:auto}
+  .cargo-grid{grid-template-columns:1fr 1fr}
+  .carrier-grid{grid-template-columns:1fr 1fr}
+  .s-fields{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="topbar">
+  <div class="tb-logo">W<span>o</span>rt</div>
+  <div class="tb-pill">
+    <span>JNPT Mumbai</span>
+    <span class="sep">→</span>
+    <span>Jebel Ali, UAE</span>
+    <span class="meta">· FCL · 20ft · 18 MT</span>
+  </div>
+  <div class="tb-right">
+    <div class="live-dot">LIVE RATES</div>
+    <div class="tb-av">ME</div>
+  </div>
+</div>
+
+<div class="shell">
+<div class="main-col">
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="s-eyebrow">Freight Configurator — Route Search</div>
+  <div class="s-fields">
+    <div class="s-field">
+      <div class="s-lbl">Origin Port</div>
+      <input class="s-inp" value="JNPT Mumbai, IN" placeholder="Origin port">
+    </div>
+    <div class="s-field">
+      <div class="s-lbl">Destination Port</div>
+      <input class="s-inp" value="Jebel Ali, UAE" placeholder="Destination">
+    </div>
+    <div class="s-field">
+      <div class="s-lbl">Cargo Ready Date</div>
+      <input class="s-inp" type="date" value="2025-07-01">
+    </div>
+    <div class="s-field">
+      <div class="s-lbl">Shipment Type</div>
+      <select class="s-inp">
+        <option>FCL — Full Container</option>
+        <option>LCL — Less Container</option>
+        <option>Air Freight</option>
+      </select>
+    </div>
+    <button class="s-btn" onclick="refreshRates()">Search</button>
+  </div>
+</div>
+
+<!-- RATE BANNER -->
+<div class="rate-banner">
+  <div class="rb-group">
+    <div>
+      <div class="rb-lbl">Estimated Market Range</div>
+      <div class="rb-range" id="rate-range">$1,256 – $1,485</div>
+      <div class="rb-sub">Per 20ft · FOB · 14-day rolling average</div>
+    </div>
+    <div class="rb-trend">
+      <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><polyline points="1,7 5,3 8,5 11,1" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      3.2% vs last week
+    </div>
+  </div>
+  <div class="rb-right">
+    <div class="c-stack">
+      <div class="c-avatar">MSK</div>
+      <div class="c-avatar">CMA</div>
+      <div class="c-avatar">MSC</div>
+      <div class="c-avatar">EVG</div>
+      <div class="c-avatar" style="background:rgba(201,168,76,0.08);color:var(--gold);border-color:rgba(201,168,76,0.2)">70+</div>
+    </div>
+    <div class="c-count">carriers checked</div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="map-wrap">
+  <svg class="map-svg" viewBox="0 0 900 200" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+        <path d="M44 0L0 0 0 44" fill="none" stroke="rgba(201,168,76,0.045)" stroke-width="0.5"/>
+      </pattern>
+      <linearGradient id="rgrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#22c55e" stop-opacity="0.5"/>
+      </linearGradient>
+    </defs>
+    <rect width="900" height="200" fill="url(#grid)"/>
+    <ellipse cx="125" cy="100" rx="90" ry="52" fill="rgba(201,168,76,0.03)" stroke="rgba(201,168,76,0.07)" stroke-width="1"/>
+    <ellipse cx="768" cy="92" rx="82" ry="48" fill="rgba(201,168,76,0.03)" stroke="rgba(201,168,76,0.07)" stroke-width="1"/>
+    <path d="M 190 100 Q 450 48 708 92" stroke="url(#rgrad)" stroke-width="1.5" fill="none" stroke-dasharray="7 5">
+      <animate attributeName="stroke-dashoffset" from="0" to="-120" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="190" cy="100" r="16" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+    <circle cx="708" cy="92" r="16" fill="none" stroke="rgba(34,197,94,0.1)" stroke-width="1"/>
+  </svg>
+  <div class="map-ov">
+    <div class="map-port">
+      <div class="port-dot"></div>
+      <div class="port-name">JNPT Mumbai</div>
+      <div class="port-code">18.95°N · 72.95°E</div>
+    </div>
+    <div class="vessel-box">
+      <div class="vessel-icon-wrap">
+        <!-- vessel SVG icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.65)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 17l1.5-9h15L21 17"/>
+          <path d="M3 17c0 2 1.5 3 9 3s9-1 9-3"/>
+          <line x1="12" y1="3" x2="12" y2="8"/>
+          <line x1="8" y1="8" x2="16" y2="8"/>
+        </svg>
+      </div>
+      <div class="vessel-lbl">MSC PALAK V · In Transit</div>
+      <div class="vessel-eta">ETA 12 days · Arabian Sea</div>
+    </div>
+    <div class="map-port">
+      <div class="port-dot dest"></div>
+      <div class="port-name">Jebel Ali</div>
+      <div class="port-code">25.01°N · 55.05°E</div>
+    </div>
+  </div>
+  <div class="map-foot">1,237 NM · Arabian Sea Route · ~12–14 days transit</div>
+</div>
+
+<!-- CARGO -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-title">
+      <div class="sec-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+      </div>
+      Cargo Requirements
+    </div>
+    <span class="sec-badge">Precision Inputs</span>
+  </div>
+  <div class="cargo-grid">
+    <div class="cf">
+      <div class="cf-lbl">Container Type</div>
+      <div class="cf-val">
+        <select onchange="updateCalc()">
+          <option>20ft Standard</option><option>40ft Standard</option>
+          <option>40ft High Cube</option><option>20ft Reefer</option>
+          <option>40ft Reefer</option><option>20ft Open Top</option>
+        </select>
+      </div>
+      <div class="cf-hint ok">Max payload: 28 MT</div>
+    </div>
+    <div class="cf">
+      <div class="cf-lbl">Cargo Weight (MT)</div>
+      <div class="cf-val"><input type="number" value="18" min="1" max="28" oninput="validateWeight(this)"></div>
+      <div class="cf-hint ok" id="weight-hint">Within equipment limit (28 MT)</div>
+    </div>
+    <div class="cf">
+      <div class="cf-lbl">Cargo Value (USD)</div>
+      <div class="cf-val"><input type="number" id="cargo-val" value="14820" oninput="updateCalc()"></div>
+      <div class="cf-hint">For insurance & incentive calc</div>
+    </div>
+    <div class="cf">
+      <div class="cf-lbl">HS Code</div>
+      <div class="cf-val"><input value="30049099" placeholder="8-digit HS code"></div>
+      <div class="cf-hint">Pharma preparations</div>
+    </div>
+  </div>
+  <div class="chips">
+    <div class="chip active" onclick="selChip(this)">20ft Standard</div>
+    <div class="chip" onclick="selChip(this)">40ft Standard</div>
+    <div class="chip" onclick="selChip(this)">40ft High Cube</div>
+    <div class="chip" onclick="selChip(this)">Reefer</div>
+    <div class="chip" onclick="selChip(this)">Open Top</div>
+    <div class="chip" onclick="selChip(this)">Flat Rack</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-title">
+      <div class="sec-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h-2M6 12H4M17.66 18.66l1.41-1.41M4.93 4.93l1.41 1.41"/></svg>
+      </div>
+      Service Configuration
+    </div>
+    <span class="sec-badge">Add-on Menu</span>
+  </div>
+  <div class="svc-cols">
+    <div>
+      <div class="svc-grp-lbl">Origin — Mumbai</div>
+
+      <div class="svc on" onclick="toggleSvc(this,'origin-local',85)" id="svc-origin-local">
+        <div class="svc-left">
+          <div class="svc-ico">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          </div>
+          <div><div class="svc-name">Origin Local Charges</div><div class="svc-desc">THC · Documentation · Port handling</div></div>
+        </div>
+        <div class="svc-r"><div class="svc-price">$85</div><div class="tog"></div></div>
+      </div>
+
+      <div class="svc" onclick="toggleSvc(this,'origin-customs',120)" id="svc-origin-customs">
+        <div class="svc-left">
+          <div class="svc-ico">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <div><div class="svc-name">Origin FCL Customs</div><div class="svc-desc">Export clearance · Shipping Bill filing</div></div>
+        </div>
+        <div class="svc-r"><div class="svc-price">$120</div><div class="tog"></div></div>
+      </div>
+
+      <div class="svc" onclick="toggleSvc(this,'origin-cfs',95)" id="svc-origin-cfs">
+        <div class="svc-left">
+          <div class="svc-ico">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><line x1="3.27" y1="6.96" x2="12" y2="12"/><line x1="12" y1="12" x2="20.73" y2="6.96"/><line x1="12" y1="12" x2="12" y2="22"/></svg>
+          </div>
+          <div><div class="svc-name">Origin FCL CFS</div><div class="svc-desc">Container stuffing & sealing</div></div>
+        </div>
+        <div class="svc-r"><div class="svc-price">$95</div><div class="tog"></div></div>
+      </div>
+
+      <div class="doc-notice" id="doc-notice-origin" onclick="window.open('wort-doc-engine.html','_blank')">
+        <div class="dn-dot"></div>
+        <span>Wort Doc Engine — Shipping Bill + Packing List required</span>
+        <span class="dn-link">Open →</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="svc-grp-lbl">Destination — Jebel Ali</div>
+
+      <div class="svc on" onclick="toggleSvc(this,'dest-local',110)" id="svc-dest-local">
+        <div class="svc-left">
+          <div class="svc-ico">
+            <svg viewBox="0 0 24 24"><path d="M3 17l1.5-9h15L21 17"/><path d="M3 17c0 2 1.5 3 9 3s9-1 9-3"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="8" y1="8" x2="16" y2="8"/></svg>
+          </div>
+          <div><div class="svc-name">Destination Local Charges</div><div class="svc-desc">Port dues · THC · Delivery order</div></div>
+        </div>
+        <div class="svc-r"><div class="svc-price">$110</div><div class="tog"></div></div>
+      </div>
+
+      <div class="svc" onclick="toggleSvc(this,'dest-customs',140)" id="svc-dest-customs">
+        <div class="svc-left">
+          <div class="svc-ico">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div><div class="svc-name">Destination FCL Customs</div><div class="svc-desc">Import clearance · DP World Jebel Ali</div></div>
+        </div>
+        <div class="svc-r"><div class="svc-price">$140</div><div class="tog"></div></div>
+      </div>
+
+      <div class="svc" onclick="toggleSvc(this,'dest-transport',180)" id="svc-dest-transport">
+        <div class="svc-left">
+          <div class="svc-ico">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div><div class="svc-name">Destination Transportation</div><div class="svc-desc">Container delivery to buyer warehouse</div></div>
+        </div>
+        <div class="svc-r"><div class="svc-price">$180</div><div class="tog"></div></div>
+      </div>
+
+      <div class="doc-notice" id="doc-notice-dest" onclick="window.open('wort-doc-engine.html','_blank')">
+        <div class="dn-dot"></div>
+        <span>Wort Doc Engine — Certificate of Origin required</span>
+        <span class="dn-link">Open →</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="freedays-box">
+    <div class="fdb-head">
+      <div class="fdb-title">Destination Free Days Extension</div>
+      <div class="fdb-sub">Prevents detention charges after port arrival</div>
+    </div>
+    <div class="fd-row">
+      <div class="fd-chip active" onclick="selFD(this,'4')">4 days</div>
+      <div class="fd-chip" onclick="selFD(this,'7')">7 days</div>
+      <div class="fd-chip" onclick="selFD(this,'14')">14 days</div>
+      <div class="fd-chip" onclick="selFD(this,'custom')">Custom</div>
+      <input class="fd-custom-inp" id="fd-inp" placeholder="__ days">
+    </div>
+  </div>
+</div>
+
+<!-- CARRIERS -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-title">
+      <div class="sec-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 17l1.5-9h15L21 17"/><path d="M3 17c0 2 1.5 3 9 3s9-1 9-3"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="8" y1="8" x2="16" y2="8"/></svg>
+      </div>
+      Carrier Selection
+    </div>
+    <span class="sec-badge">70+ Carriers</span>
+  </div>
+  <div class="carrier-grid">
+    <div class="c-card sel" onclick="selCarrier(this,'Maersk','1256')">
+      <div class="c-badge b-assured">Assured</div>
+      <div class="c-monogram">MSK</div>
+      <div class="c-name">Maersk</div>
+      <div class="c-price">$1,256</div>
+      <div class="c-eta">12 days · Weekly</div>
+    </div>
+    <div class="c-card" onclick="selCarrier(this,'CMA CGM','1312')">
+      <div class="c-monogram">CMA</div>
+      <div class="c-name">CMA CGM</div>
+      <div class="c-price">$1,312</div>
+      <div class="c-eta">13 days · 2× week</div>
+    </div>
+    <div class="c-card" onclick="selCarrier(this,'MSC','1285')">
+      <div class="c-badge b-pop">Popular</div>
+      <div class="c-monogram">MSC</div>
+      <div class="c-name">MSC</div>
+      <div class="c-price">$1,285</div>
+      <div class="c-eta">11 days · Weekly</div>
+    </div>
+    <div class="c-card" onclick="selCarrier(this,'Evergreen','1420')">
+      <div class="c-monogram">EVG</div>
+      <div class="c-name">Evergreen</div>
+      <div class="c-price">$1,420</div>
+      <div class="c-eta">14 days · Weekly</div>
+    </div>
+    <div class="c-card" onclick="selCarrier(this,'OOCL','1380')">
+      <div class="c-monogram">OOCL</div>
+      <div class="c-name">OOCL</div>
+      <div class="c-price">$1,380</div>
+      <div class="c-eta">12 days · 2× week</div>
+    </div>
+    <div class="c-card" onclick="selCarrier(this,'Hapag-Lloyd','1295')">
+      <div class="c-monogram">HPL</div>
+      <div class="c-name">Hapag-Lloyd</div>
+      <div class="c-price">$1,295</div>
+      <div class="c-eta">13 days · Weekly</div>
+    </div>
+    <div class="c-card" onclick="selCarrier(this,'PIL','1445')">
+      <div class="c-monogram">PIL</div>
+      <div class="c-name">PIL</div>
+      <div class="c-price">$1,445</div>
+      <div class="c-eta">15 days · Weekly</div>
+    </div>
+    <div class="c-card" onclick="selCarrier(this,'IAL','1360')">
+      <div class="c-monogram">IAL</div>
+      <div class="c-name">IAL</div>
+      <div class="c-price">$1,360</div>
+      <div class="c-eta">12 days · Weekly</div>
+    </div>
+  </div>
+  <div class="more-link" onclick="alert('Showing all 70+ carriers on this route…')">View all 70+ carriers on this route →</div>
+</div>
+
+<!-- INSURANCE -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-title">
+      <div class="sec-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      Cargo Insurance
+    </div>
+    <span class="sec-badge">One-Click Coverage</span>
+  </div>
+  <div class="ins-row">
+    <div class="ins-ico">
+      <svg viewBox="0 0 24 24" stroke="var(--muted)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <div>
+      <div class="ins-name">Comprehensive Cargo Coverage</div>
+      <div class="ins-desc">All-risk · Loss, damage, theft · Institute Cargo Clauses (A)</div>
+    </div>
+    <div class="ins-price" id="ins-price">$74.10 / shipment</div>
+    <div class="big-tog on" id="ins-tog" onclick="toggleIns()"></div>
+  </div>
+  <div class="ins-note">Premium: 0.5% of cargo value · Underwritten by Bajaj Allianz · Claim TAT: 7 days</div>
+</div>
+
+<!-- DOCUMENTS -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-title">
+      <div class="sec-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      Additional Documents & BL Type
+    </div>
+    <span class="sec-badge">Optional</span>
+  </div>
+  <div class="upload-grid">
+    <div class="upl" onclick="this.classList.toggle('done')">
+      <div class="upl-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
+      <div class="upl-name">MSDS Certificate</div>
+      <div class="upl-sub">Material Safety Data Sheet</div>
+    </div>
+    <div class="upl" onclick="this.classList.toggle('done')">
+      <div class="upl-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
+      <div class="upl-name">Cargo Photos</div>
+      <div class="upl-sub">Pre-shipment condition</div>
+    </div>
+    <div class="upl" onclick="this.classList.toggle('done')">
+      <div class="upl-ico"><svg viewBox="0 0 24 24"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <div class="upl-name">Quality Certificate</div>
+      <div class="upl-sub">Lab test / Inspection</div>
+    </div>
+    <div class="upl" onclick="this.classList.toggle('done')">
+      <div class="upl-ico"><svg viewBox="0 0 24 24"><path d="M12 2a9 9 0 100 18A9 9 0 0012 2z"/><path d="M12 6v6l4 2"/></svg></div>
+      <div class="upl-name">Phytosanitary Cert</div>
+      <div class="upl-sub">NPPO certificate</div>
+    </div>
+    <div class="upl" onclick="this.classList.toggle('done')">
+      <div class="upl-ico"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <div class="upl-name">Health Certificate</div>
+      <div class="upl-sub">FSSAI / CDSCO</div>
+    </div>
+    <div class="upl" onclick="this.classList.toggle('done')">
+      <div class="upl-ico"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+      <div class="upl-name">Other Documents</div>
+      <div class="upl-sub">Upload any custom doc</div>
+    </div>
+  </div>
+  <div style="margin-top:0.72rem">
+    <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.48rem">Bill of Lading Type</div>
+    <div class="bl-row">
+      <div class="bl-opt active" onclick="selBL(this)">Original BL</div>
+      <div class="bl-opt" onclick="selBL(this)">House BL</div>
+      <div class="bl-opt" onclick="selBL(this)">Seaway Bill</div>
+      <div class="bl-opt" onclick="selBL(this)">Telex Release</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main-col -->
+
+<!-- SIDEBAR -->
+<div class="side-col">
+  <div class="s-top">
+    <div class="s-eyebrow">Total Landing Cost</div>
+    <div class="s-total" id="total-display">$1,531</div>
+    <div class="s-sub">All-inclusive · Subject to final confirmation</div>
+    <div class="s-route">
+      JNPT Mumbai <span class="arr">→</span> Jebel Ali
+      <span style="opacity:0.45">· 20ft FCL</span>
+    </div>
+  </div>
+
+  <div class="s-sec">
+    <div class="s-sec-title">Price Breakup</div>
+    <div class="bp-row"><span class="bp-name">Ocean Freight (Maersk)</span><span class="bp-val gold" id="bp-ocean">$1,256</span></div>
+    <div class="bp-row"><span class="bp-name">Origin Local</span><span class="bp-val" id="bp-ol">$85</span></div>
+    <div class="bp-row"><span class="bp-name">Origin Customs</span><span class="bp-val off" id="bp-oc">—</span></div>
+    <div class="bp-row"><span class="bp-name">Origin CFS</span><span class="bp-val off" id="bp-cfs">—</span></div>
+    <div class="bp-row"><span class="bp-name">Destination Local</span><span class="bp-val" id="bp-dl">$110</span></div>
+    <div class="bp-row"><span class="bp-name">Destination Customs</span><span class="bp-val off" id="bp-dc">—</span></div>
+    <div class="bp-row"><span class="bp-name">Destination Transport</span><span class="bp-val off" id="bp-dt">—</span></div>
+    <div class="bp-row"><span class="bp-name">Cargo Insurance</span><span class="bp-val" id="bp-ins">$74</span></div>
+    <div class="bp-div"></div>
+    <div class="bp-total"><span class="bpt-n">Total</span><span class="bpt-v" id="bp-total">$1,531</span></div>
+  </div>
+
+  <div class="s-sec">
+    <div class="s-sec-title">Incentive Tracker</div>
+    <div class="incentive">
+      <div class="inc-title">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Estimated Refunds
+      </div>
+      <div class="inc-row"><span class="inc-lbl">RoDTEP Benefit (0.5%)</span><span class="inc-val" id="rodtep-val">+$74</span></div>
+      <div class="inc-row"><span class="inc-lbl">IGST Refund (LuT filed)</span><span class="inc-val">₹0 payable</span></div>
+      <div class="inc-row"><span class="inc-lbl">Duty Drawback</span><span class="inc-val" id="dbk-val">+$89</span></div>
+      <div class="inc-net">
+        <span class="inc-net-lbl">Net Effective Cost</span>
+        <span class="inc-net-val" id="net-cost">$1,368</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-sec">
+    <div class="s-sec-title">Document Status</div>
+    <div class="ds-list">
+      <div class="ds-row">
+        <div class="ds-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
+        <span class="ds-name">Commercial Invoice</span>
+        <span class="ds-badge st-done">Done</span>
+      </div>
+      <div class="ds-row">
+        <div class="ds-ico"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+        <span class="ds-name">Packing List</span>
+        <span class="ds-badge st-done">Done</span>
+      </div>
+      <div class="ds-row">
+        <div class="ds-ico"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <span class="ds-name">Shipping Bill</span>
+        <span class="ds-badge st-linked">Linked</span>
+      </div>
+      <div class="ds-row">
+        <div class="ds-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+        <span class="ds-name">Certificate of Origin</span>
+        <span class="ds-badge st-need">Needed</span>
+      </div>
+      <div class="ds-row">
+        <div class="ds-ico"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <span class="ds-name">Bank Realisation Cert</span>
+        <span class="ds-badge st-need">Post-shipment</span>
+      </div>
+      <div class="ds-row">
+        <div class="ds-ico"><svg viewBox="0 0 24 24"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <span class="ds-name">RCMC (PHARMEXCIL)</span>
+        <span class="ds-badge st-done">Valid</span>
+      </div>
+    </div>
+    <div class="ds-link" onclick="window.open('wort-doc-engine.html','_blank')">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Open Wort Document Engine
+    </div>
+  </div>
+
+  <div class="side-cta">
+    <button class="book-btn" onclick="handleBook()">Confirm & Book Shipment</button>
+    <div class="book-note">Assured Fulfillment · Maersk · Price locked 24h</div>
+  </div>
+</div><!-- /side-col -->
+
+</div><!-- /shell -->
+
+<script>
+const svcs = {
+  'origin-local':   {on:true,  price:85},
+  'origin-customs': {on:false, price:120},
+  'origin-cfs':     {on:false, price:95},
+  'dest-local':     {on:true,  price:110},
+  'dest-customs':   {on:false, price:140},
+  'dest-transport': {on:false, price:180},
+};
+let ocean=1256, insOn=true, cargoVal=14820, selCarrierName='Maersk';
+
+function calcTotal(){
+  let t=ocean;
+  Object.values(svcs).forEach(s=>{if(s.on)t+=s.price});
+  if(insOn) t+=Math.round(cargoVal*0.005);
+  return t;
+}
+
+function updateUI(){
+  const total=calcTotal();
+  const ins=Math.round(cargoVal*0.005);
+  const rod=Math.round(cargoVal*0.005);
+  const dbk=Math.round(cargoVal*0.006);
+  const net=total-rod-dbk;
+
+  document.getElementById('total-display').textContent='$'+total.toLocaleString();
+  document.getElementById('bp-total').textContent='$'+total.toLocaleString();
+  document.getElementById('bp-ocean').textContent='$'+ocean.toLocaleString()+' ('+selCarrierName+')';
+  document.getElementById('bp-ol').textContent =svcs['origin-local'].on  ?'$85':'—';
+  document.getElementById('bp-oc').textContent =svcs['origin-customs'].on?'$120':'—';
+  document.getElementById('bp-cfs').textContent=svcs['origin-cfs'].on    ?'$95':'—';
+  document.getElementById('bp-dl').textContent =svcs['dest-local'].on    ?'$110':'—';
+  document.getElementById('bp-dc').textContent =svcs['dest-customs'].on  ?'$140':'—';
+  document.getElementById('bp-dt').textContent =svcs['dest-transport'].on?'$180':'—';
+  document.getElementById('bp-ins').textContent=insOn?'$'+ins:'—';
+  document.getElementById('rodtep-val').textContent='+$'+rod;
+  document.getElementById('dbk-val').textContent='+$'+dbk;
+  document.getElementById('net-cost').textContent='$'+net.toLocaleString();
+  document.getElementById('ins-price').textContent='$'+ins.toFixed(2)+' / shipment';
+
+  ['bp-oc','bp-cfs','bp-dc','bp-dt','bp-ins'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.className='bp-val'+(el.textContent==='—'?' off':'');
+  });
+
+  document.getElementById('doc-notice-origin').style.display=svcs['origin-customs'].on?'flex':'none';
+  document.getElementById('doc-notice-dest').style.display=svcs['dest-customs'].on?'flex':'none';
+}
+
+function toggleSvc(el,key){
+  svcs[key].on=!svcs[key].on;
+  el.classList.toggle('on',svcs[key].on);
+  updateUI();
+}
+
+function selCarrier(el,name,price){
+  document.querySelectorAll('.c-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  ocean=parseInt(price);
+  selCarrierName=name;
+  updateUI();
+}
+
+function toggleIns(){
+  insOn=!insOn;
+  document.getElementById('ins-tog').classList.toggle('on',insOn);
+  updateUI();
+}
+
+function validateWeight(inp){
+  const w=parseFloat(inp.value);
+  const hint=document.getElementById('weight-hint');
+  if(w>28){
+    inp.style.color='#f59e0b';
+    hint.textContent='Exceeds 28 MT — consider 40ft container';
+    hint.className='cf-hint warn';
+  } else {
+    inp.style.color='';
+    hint.textContent='Within equipment limit (28 MT)';
+    hint.className='cf-hint ok';
+  }
+}
+
+function updateCalc(){
+  const v=parseFloat(document.getElementById('cargo-val').value);
+  if(!isNaN(v)&&v>0) cargoVal=v;
+  updateUI();
+}
+
+function selChip(el){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selFD(el,v){
+  document.querySelectorAll('.fd-chip').forEach(d=>d.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('fd-inp').style.display=v==='custom'?'block':'none';
+}
+
+function selBL(el){
+  document.querySelectorAll('.bl-opt').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function refreshRates(){
+  const btn=document.querySelector('.s-btn');
+  btn.textContent='Searching…';btn.style.opacity='0.7';
+  setTimeout(()=>{
+    btn.textContent='Search';btn.style.opacity='1';
+    const lo=1200+Math.floor(Math.random()*100);
+    const hi=lo+180+Math.floor(Math.random()*80);
+    document.getElementById('rate-range').textContent='$'+lo.toLocaleString()+' – $'+hi.toLocaleString();
+  },1200);
+}
+
+function handleBook(){
+  const btn=document.querySelector('.book-btn');
+  btn.textContent='Booking Confirmed';
+  btn.style.background='#22c55e';btn.style.color='#fff';
+  setTimeout(()=>{
+    btn.textContent='Confirm & Book Shipment';
+    btn.style.background='';btn.style.color='';
+  },3000);
+}
+
+updateUI();
+</script>
+</body>
+</html>
