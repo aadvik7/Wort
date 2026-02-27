@@ -3,682 +3,796 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wort Freight Terminal</title>
+<title>Wort Freight — Global Shipping Terminal</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --bg0:#080b12;--bg1:#0d1119;--bg2:#131824;--bg3:#1a2030;--bg4:#212838;
-  --brd:#1c2538;--brd2:#2a3550;--brdF:#3b82f6;
-  --t0:#eef2f7;--t1:#8b9ab5;--t2:#556178;
-  --cyan:#22d3ee;--blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--purple:#a78bfa;
-  --mono:'JetBrains Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+  --white:#ffffff;
+  --bg:#f7f9fc;
+  --bg2:#f0f4f8;
+  --bg3:#e8edf4;
+  --card:#ffffff;
+  --border:#e2e8f0;
+  --border2:#cbd5e1;
+  --blue:#2563eb;
+  --blue2:#1d4ed8;
+  --blue3:#3b82f6;
+  --blue4:#60a5fa;
+  --blue5:#dbeafe;
+  --blue6:#eff6ff;
+  --navy:#0f172a;
+  --navy2:#1e293b;
+  --navy3:#334155;
+  --t0:#0f172a;
+  --t1:#334155;
+  --t2:#64748b;
+  --t3:#94a3b8;
+  --green:#059669;
+  --green2:#10b981;
+  --green3:#d1fae5;
+  --amber:#d97706;
+  --amber2:#fef3c7;
+  --red:#dc2626;
+  --red2:#fee2e2;
+  --purple:#7c3aed;
+  --purple2:#ede9fe;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',system-ui,sans-serif;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow2:0 4px 16px rgba(0,0,0,.08);
+  --shadow3:0 8px 30px rgba(0,0,0,.1);
+  --shadow-blue:0 4px 14px rgba(37,99,235,.2);
 }
 
+html{scroll-behavior:smooth}
 body{
-  font-family:var(--sans);
-  background:var(--bg0);
-  color:var(--t0);
-  font-size:13px;
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-  height:100vh;
-  overflow:hidden;
+  font-family:var(--sans);background:var(--bg);color:var(--t0);
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  min-height:100vh;
 }
 
-::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* ── LAYOUT ── */
-#app{
-  display:flex;
-  flex-direction:column;
-  height:100vh;
-}
+/* ═══════════════════════ TOPBAR ═══════════════════════ */
 .topbar{
-  height:46px;
-  min-height:46px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 20px;
-  background:var(--bg1);
-  border-bottom:1px solid var(--brd);
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow);
 }
-.brand{display:flex;align-items:center;gap:10px}
+.brand{display:flex;align-items:center;gap:12px}
 .logo{
-  width:26px;height:26px;
-  background:linear-gradient(135deg,var(--blue),var(--cyan));
-  border-radius:4px;
-  display:flex;align-items:center;justify-content:center;
-  font:700 12px var(--mono);color:#fff;
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--blue),var(--blue3));
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font:800 16px var(--mono);color:#fff;
+  box-shadow:var(--shadow-blue);
 }
-.brand-name{font:700 14px var(--mono);letter-spacing:-.02em}
+.brand-name{font:700 18px var(--sans);color:var(--navy);letter-spacing:-.03em}
+.brand-dot{width:6px;height:6px;background:var(--green2);border-radius:50%;margin-left:4px;display:inline-block}
 .brand-tag{
-  font:500 8px var(--mono);text-transform:uppercase;letter-spacing:.06em;
-  padding:2px 7px;border-radius:3px;
-  background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.2);
+  font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.08em;
+  padding:3px 10px;border-radius:6px;
+  background:var(--blue6);color:var(--blue);
 }
-.clock{font:400 10px var(--mono);color:var(--t2);display:flex;align-items:center;gap:6px}
-.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
-@keyframes blink{50%{opacity:.3}}
+.topbar-right{display:flex;align-items:center;gap:20px}
+.topbar-stat{
+  display:flex;align-items:center;gap:6px;
+  font:500 12px var(--mono);color:var(--t2);
+}
+.topbar-stat .dot{width:7px;height:7px;border-radius:50%;background:var(--green2);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
 
-.body-wrap{
-  flex:1;
-  display:flex;
+/* ═══════════════════════ HERO / LANDING ═══════════════════════ */
+.hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 50%,var(--blue2) 100%);
+  padding:60px 32px 48px;
+  color:#fff;
+  position:relative;
   overflow:hidden;
 }
-.main{
-  flex:1;
-  overflow-y:auto;
-  padding:16px;
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
-.sidebar{
-  width:330px;
-  min-width:330px;
-  background:var(--bg1);
-  border-left:1px solid var(--brd);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
+.hero-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.hero-label{
+  display:inline-flex;align-items:center;gap:6px;
+  font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.1em;
+  padding:6px 14px;border-radius:8px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.7);margin-bottom:20px;
 }
-.sb-scroll{flex:1;overflow-y:auto}
+.hero-label .dot{width:6px;height:6px;border-radius:50%;background:var(--green2);animation:pulse 2s infinite}
+.hero h1{
+  font:800 42px var(--sans);letter-spacing:-.04em;
+  line-height:1.15;margin-bottom:8px;
+  max-width:600px;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,var(--blue4),var(--green2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  font:400 17px var(--sans);color:rgba(255,255,255,.6);
+  max-width:500px;line-height:1.6;margin-bottom:36px;
+}
 
-/* ── CARDS ── */
+/* ─── Search Box ─── */
+.search-box{
+  background:var(--white);border-radius:16px;
+  padding:28px 32px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+  max-width:900px;
+}
+.search-row{display:flex;gap:12px;align-items:flex-end}
+.search-row>.fg{flex:1}
+.search-box .fl{color:var(--t2)}
+.search-box .port-i{
+  background:var(--bg);border-color:var(--border);color:var(--t0);
+}
+.search-box .port-i:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+
+/* ─── Stats Strip ─── */
+.stats-strip{
+  display:flex;gap:0;margin-top:40px;
+  border-radius:12px;overflow:hidden;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  max-width:900px;
+}
+.stat-item{
+  flex:1;padding:20px 24px;
+  border-right:1px solid rgba(255,255,255,.06);
+  text-align:center;
+}
+.stat-item:last-child{border-right:none}
+.stat-val{font:800 28px var(--mono);letter-spacing:-.02em;color:#fff}
+.stat-label{font:500 11px var(--sans);color:rgba(255,255,255,.45);margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+
+/* ─── Features Row ─── */
+.features{
+  display:flex;gap:16px;margin-top:24px;max-width:900px;
+}
+.feat{
+  flex:1;display:flex;align-items:center;gap:10px;
+  padding:14px 16px;border-radius:10px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+}
+.feat-icon{font-size:20px}
+.feat-text{font:500 12px var(--sans);color:rgba(255,255,255,.7)}
+.feat-text strong{display:block;color:#fff;font-weight:600}
+
+/* ═══════════════════════ WORKSPACE ═══════════════════════ */
+.workspace{
+  display:none;
+  max-width:1300px;
+  margin:0 auto;
+  padding:24px 32px 60px;
+}
+.workspace.vis{display:flex;gap:24px}
+.ws-main{flex:1;min-width:0}
+.ws-side{width:360px;min-width:360px}
+
+/* ═══════════════════════ CARDS ═══════════════════════ */
 .card{
-  background:var(--bg2);
-  border:1px solid var(--brd);
-  border-radius:8px;
-  margin-bottom:14px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
 }
 .card-h{
   display:flex;align-items:center;justify-content:space-between;
-  padding:10px 14px;
-  background:var(--bg3);
-  border-bottom:1px solid var(--brd);
-  border-radius:8px 8px 0 0;
+  padding:16px 24px;
+  border-bottom:1px solid var(--border);
 }
-.card-h-left{display:flex;align-items:center;gap:8px}
+.card-h-l{display:flex;align-items:center;gap:12px}
 .card-ico{
-  width:24px;height:24px;border-radius:4px;
-  display:flex;align-items:center;justify-content:center;font-size:12px;
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
 }
-.card-ico.bl{background:rgba(59,130,246,.12)}
-.card-ico.gr{background:rgba(16,185,129,.12)}
-.card-ico.am{background:rgba(245,158,11,.12)}
-.card-ico.pu{background:rgba(167,139,250,.12)}
-.card-ttl{font:600 12px var(--sans)}
-.card-sub{font:400 9px var(--sans);color:var(--t2);margin-top:1px}
+.card-ico.bl{background:var(--blue5);color:var(--blue)}
+.card-ico.gr{background:var(--green3);color:var(--green)}
+.card-ico.am{background:var(--amber2);color:var(--amber)}
+.card-ico.pu{background:var(--purple2);color:var(--purple)}
+.card-ttl{font:700 16px var(--sans);color:var(--navy);letter-spacing:-.02em}
+.card-sub{font:400 13px var(--sans);color:var(--t2);margin-top:2px}
 .badge{
-  font:500 8px var(--mono);padding:2px 7px;border-radius:50px;
-  text-transform:uppercase;letter-spacing:.04em;
+  font:600 10px var(--mono);padding:4px 10px;border-radius:8px;
+  text-transform:uppercase;letter-spacing:.05em;
 }
-.badge-req{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
-.badge-opt{background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.2)}
-.card-b{padding:14px}
+.badge-req{background:var(--red2);color:var(--red)}
+.badge-opt{background:var(--blue6);color:var(--blue)}
+.card-b{padding:24px}
 
-/* ── FORM ── */
-.row{display:flex;gap:10px}
-.row>*{flex:1}
-.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+/* ═══════════════════════ FORM ═══════════════════════ */
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.row>*{flex:1;min-width:0}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .fg:last-child{margin-bottom:0}
 label.fl{
-  font:500 9px var(--mono);text-transform:uppercase;
-  letter-spacing:.06em;color:var(--t2);
+  font:600 10px var(--mono);text-transform:uppercase;
+  letter-spacing:.08em;color:var(--t2);
 }
 input.fi,select.fs{
-  width:100%;
-  padding:7px 10px;
-  background:var(--bg0);
-  border:1px solid var(--brd);
-  border-radius:5px;
-  color:var(--t0);
-  font:400 12px var(--mono);
-  outline:none;
-  transition:border .15s;
+  width:100%;padding:10px 14px;
+  background:var(--bg);border:1px solid var(--border);border-radius:10px;
+  color:var(--t0);font:400 13px var(--mono);outline:none;
+  transition:border .15s,box-shadow .15s;
 }
 input.fi:focus,select.fs:focus{
-  border-color:var(--brdF);
-  box-shadow:0 0 0 2px rgba(59,130,246,.1);
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1);
+  background:var(--white);
 }
-input.fi::placeholder{color:var(--t2)}
+input.fi::placeholder{color:var(--t3)}
 select.fs{
   cursor:pointer;appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%23556178' stroke-width='2'%3E%3Cpath d='M1 3l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:right 8px center;
-  padding-right:24px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  padding-right:32px;
 }
-.hint{font:400 9px var(--sans);color:var(--t2)}
+.hint{font:400 11px var(--sans);color:var(--t3)}
 
-/* ── PORT SEARCH ── */
+/* ═══════════════════════ PORT SELECTOR ═══════════════════════ */
 .port-w{position:relative}
 .port-i{
-  width:100%;padding:8px 10px 8px 32px;
-  background:var(--bg0);border:1px solid var(--brd);border-radius:5px;
-  color:var(--t0);font:400 12px var(--sans);outline:none;transition:border .15s;
+  width:100%;padding:10px 14px 10px 38px;
+  background:var(--bg);border:1px solid var(--border);border-radius:10px;
+  color:var(--t0);font:400 13px var(--sans);outline:none;
+  transition:border .15s,box-shadow .15s;
 }
-.port-i:focus{border-color:var(--brdF);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
-.port-i::placeholder{color:var(--t2)}
-.port-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none}
+.port-i:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1);background:var(--white)}
+.port-i::placeholder{color:var(--t3)}
+.port-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
 .port-dd{
-  display:none;
-  position:absolute;top:calc(100% + 3px);left:0;right:0;
-  background:var(--bg4);border:1px solid var(--brd2);border-radius:5px;
-  box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:100;max-height:220px;overflow-y:auto;
+  display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;
+  background:var(--white);border:1px solid var(--border);border-radius:12px;
+  box-shadow:var(--shadow3);z-index:100;max-height:260px;overflow-y:auto;
 }
 .port-dd.open{display:block}
 .port-o{
-  display:flex;align-items:center;gap:8px;
-  padding:7px 10px;cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,.03);
-  transition:background .1s;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;cursor:pointer;
+  border-bottom:1px solid var(--bg2);transition:background .1s;
 }
 .port-o:last-child{border:none}
-.port-o:hover{background:var(--bg3)}
-.port-o-name{font:500 11px var(--sans)}
-.port-o-meta{font:400 9px var(--mono);color:var(--t2)}
+.port-o:hover{background:var(--blue6)}
+.port-o-flag{font-size:18px}
+.port-o-name{font:500 13px var(--sans);color:var(--t0)}
+.port-o-meta{font:400 10px var(--mono);color:var(--t2)}
 
-/* ── RATE BAR ── */
-.rate-bar{
-  display:none;
-  align-items:center;gap:14px;
-  padding:10px 14px;margin-top:10px;
-  background:linear-gradient(135deg,rgba(59,130,246,.04),rgba(34,211,238,.04));
-  border:1px solid var(--brd);border-radius:8px;
-}
-.rate-bar.vis{display:flex}
-.rate-val{font:700 18px var(--mono);color:var(--cyan)}
-.rate-sep{color:var(--t2);font-size:12px;margin:0 2px}
-.rate-lbl{font:500 9px var(--mono);color:var(--t2);text-transform:uppercase;letter-spacing:.04em}
-.rate-trend{
-  font:500 10px var(--mono);padding:2px 6px;border-radius:3px;
-}
-.rate-trend.up{color:var(--red);background:rgba(239,68,68,.1)}
-.rate-trend.down{color:var(--green);background:rgba(16,185,129,.1)}
-.rate-trend.flat{color:var(--amber);background:rgba(245,158,11,.1)}
-
-/* ── MAP ── */
+/* ═══════════════════════ MAP ═══════════════════════ */
 .map-wrap{
-  display:none;position:relative;height:200px;
-  background:var(--bg0);border:1px solid var(--brd);border-radius:8px;
-  overflow:hidden;margin-bottom:14px;
+  display:none;position:relative;height:240px;
+  background:var(--navy);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;margin-bottom:20px;box-shadow:var(--shadow2);
 }
 .map-wrap.vis{display:block}
 .map-wrap canvas{width:100%;height:100%;display:block}
-.map-chips{position:absolute;bottom:8px;left:8px;display:flex;gap:5px}
+.map-chips{position:absolute;bottom:12px;left:12px;display:flex;gap:6px}
 .map-chip{
-  font:500 9px var(--mono);padding:3px 8px;
-  background:rgba(8,11,18,.85);backdrop-filter:blur(4px);
-  border:1px solid var(--brd);border-radius:3px;color:var(--t1);
+  font:500 11px var(--mono);padding:5px 12px;
+  background:rgba(255,255,255,.95);border-radius:8px;
+  color:var(--navy);box-shadow:var(--shadow2);
 }
-.map-chip b{color:var(--cyan)}
+.map-chip b{color:var(--blue);font-weight:600}
 
-/* ── WEIGHT VALIDATION ── */
+/* ─── Rate Bar ─── */
+.rate-bar{
+  display:none;align-items:center;gap:16px;
+  padding:16px 20px;margin-top:16px;
+  background:var(--blue6);border:1px solid rgba(37,99,235,.15);border-radius:12px;
+}
+.rate-bar.vis{display:flex}
+.rate-val{font:800 22px var(--mono);color:var(--blue2);letter-spacing:-.02em}
+.rate-sep{color:var(--t3);font-size:14px;margin:0 3px}
+.rate-lbl{font:600 9px var(--mono);color:var(--t2);text-transform:uppercase;letter-spacing:.06em}
+.rate-trend{font:600 11px var(--mono);padding:3px 8px;border-radius:6px}
+.rate-trend.up{color:var(--red);background:var(--red2)}
+.rate-trend.down{color:var(--green);background:var(--green3)}
+.rate-trend.flat{color:var(--amber);background:var(--amber2)}
+
+/* ═══════════════════════ WEIGHT ═══════════════════════ */
 .wv{
-  display:none;align-items:flex-start;gap:8px;
-  padding:8px 10px;border-radius:5px;font-size:11px;margin-top:8px;
+  display:none;align-items:flex-start;gap:10px;
+  padding:12px 16px;border-radius:10px;font-size:12px;margin-top:12px;
 }
 .wv.vis{display:flex}
-.wv.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:#34d399}
-.wv.wrn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--amber)}
-.wv.bad{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--red)}
-.wv-bar{height:4px;background:var(--bg0);border-radius:2px;margin-top:5px;overflow:hidden}
-.wv-fill{height:100%;border-radius:2px;transition:width .3s}
-.wv-fill.ok{background:var(--green)}.wv-fill.wrn{background:var(--amber)}.wv-fill.bad{background:var(--red)}
-.wv-meta{font:400 9px var(--mono);color:var(--t2);margin-top:3px}
+.wv.ok{background:var(--green3);color:var(--green)}
+.wv.wrn{background:var(--amber2);color:var(--amber)}
+.wv.bad{background:var(--red2);color:var(--red)}
+.wv-bar{height:5px;background:var(--bg2);border-radius:3px;margin-top:6px;overflow:hidden}
+.wv-fill{height:100%;border-radius:3px;transition:width .3s}
+.wv-fill.ok{background:var(--green2)}.wv-fill.wrn{background:var(--amber)}.wv-fill.bad{background:var(--red)}
+.wv-meta{font:400 10px var(--mono);color:var(--t2);margin-top:4px}
 
-/* ── SERVICES ── */
-.scat{margin-bottom:12px}
+/* ═══════════════════════ SERVICES ═══════════════════════ */
+.scat{margin-bottom:18px}
 .scat:last-child{margin-bottom:0}
 .scat-h{
-  display:flex;align-items:center;gap:5px;
-  padding-bottom:5px;margin-bottom:6px;
-  border-bottom:1px solid rgba(255,255,255,.04);
-  font:600 9px var(--sans);text-transform:uppercase;letter-spacing:.04em;color:var(--t1);
+  display:flex;align-items:center;gap:6px;
+  padding-bottom:8px;margin-bottom:10px;
+  border-bottom:1px solid var(--bg2);
+  font:700 11px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--t2);
 }
 .scat-cnt{
-  font:400 8px var(--mono);padding:1px 5px;
-  background:var(--bg0);border-radius:3px;color:var(--t2);margin-left:auto;
+  font:500 10px var(--mono);padding:2px 8px;
+  background:var(--bg2);border-radius:6px;color:var(--t2);margin-left:auto;
 }
 .svc{
-  display:flex;align-items:flex-start;gap:8px;
-  padding:7px 10px;background:var(--bg0);border:1px solid var(--brd);
-  border-radius:5px;margin-bottom:4px;cursor:pointer;transition:all .1s;
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 16px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .12s;
 }
-.svc:hover{border-color:var(--brd2);background:rgba(255,255,255,.02)}
-.svc.on{border-color:var(--blue);background:rgba(59,130,246,.05)}
-.svc.lk{cursor:default;opacity:.7}
-.svc.lk.on{opacity:1}
+.svc:hover{border-color:var(--blue4);background:var(--blue6);box-shadow:var(--shadow)}
+.svc.on{border-color:var(--blue);background:var(--blue6)}
+.svc.lk{cursor:default}
+.svc.lk:not(.on){opacity:.6}
 .svc-ck{
-  width:14px;height:14px;min-width:14px;
-  border:2px solid var(--brd2);border-radius:3px;
+  width:18px;height:18px;min-width:18px;
+  border:2px solid var(--border2);border-radius:5px;
   display:flex;align-items:center;justify-content:center;
-  margin-top:1px;transition:all .1s;
-  font-size:8px;color:transparent;font-weight:700;
+  margin-top:1px;transition:all .1s;font:700 10px var(--sans);color:transparent;
 }
 .svc.on .svc-ck{background:var(--blue);border-color:var(--blue);color:#fff}
 .svc-mid{flex:1;min-width:0}
-.svc-nm{font:500 11px var(--sans);display:flex;align-items:center;gap:4px}
-.svc-rd{width:4px;height:4px;background:var(--red);border-radius:50%}
-.svc-ds{font:400 9px var(--sans);color:var(--t2);margin-top:1px}
-.svc-docs{display:flex;gap:2px;flex-wrap:wrap;margin-top:4px}
+.svc-nm{font:600 13px var(--sans);color:var(--t0);display:flex;align-items:center;gap:4px}
+.svc-rd{width:5px;height:5px;background:var(--red);border-radius:50%}
+.svc-ds{font:400 11px var(--sans);color:var(--t2);margin-top:2px}
+.svc-docs{display:flex;gap:3px;flex-wrap:wrap;margin-top:6px}
 .svc-doc{
-  font:500 7px var(--mono);padding:1px 4px;
-  background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.15);
-  border-radius:2px;color:var(--purple);text-transform:uppercase;
+  font:500 8px var(--mono);padding:2px 6px;
+  background:var(--purple2);border-radius:4px;
+  color:var(--purple);text-transform:uppercase;letter-spacing:.03em;
 }
-.svc-pr{font:600 11px var(--mono);color:var(--cyan);white-space:nowrap;text-align:right}
-.svc-bs{font:400 8px var(--mono);color:var(--t2);text-align:right}
+.svc-pr{font:700 13px var(--mono);color:var(--blue);white-space:nowrap}
+.svc-bs{font:400 10px var(--mono);color:var(--t3);text-align:right}
 
-/* ── FREE DAYS ── */
-.fd-grid{display:flex;gap:5px}
+/* ═══════════════════════ FREE DAYS ═══════════════════════ */
+.fd-grid{display:flex;gap:8px}
 .fd-grid>div{
-  flex:1;padding:8px;background:var(--bg0);border:1px solid var(--brd);
-  border-radius:5px;cursor:pointer;text-align:center;transition:all .1s;
+  flex:1;padding:14px 10px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;cursor:pointer;text-align:center;transition:all .12s;
 }
-.fd-grid>div:hover{border-color:var(--brd2)}
-.fd-grid>div.on{border-color:var(--blue);background:rgba(59,130,246,.05)}
-.fd-n{font:700 16px var(--mono)}
-.fd-l{font:400 8px var(--sans);color:var(--t2);margin-top:1px}
-.fd-c{font:400 8px var(--mono);color:var(--amber);margin-top:2px}
+.fd-grid>div:hover{border-color:var(--blue4);box-shadow:var(--shadow)}
+.fd-grid>div.on{border-color:var(--blue);background:var(--blue6);box-shadow:var(--shadow-blue)}
+.fd-n{font:800 20px var(--mono);color:var(--navy)}
+.fd-l{font:500 10px var(--sans);color:var(--t2);margin-top:2px}
+.fd-c{font:500 10px var(--mono);color:var(--amber);margin-top:4px}
 
-/* ── CARRIERS ── */
+/* ═══════════════════════ CARRIERS ═══════════════════════ */
 .cr{
-  display:flex;align-items:center;gap:10px;
-  padding:10px;background:var(--bg0);border:1px solid var(--brd);
-  border-radius:5px;margin-bottom:5px;cursor:pointer;transition:all .12s;
+  display:flex;align-items:center;gap:14px;
+  padding:16px;background:var(--bg);border:1px solid var(--border);
+  border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all .12s;
 }
-.cr:hover{border-color:var(--brd2);background:rgba(255,255,255,.02)}
-.cr.on{border-color:var(--blue);background:rgba(59,130,246,.04);box-shadow:0 0 12px rgba(59,130,246,.06)}
+.cr:hover{border-color:var(--blue4);background:var(--blue6);box-shadow:var(--shadow)}
+.cr.on{border-color:var(--blue);background:var(--blue6);box-shadow:var(--shadow-blue)}
 .cr-logo{
-  width:42px;height:42px;min-width:42px;
-  background:var(--bg3);border:1px solid var(--brd);border-radius:5px;
+  width:50px;height:50px;min-width:50px;
+  background:var(--white);border:1px solid var(--border);border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font:700 9px var(--mono);color:var(--t1);
+  font:700 10px var(--mono);color:var(--navy);
 }
 .cr-info{flex:1;min-width:0}
-.cr-nm{font:600 12px var(--sans);display:flex;align-items:center;gap:5px}
+.cr-nm{font:600 14px var(--sans);color:var(--navy);display:flex;align-items:center;gap:6px}
 .cr-bdg{
-  font:500 7px var(--mono);padding:2px 5px;border-radius:50px;
-  text-transform:uppercase;letter-spacing:.03em;
-  background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2);
+  font:600 8px var(--mono);padding:2px 7px;border-radius:6px;
+  background:var(--green3);color:var(--green);text-transform:uppercase;letter-spacing:.03em;
 }
-.cr-meta{display:flex;gap:10px;margin-top:3px;font:400 9px var(--mono);color:var(--t2)}
-.cr-right{text-align:right;min-width:70px}
-.cr-rate{font:700 16px var(--mono)}
-.cr-per{font:400 8px var(--mono);color:var(--t2)}
-.cr-av{font:500 8px var(--mono);margin-top:2px;padding:1px 4px;border-radius:3px;display:inline-block}
-.cr-av.yes{background:rgba(16,185,129,.1);color:var(--green)}
-.cr-av.no{background:rgba(245,158,11,.1);color:var(--amber)}
+.cr-meta{display:flex;gap:14px;margin-top:4px;font:400 11px var(--mono);color:var(--t2)}
+.cr-right{text-align:right;min-width:80px}
+.cr-rate{font:800 18px var(--mono);color:var(--navy);letter-spacing:-.02em}
+.cr-per{font:400 10px var(--mono);color:var(--t3)}
+.cr-av{font:600 9px var(--mono);margin-top:3px;padding:2px 6px;border-radius:5px;display:inline-block}
+.cr-av.yes{background:var(--green3);color:var(--green)}
+.cr-av.no{background:var(--amber2);color:var(--amber)}
 
-/* ── INSURANCE ── */
+/* ═══════════════════════ INSURANCE ═══════════════════════ */
 .ins-bar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 14px;
-  background:linear-gradient(135deg,rgba(16,185,129,.03),rgba(34,211,238,.03));
-  border:1px solid var(--brd);border-radius:8px;cursor:pointer;transition:all .15s;
+  padding:18px 20px;background:var(--bg);border:1px solid var(--border);
+  border-radius:12px;cursor:pointer;transition:all .15s;
 }
-.ins-bar.on{border-color:var(--green);box-shadow:0 0 10px rgba(16,185,129,.06)}
-.ins-left{display:flex;align-items:center;gap:8px}
-.ins-nm{font:600 12px var(--sans)}
-.ins-sub{font:400 9px var(--sans);color:var(--t2);margin-top:1px}
+.ins-bar:hover{border-color:var(--blue4);box-shadow:var(--shadow)}
+.ins-bar.on{border-color:var(--green2);background:var(--green3)}
+.ins-left{display:flex;align-items:center;gap:12px}
+.ins-nm{font:600 14px var(--sans);color:var(--navy)}
+.ins-sub{font:400 11px var(--sans);color:var(--t2);margin-top:1px}
 .tog{
-  width:36px;height:19px;background:var(--bg0);
-  border:2px solid var(--brd2);border-radius:10px;
-  position:relative;transition:all .2s;
+  width:44px;height:24px;background:var(--bg3);
+  border-radius:12px;position:relative;transition:all .2s;cursor:pointer;
 }
-.tog.on{background:var(--green);border-color:var(--green)}
+.tog.on{background:var(--green2)}
 .tog-k{
-  width:13px;height:13px;background:#fff;border-radius:50%;
-  position:absolute;top:1px;left:1px;transition:transform .2s;
+  width:18px;height:18px;background:#fff;border-radius:50%;
+  position:absolute;top:3px;left:3px;transition:transform .2s;
+  box-shadow:0 1px 3px rgba(0,0,0,.1);
 }
-.tog.on .tog-k{transform:translateX(17px)}
+.tog.on .tog-k{transform:translateX(20px)}
 
-.cov-grid{display:flex;gap:5px;margin-top:12px}
+.cov-grid{display:flex;gap:8px;margin-top:16px}
 .cov-grid>div{
-  flex:1;padding:8px;background:var(--bg0);border:1px solid var(--brd);
-  border-radius:5px;cursor:pointer;text-align:center;transition:all .1s;
+  flex:1;padding:14px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;cursor:pointer;text-align:center;transition:all .12s;
 }
-.cov-grid>div:hover{border-color:var(--brd2)}
-.cov-grid>div.on{border-color:var(--green);background:rgba(16,185,129,.05)}
-.cov-nm{font:600 11px var(--sans)}
-.cov-rt{font:400 9px var(--mono);color:var(--t2);margin-top:1px}
-.cov-pr{font:700 13px var(--mono);color:var(--green);margin-top:4px}
+.cov-grid>div:hover{border-color:var(--green2);box-shadow:var(--shadow)}
+.cov-grid>div.on{border-color:var(--green2);background:var(--green3)}
+.cov-nm{font:600 13px var(--sans);color:var(--navy)}
+.cov-rt{font:400 11px var(--mono);color:var(--t2);margin-top:2px}
+.cov-pr{font:800 15px var(--mono);color:var(--green);margin-top:6px}
+.ins-stats{display:flex;gap:12px;margin-top:16px}
+.ins-stats>div{flex:1;padding:12px;background:var(--bg);border-radius:10px;border:1px solid var(--border)}
+.ins-sl{font:500 9px var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:.05em}
+.ins-sv{font:700 14px var(--mono);color:var(--blue);margin-top:3px}
+.ins-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:12px}
+.ins-tg{font:500 9px var(--mono);padding:3px 8px;border-radius:5px}
+.ins-tg.ok{background:var(--green3);color:var(--green)}
+.ins-tg.no{background:var(--red2);color:var(--red)}
 
-.ins-stats{display:flex;gap:10px;margin-top:12px}
-.ins-stats>div{flex:1}
-.ins-sl{font:400 8px var(--mono);color:var(--t2);text-transform:uppercase;letter-spacing:.04em}
-.ins-sv{font:600 12px var(--mono);color:var(--cyan);margin-top:2px}
-.ins-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:8px}
-.ins-tg{font:500 7px var(--mono);padding:1px 5px;border-radius:2px}
-.ins-tg.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.15);color:var(--green)}
-.ins-tg.no{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.15);color:var(--red)}
-
-/* ── BL & DOCS ── */
-.bl-grid{display:flex;gap:5px}
+/* ═══════════════════════ BL & DOCS ═══════════════════════ */
+.bl-grid{display:flex;gap:8px}
 .bl-grid>div{
-  flex:1;padding:8px;background:var(--bg0);border:1px solid var(--brd);
-  border-radius:5px;cursor:pointer;text-align:center;transition:all .1s;
+  flex:1;padding:12px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;cursor:pointer;text-align:center;transition:all .12s;
 }
-.bl-grid>div:hover{border-color:var(--brd2)}
-.bl-grid>div.on{border-color:var(--blue);background:rgba(59,130,246,.05)}
-.bl-nm{font:500 11px var(--sans)}
-.bl-ds{font:400 8px var(--sans);color:var(--t2);margin-top:1px}
-
+.bl-grid>div:hover{border-color:var(--blue4);box-shadow:var(--shadow)}
+.bl-grid>div.on{border-color:var(--blue);background:var(--blue6)}
+.bl-nm{font:600 12px var(--sans);color:var(--navy)}
+.bl-ds{font:400 10px var(--sans);color:var(--t3);margin-top:2px}
 .doc-item{
-  display:flex;align-items:center;gap:8px;
-  padding:6px 10px;background:var(--bg0);border:1px solid var(--brd);
-  border-radius:5px;margin-bottom:3px;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:4px;
 }
-.doc-dot{width:6px;height:6px;border-radius:50%;background:var(--t2);flex-shrink:0}
-.doc-nm{flex:1;font:500 10px var(--sans)}
-.doc-req{
-  font:500 7px var(--mono);padding:1px 4px;
-  background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.15);
-  border-radius:2px;color:var(--red);
-}
-.doc-st{font:400 8px var(--mono);color:var(--t2)}
+.doc-dot{width:8px;height:8px;border-radius:50%;background:var(--t3);flex-shrink:0}
+.doc-nm{flex:1;font:500 12px var(--sans);color:var(--t0)}
+.doc-req{font:600 8px var(--mono);padding:2px 6px;background:var(--red2);border-radius:4px;color:var(--red)}
+.doc-st{font:400 10px var(--mono);color:var(--t3)}
 
-/* ── SIDEBAR PRICING ── */
-.sb-sec{padding:10px 14px;border-bottom:1px solid var(--brd)}
-.sb-ttl{
-  font:600 8px var(--mono);text-transform:uppercase;
-  letter-spacing:.06em;color:var(--t2);margin-bottom:6px;
+/* ═══════════════════════ SIDEBAR ═══════════════════════ */
+.side-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:14px;box-shadow:var(--shadow);
+  position:sticky;top:88px;overflow:hidden;
 }
-.sb-ln{display:flex;justify-content:space-between;padding:2px 0;font-size:10px}
-.sb-ln.sub{padding-top:5px;margin-top:5px;border-top:1px solid var(--brd);font-weight:600}
-.sb-lbl{color:var(--t1)}
-.sb-amt{font-family:var(--mono);font-weight:500}
+.sb-sec{padding:14px 20px;border-bottom:1px solid var(--border)}
+.sb-ttl{font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:8px}
+.sb-ln{display:flex;justify-content:space-between;padding:3px 0;font-size:12px}
+.sb-ln.sub{padding-top:8px;margin-top:8px;border-top:1px solid var(--border);font-weight:700}
+.sb-lbl{color:var(--t2)}
+.sb-amt{font-family:var(--mono);font-weight:600;color:var(--t0)}
 
 .sb-inc{
   display:flex;justify-content:space-between;align-items:center;
-  padding:5px 8px;background:rgba(16,185,129,.05);
-  border:1px solid rgba(16,185,129,.12);border-radius:5px;margin-bottom:4px;
+  padding:8px 12px;background:var(--green3);border-radius:8px;margin-bottom:5px;
 }
-.sb-inc-tp{font:500 10px var(--sans);color:#34d399}
-.sb-inc-am{font:600 10px var(--mono);color:var(--green)}
-.sb-inc-nt{font:400 7px var(--mono);color:var(--t2);margin-top:1px}
+.sb-inc-tp{font:600 11px var(--sans);color:var(--green)}
+.sb-inc-am{font:700 11px var(--mono);color:var(--green)}
+.sb-inc-nt{font:400 9px var(--mono);color:var(--t2);margin-top:1px}
 
-.sb-total-wrap{
-  border-top:2px solid var(--blue);
-  background:linear-gradient(135deg,var(--bg3),var(--bg4));
-}
 .sb-total{
-  display:flex;justify-content:space-between;align-items:baseline;
-  padding:12px 14px;
+  padding:18px 20px;
+  background:linear-gradient(135deg,var(--navy),var(--blue2));
+  color:#fff;
 }
-.sb-total-lbl{font:600 10px var(--sans);text-transform:uppercase;letter-spacing:.04em}
-.sb-total-val{font:700 20px var(--mono);color:var(--cyan)}
-.sb-net{font:400 9px var(--mono);color:var(--green);text-align:right;margin-top:1px}
+.sb-total-top{display:flex;justify-content:space-between;align-items:baseline}
+.sb-total-lbl{font:600 11px var(--sans);text-transform:uppercase;letter-spacing:.04em;color:rgba(255,255,255,.6)}
+.sb-total-val{font:800 24px var(--mono);letter-spacing:-.02em}
+.sb-net{font:400 11px var(--mono);color:rgba(255,255,255,.5);text-align:right;margin-top:4px}
+.sb-btn-wrap{padding:16px 20px}
 
+/* ═══════════════════════ BUTTONS ═══════════════════════ */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:5px;
-  padding:8px 16px;border-radius:5px;font:600 12px var(--sans);
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 24px;border-radius:10px;font:600 13px var(--sans);
   cursor:pointer;border:none;outline:none;transition:all .15s;
 }
 .btn-p{
-  background:linear-gradient(135deg,var(--blue),#2563eb);
-  color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.2);
+  background:var(--blue);color:#fff;
+  box-shadow:var(--shadow-blue);
 }
-.btn-p:hover{box-shadow:0 4px 14px rgba(59,130,246,.3);transform:translateY(-1px)}
+.btn-p:hover{background:var(--blue2);box-shadow:0 6px 20px rgba(37,99,235,.3);transform:translateY(-1px)}
 .btn-p:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
-.btn-g{
-  background:linear-gradient(135deg,var(--green),#059669);
-  color:#fff;box-shadow:0 2px 8px rgba(16,185,129,.2);
-}
-.btn-g:hover{box-shadow:0 4px 14px rgba(16,185,129,.3);transform:translateY(-1px)}
+.btn-g{background:var(--green);color:#fff;box-shadow:0 4px 14px rgba(5,150,105,.2)}
+.btn-g:hover{background:#047857;transform:translateY(-1px)}
 .btn-full{width:100%}
+.btn-lg{padding:14px 28px;font-size:14px}
 
 .hidden{display:none!important}
-.mt{margin-top:10px}
 
-@media(max-width:900px){
-  .sidebar{display:none}
+@media(max-width:1100px){
+  .workspace.vis{flex-direction:column}
+  .ws-side{width:100%;min-width:0}
+  .side-card{position:static}
+  .hero h1{font-size:30px}
+  .stats-strip{flex-wrap:wrap}
+  .stat-item{min-width:45%}
+  .features{flex-wrap:wrap}
+  .feat{min-width:45%}
+  .search-row{flex-wrap:wrap}
+  .search-row>.fg{min-width:200px}
+}
+@media(max-width:640px){
+  .topbar{padding:0 16px}
+  .hero{padding:36px 16px 32px}
+  .hero h1{font-size:24px}
+  .workspace{padding:16px}
+  .card-b{padding:16px}
+  .row{flex-direction:column}
+  .fd-grid{flex-wrap:wrap}
+  .fd-grid>div{min-width:45%}
+  .bl-grid{flex-wrap:wrap}
+  .bl-grid>div{min-width:45%}
+  .cr{flex-wrap:wrap}
+  .cr-right{text-align:left;min-width:100%;display:flex;gap:12px;align-items:center;padding-top:8px;border-top:1px solid var(--border)}
 }
 </style>
 </head>
 <body>
 
-<div id="app">
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">W</div>
-      <span class="brand-name">Wort Freight</span>
-      <span class="brand-tag">Terminal v2</span>
+<!-- ═══════════ TOPBAR ═══════════ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">W</div>
+    <span class="brand-name">Wort Freight<span class="brand-dot"></span></span>
+    <span class="brand-tag">Terminal</span>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-stat"><span class="dot"></span> Market Live</div>
+    <div class="topbar-stat" id="clk"></div>
+  </div>
+</header>
+
+<!-- ═══════════ HERO / LANDING ═══════════ -->
+<section class="hero" id="heroSection">
+  <div class="hero-inner">
+    <div class="hero-label"><span class="dot"></span> Powered by real-time market data</div>
+    <h1>Ship smarter with <span>transparent freight</span> pricing</h1>
+    <p class="hero-sub">Compare rates from 70+ carriers, configure end-to-end services, and get your total landing cost — before you book.</p>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <div class="search-row">
+        <div class="fg" style="margin-bottom:0">
+          <label class="fl">Origin Port</label>
+          <div class="port-w">
+            <span class="port-icon">🚢</span>
+            <input class="port-i" id="inp-o" placeholder="Search port or city..." autocomplete="off">
+            <div class="port-dd" id="dd-o"></div>
+          </div>
+        </div>
+        <div class="fg" style="margin-bottom:0">
+          <label class="fl">Destination Port</label>
+          <div class="port-w">
+            <span class="port-icon">📍</span>
+            <input class="port-i" id="inp-d" placeholder="Search port or city..." autocomplete="off">
+            <div class="port-dd" id="dd-d"></div>
+          </div>
+        </div>
+        <div style="flex:0 0 auto;align-self:flex-end">
+          <button class="btn btn-p btn-lg" id="btnSearch" disabled>Search Rates →</button>
+        </div>
+      </div>
+      <div class="rate-bar" id="rateBar">
+        <div style="flex:1">
+          <div class="rate-lbl">Estimated Price Range</div>
+          <div style="display:flex;align-items:baseline;gap:4px;margin-top:3px">
+            <span class="rate-val" id="rMin"></span>
+            <span class="rate-sep">–</span>
+            <span class="rate-val" id="rMax"></span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div id="rTrend"></div>
+          <div class="hint" style="margin-top:4px" id="rPts"></div>
+        </div>
+      </div>
     </div>
-    <div class="clock">
-      <span class="live-dot"></span>
-      Live · <span id="clk"></span>
+
+    <!-- Stats -->
+    <div class="stats-strip">
+      <div class="stat-item">
+        <div class="stat-val">70+</div>
+        <div class="stat-label">Global Carriers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">2,400+</div>
+        <div class="stat-label">Port Pairs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">$2.1B</div>
+        <div class="stat-label">Cargo Managed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">99.4%</div>
+        <div class="stat-label">On-Time Rate</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">18%</div>
+        <div class="stat-label">Avg Savings</div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features">
+      <div class="feat">
+        <span class="feat-icon">📊</span>
+        <div class="feat-text"><strong>Live Market Rates</strong>Real-time pricing across all trade lanes</div>
+      </div>
+      <div class="feat">
+        <span class="feat-icon">🛡️</span>
+        <div class="feat-text"><strong>One-Click Insurance</strong>Comprehensive cargo coverage</div>
+      </div>
+      <div class="feat">
+        <span class="feat-icon">💰</span>
+        <div class="feat-text"><strong>Incentive Tracker</strong>RoDTEP & GST refund estimates</div>
+      </div>
+      <div class="feat">
+        <span class="feat-icon">📄</span>
+        <div class="feat-text"><strong>Document Engine</strong>Automated compliance docs</div>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="body-wrap">
-    <!-- MAIN -->
-    <div class="main" id="main">
+<!-- ═══════════ WORKSPACE ═══════════ -->
+<div class="workspace" id="workspace">
+  <div class="ws-main">
 
-      <!-- SEARCH -->
-      <div class="card">
-        <div class="card-h">
-          <div class="card-h-left">
-            <div class="card-ico bl">🔍</div>
-            <div><div class="card-ttl">Route Search</div><div class="card-sub">Find shipping routes between ports</div></div>
-          </div>
+    <!-- Map -->
+    <div class="map-wrap" id="mapWrap">
+      <canvas id="mapC"></canvas>
+      <div class="map-chips">
+        <div class="map-chip">📏 <b id="mDist"></b> NM</div>
+        <div class="map-chip">⏱️ <b id="mDays"></b> days transit</div>
+      </div>
+    </div>
+
+    <!-- Cargo -->
+    <div class="card">
+      <div class="card-h">
+        <div class="card-h-l"><div class="card-ico am">📦</div>
+          <div><div class="card-ttl">Cargo Requirements</div><div class="card-sub">Define container specs and cargo details</div></div>
         </div>
-        <div class="card-b">
-          <div class="row">
-            <div class="fg">
-              <label class="fl">Origin Port</label>
-              <div class="port-w">
-                <span class="port-icon">🚢</span>
-                <input class="port-i" id="inp-o" placeholder="Search port..." autocomplete="off">
-                <div class="port-dd" id="dd-o"></div>
-              </div>
-            </div>
-            <div class="fg">
-              <label class="fl">Destination Port</label>
-              <div class="port-w">
-                <span class="port-icon">📍</span>
-                <input class="port-i" id="inp-d" placeholder="Search port..." autocomplete="off">
-                <div class="port-dd" id="dd-d"></div>
-              </div>
-            </div>
-            <div class="fg" style="flex:0 0 auto;justify-content:flex-end">
-              <label class="fl">&nbsp;</label>
-              <button class="btn btn-p" id="btnSearch" disabled>Search Rates →</button>
-            </div>
-          </div>
-          <div class="rate-bar" id="rateBar">
-            <div style="flex:1">
-              <div class="rate-lbl">Estimated Freight Price Range</div>
-              <div style="display:flex;align-items:baseline;gap:4px;margin-top:2px">
-                <span class="rate-val" id="rMin"></span>
-                <span class="rate-sep">–</span>
-                <span class="rate-val" id="rMax"></span>
-              </div>
-            </div>
-            <div style="text-align:right">
-              <div id="rTrend"></div>
-              <div class="hint mt" id="rPts"></div>
-            </div>
-          </div>
+        <span class="badge badge-req">Required</span>
+      </div>
+      <div class="card-b">
+        <div class="row">
+          <div class="fg"><label class="fl">Container Size</label><select class="fs" id="cSize"><option>20ft</option><option>40ft</option><option>40ft-HC</option><option>45ft-HC</option></select></div>
+          <div class="fg"><label class="fl">Container Type</label><select class="fs" id="cType"><option>Standard</option><option>Reefer</option><option>Open-Top</option><option>Flat-Rack</option><option>Tank</option></select></div>
+          <div class="fg"><label class="fl">Quantity</label><input class="fi" type="number" id="cQty" value="1" min="1"></div>
+          <div class="fg"><label class="fl">Gross Weight</label><div style="display:flex;gap:6px"><input class="fi" type="number" id="cWt" placeholder="0.0" min="0" step="0.1" style="flex:1"><select class="fs" id="cWU" style="width:64px"><option>MT</option><option>KG</option><option>LBS</option></select></div></div>
+        </div>
+        <div class="wv" id="wvBox"></div>
+        <div class="row" style="margin-top:4px">
+          <div class="fg"><label class="fl">Commodity</label><input class="fi" id="cComm" placeholder="e.g., Cotton Textiles"></div>
+          <div class="fg"><label class="fl">HS Code</label><input class="fi" id="cHS" placeholder="e.g., 6109.10"><div class="hint">Used for incentive calculation</div></div>
+          <div class="fg"><label class="fl">Cargo Value (USD)</label><input class="fi" type="number" id="cVal" placeholder="0" min="0" step="100"></div>
         </div>
       </div>
+    </div>
 
-      <!-- MAP -->
-      <div class="map-wrap" id="mapWrap">
-        <canvas id="mapC"></canvas>
-        <div class="map-chips">
-          <div class="map-chip">📏 <b id="mDist"></b> NM</div>
-          <div class="map-chip">⏱️ <b id="mDays"></b> days</div>
+    <!-- Origin Services -->
+    <div class="card">
+      <div class="card-h">
+        <div class="card-h-l"><div class="card-ico bl">🚢</div>
+          <div><div class="card-ttl">Origin Services</div><div class="card-sub">Export-side logistics and documentation</div></div>
+        </div>
+        <span class="badge badge-opt">Add-ons</span>
+      </div>
+      <div class="card-b" id="originSvc"></div>
+    </div>
+
+    <!-- Destination Services -->
+    <div class="card">
+      <div class="card-h">
+        <div class="card-h-l"><div class="card-ico gr">📍</div>
+          <div><div class="card-ttl">Destination Services</div><div class="card-sub">Import logistics and last-mile delivery</div></div>
+        </div>
+        <span class="badge badge-opt">Add-ons</span>
+      </div>
+      <div class="card-b">
+        <div id="destSvc"></div>
+        <div class="scat" style="margin-top:18px">
+          <div class="scat-h"><span>⏰</span> Free Days Extension</div>
+          <p class="hint" style="margin-bottom:10px">Extend free days to prevent detention &amp; demurrage charges at destination port</p>
+          <div class="fd-grid" id="fdGrid"></div>
+          <div class="hidden" style="margin-top:10px" id="fdCustWrap"><div class="fg" style="max-width:160px"><label class="fl">Custom Days</label><input class="fi" type="number" id="fdCust" value="10" min="1" max="60"></div></div>
+          <div class="hidden" style="margin-top:8px" id="fdCost"></div>
         </div>
       </div>
+    </div>
 
-      <!-- PANELS (hidden until search) -->
-      <div id="panels" class="hidden">
-
-        <!-- CARGO -->
-        <div class="card">
-          <div class="card-h">
-            <div class="card-h-left">
-              <div class="card-ico am">📦</div>
-              <div><div class="card-ttl">Cargo Requirements</div><div class="card-sub">Container specs & cargo details</div></div>
-            </div>
-            <span class="badge badge-req">Required</span>
-          </div>
-          <div class="card-b">
-            <div class="row">
-              <div class="fg">
-                <label class="fl">Container Size</label>
-                <select class="fs" id="cSize"><option>20ft</option><option>40ft</option><option>40ft-HC</option><option>45ft-HC</option></select>
-              </div>
-              <div class="fg">
-                <label class="fl">Container Type</label>
-                <select class="fs" id="cType"><option>Standard</option><option>Reefer</option><option>Open-Top</option><option>Flat-Rack</option><option>Tank</option></select>
-              </div>
-              <div class="fg">
-                <label class="fl">Quantity</label>
-                <input class="fi" type="number" id="cQty" value="1" min="1">
-              </div>
-              <div class="fg">
-                <label class="fl">Gross Weight</label>
-                <div style="display:flex;gap:5px">
-                  <input class="fi" type="number" id="cWt" placeholder="0.0" min="0" step="0.1" style="flex:1">
-                  <select class="fs" id="cWU" style="width:58px"><option>MT</option><option>KG</option><option>LBS</option></select>
-                </div>
-              </div>
-            </div>
-            <div class="wv" id="wvBox"></div>
-            <div class="row mt">
-              <div class="fg"><label class="fl">Commodity</label><input class="fi" id="cComm" placeholder="e.g., Cotton Textiles"></div>
-              <div class="fg"><label class="fl">HS Code</label><input class="fi" id="cHS" placeholder="e.g., 6109.10"><div class="hint">For incentive calc</div></div>
-              <div class="fg"><label class="fl">Cargo Value (USD)</label><input class="fi" type="number" id="cVal" placeholder="0" min="0" step="100"></div>
-            </div>
-          </div>
+    <!-- Carriers -->
+    <div class="card">
+      <div class="card-h">
+        <div class="card-h-l"><div class="card-ico pu">⚓</div>
+          <div><div class="card-ttl">Carrier Selection</div><div class="card-sub" id="crCnt">Select your preferred carrier</div></div>
         </div>
+      </div>
+      <div class="card-b" id="crBody"></div>
+    </div>
 
-        <!-- ORIGIN SERVICES -->
-        <div class="card">
-          <div class="card-h">
-            <div class="card-h-left">
-              <div class="card-ico bl">🚢</div>
-              <div><div class="card-ttl">Origin Services</div><div class="card-sub">Export logistics & documentation</div></div>
-            </div>
-            <span class="badge badge-opt">Add-ons</span>
-          </div>
-          <div class="card-b" id="originSvc"></div>
+    <!-- Insurance -->
+    <div class="card">
+      <div class="card-h">
+        <div class="card-h-l"><div class="card-ico gr">🛡️</div>
+          <div><div class="card-ttl">Cargo Insurance</div><div class="card-sub">Protect your shipment with comprehensive coverage</div></div>
         </div>
-
-        <!-- DESTINATION SERVICES -->
-        <div class="card">
-          <div class="card-h">
-            <div class="card-h-left">
-              <div class="card-ico gr">📍</div>
-              <div><div class="card-ttl">Destination Services</div><div class="card-sub">Import logistics & last-mile</div></div>
-            </div>
-            <span class="badge badge-opt">Add-ons</span>
+      </div>
+      <div class="card-b">
+        <div class="ins-bar" id="insBar">
+          <div class="ins-left">
+            <span style="font-size:22px">🛡️</span>
+            <div><div class="ins-nm">Comprehensive Cargo Coverage</div><div class="ins-sub">One-click insurance with auto-calculated premiums</div></div>
           </div>
-          <div class="card-b">
-            <div id="destSvc"></div>
-            <div class="scat" style="margin-top:12px">
-              <div class="scat-h"><span>⏰</span> Free Days Extension</div>
-              <div class="hint" style="margin-bottom:6px">Prevent detention & demurrage at destination</div>
-              <div class="fd-grid" id="fdGrid"></div>
-              <div class="hidden mt" id="fdCustWrap"><div class="fg" style="max-width:140px"><label class="fl">Custom Days</label><input class="fi" type="number" id="fdCust" value="10" min="1" max="60"></div></div>
-              <div class="hidden mt" id="fdCost" style="font:500 10px var(--mono);color:var(--amber)"></div>
-            </div>
-          </div>
+          <div class="tog" id="insTog"><div class="tog-k"></div></div>
         </div>
+        <div class="hidden" id="insBody"></div>
+      </div>
+    </div>
 
-        <!-- CARRIERS -->
-        <div class="card">
-          <div class="card-h">
-            <div class="card-h-left">
-              <div class="card-ico pu">⚓</div>
-              <div><div class="card-ttl">Carrier Selection</div><div class="card-sub" id="crCnt"></div></div>
-            </div>
-          </div>
-          <div class="card-b" id="crBody"></div>
+    <!-- Documents -->
+    <div class="card">
+      <div class="card-h">
+        <div class="card-h-l"><div class="card-ico pu">📄</div>
+          <div><div class="card-ttl">Documents &amp; Bill of Lading</div><div class="card-sub">Required documentation based on selected services</div></div>
         </div>
+      </div>
+      <div class="card-b">
+        <label class="fl" style="margin-bottom:8px;display:block">Bill of Lading Type</label>
+        <div class="bl-grid" id="blGrid"></div>
+        <div style="margin-top:16px" id="docList"></div>
+      </div>
+    </div>
 
-        <!-- INSURANCE -->
-        <div class="card">
-          <div class="card-h">
-            <div class="card-h-left">
-              <div class="card-ico gr">🛡️</div>
-              <div><div class="card-ttl">Cargo Insurance</div><div class="card-sub">Protect your shipment</div></div>
-            </div>
-          </div>
-          <div class="card-b">
-            <div class="ins-bar" id="insBar">
-              <div class="ins-left">
-                <span style="font-size:18px">🛡️</span>
-                <div><div class="ins-nm">Comprehensive Coverage</div><div class="ins-sub">One-click, auto-calculated premiums</div></div>
-              </div>
-              <div class="tog" id="insTog"><div class="tog-k"></div></div>
-            </div>
-            <div class="hidden" id="insBody"></div>
-          </div>
-        </div>
+  </div>
 
-        <!-- DOCUMENTS -->
-        <div class="card">
-          <div class="card-h">
-            <div class="card-h-left">
-              <div class="card-ico pu">📄</div>
-              <div><div class="card-ttl">Documents & B/L Type</div><div class="card-sub">Based on selected services</div></div>
-            </div>
-          </div>
-          <div class="card-b">
-            <label class="fl" style="margin-bottom:6px;display:block">Bill of Lading Type</label>
-            <div class="bl-grid" id="blGrid"></div>
-            <div class="mt" id="docList"></div>
-          </div>
-        </div>
-
-      </div><!-- /panels -->
-    </div><!-- /main -->
-
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sb-sec" style="background:var(--bg3)">
+  <!-- Sidebar -->
+  <div class="ws-side">
+    <div class="side-card">
+      <div class="sb-sec" style="background:var(--bg)">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font:600 11px var(--sans)">💰 Price Breakdown</span>
-          <span id="sbSpec" style="font:400 8px var(--mono);color:var(--t2)"></span>
+          <span style="font:700 14px var(--sans);color:var(--navy)">💰 Price Breakdown</span>
+          <span id="sbSpec" style="font:500 10px var(--mono);color:var(--t3)"></span>
         </div>
       </div>
-      <div class="sb-scroll" id="sbContent">
-        <div class="sb-sec" style="text-align:center;padding:36px 14px">
-          <div style="font-size:24px;margin-bottom:6px">💰</div>
-          <div style="font:400 10px var(--sans);color:var(--t2)">Configure your shipment to<br>see the total landing cost</div>
+      <div id="sbContent">
+        <div class="sb-sec" style="text-align:center;padding:40px 20px">
+          <div style="font-size:28px;margin-bottom:8px">📊</div>
+          <div style="font:400 13px var(--sans);color:var(--t2)">Select a carrier to see<br>your total landing cost</div>
         </div>
       </div>
       <div class="hidden" id="sbBottom">
-        <div class="sb-total-wrap">
-          <div class="sb-total">
-            <div>
-              <div class="sb-total-lbl">Total Landing Cost</div>
-              <div class="sb-net hidden" id="sbNet"></div>
-            </div>
+        <div class="sb-total">
+          <div class="sb-total-top">
+            <div class="sb-total-lbl">Total Landing Cost</div>
             <div class="sb-total-val" id="sbTotalVal">$0</div>
           </div>
+          <div class="sb-net hidden" id="sbNet"></div>
         </div>
-        <div class="sb-sec">
-          <button class="btn btn-g btn-full" id="btnBook">📋 Confirm Booking</button>
-          <div style="font:400 8px var(--mono);color:var(--t2);text-align:center;margin-top:6px">Rates valid 7 days · No hidden charges</div>
+        <div class="sb-btn-wrap">
+          <button class="btn btn-g btn-full btn-lg" id="btnBook">📋 Confirm Booking</button>
+          <p style="font:400 10px var(--mono);color:var(--t3);text-align:center;margin-top:8px">Rates valid for 7 days · Zero hidden charges</p>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════ DATA ═══════════════════════════════ */
+/* ═══════════════════ DATA ═══════════════════ */
 const FL={IN:'🇮🇳',US:'🇺🇸',GB:'🇬🇧',SG:'🇸🇬',AE:'🇦🇪',CN:'🇨🇳',NL:'🇳🇱',DE:'🇩🇪',JP:'🇯🇵'};
 const PORTS=[
   {c:'INNSA',n:'Jawaharlal Nehru Port',ci:'Nhava Sheva',co:'India',cc:'IN',la:18.95,lo:72.95},
@@ -692,13 +806,7 @@ const PORTS=[
   {c:'DEHAM',n:'Port of Hamburg',ci:'Hamburg',co:'Germany',cc:'DE',la:53.53,lo:9.96},
   {c:'JPTYO',n:'Port of Tokyo',ci:'Tokyo',co:'Japan',cc:'JP',la:35.63,lo:139.77},
 ];
-const CSPECS={
-  '20ft-Standard':28200,'40ft-Standard':28750,'40ft-HC-Standard':28560,'45ft-HC-Standard':27600,
-  '20ft-Reefer':27400,'40ft-Reefer':27700,'40ft-HC-Reefer':26280,
-  '20ft-Open-Top':28130,'40ft-Open-Top':26630,
-  '20ft-Flat-Rack':27400,'40ft-Flat-Rack':39200,
-  '20ft-Tank':26000,'40ft-Tank':26000,
-};
+const CSPECS={'20ft-Standard':28200,'40ft-Standard':28750,'40ft-HC-Standard':28560,'45ft-HC-Standard':27600,'20ft-Reefer':27400,'40ft-Reefer':27700,'40ft-HC-Reefer':26280,'20ft-Open-Top':28130,'40ft-Open-Top':26630,'20ft-Flat-Rack':27400,'40ft-Flat-Rack':39200,'20ft-Tank':26000,'40ft-Tank':26000};
 const CARRIERS=[
   {id:'maersk',n:'Maersk',cd:'MAEU',a:true,r:94,d:22,fd:4},
   {id:'msc',n:'MSC',cd:'MSCU',a:true,r:91,d:24,fd:4},
@@ -711,87 +819,61 @@ const CARRIERS=[
   {id:'ial',n:'IAL',cd:'IALU',a:true,r:86,d:28,fd:4},
   {id:'wanhai',n:'Wan Hai',cd:'WHLC',a:false,r:88,d:26,fd:4},
 ];
-const BP={'INNSA-USNYC':1350,'INNSA-GBFXT':1180,'INNSA-NLRTM':1220,'INNSA-DEHAM':1250,
-  'INNSA-SGSIN':450,'INNSA-AEJEA':380,'INNSA-CNSHA':680,'INNSA-JPTYO':750,
-  'CNSHA-USNYC':2100,'CNSHA-GBFXT':1850};
+const BPR={'INNSA-USNYC':1350,'INNSA-GBFXT':1180,'INNSA-NLRTM':1220,'INNSA-DEHAM':1250,'INNSA-SGSIN':450,'INNSA-AEJEA':380,'INNSA-CNSHA':680,'INNSA-JPTYO':750,'CNSHA-USNYC':2100,'CNSHA-GBFXT':1850};
 const SM={'20ft':1,'40ft':1.75,'40ft-HC':1.85,'45ft-HC':2.1};
 const TM={'Standard':1,'Reefer':2.2,'Open-Top':1.4,'Flat-Rack':1.6,'Tank':1.8};
-
 const SVCS=[
-  {id:'o1',cat:'OL',n:'Terminal Handling',ds:'Lift-on/lift-off at origin',p:185,b:'c',rq:1,on:1,doc:[]},
-  {id:'o2',cat:'OL',n:'B/L Fee',ds:'B/L issuance',p:50,b:'b',rq:1,on:1,doc:['bill-of-lading']},
-  {id:'o3',cat:'OL',n:'Seal Charges',ds:'One-time seal',p:15,b:'c',rq:1,on:1,doc:[]},
-  {id:'o4',cat:'OL',n:'ENS Filing',ds:'EU Entry Summary',p:30,b:'b',rq:0,on:0,doc:[]},
-  {id:'o5',cat:'OC',n:'Customs Clearance',ds:'Full export clearance',p:120,b:'s',rq:0,on:0,doc:['shipping-bill','packing-list','commercial-invoice']},
-  {id:'o6',cat:'OC',n:'Customs Exam',ds:'Physical/X-ray coordination',p:75,b:'c',rq:0,on:0,doc:['shipping-bill']},
-  {id:'o7',cat:'OC',n:'Certificate of Origin',ds:'CoO procurement',p:45,b:'s',rq:0,on:0,doc:['certificate-of-origin']},
-  {id:'o8',cat:'OF',n:'CFS Stuffing',ds:'Consolidation & stuffing',p:95,b:'c',rq:0,on:0,doc:['packing-list']},
-  {id:'o9',cat:'OF',n:'CFS Storage',ds:'3 days free',p:25,b:'c',rq:0,on:0,doc:[]},
-  {id:'o10',cat:'OF',n:'Fumigation',ds:'Pest treatment',p:65,b:'c',rq:0,on:0,doc:['fumigation']},
-  {id:'d1',cat:'DL',n:'Terminal Handling',ds:'Destination terminal',p:210,b:'c',rq:1,on:1,doc:[]},
-  {id:'d2',cat:'DL',n:'Delivery Order',ds:'DO issuance',p:45,b:'b',rq:1,on:1,doc:[]},
-  {id:'d3',cat:'DL',n:'ISPS Charge',ds:'Port security',p:15,b:'c',rq:1,on:1,doc:[]},
-  {id:'d4',cat:'DC',n:'Import Clearance',ds:'Full import customs',p:150,b:'s',rq:0,on:0,doc:['commercial-invoice','packing-list','bill-of-lading']},
-  {id:'d5',cat:'DC',n:'Duty Payment',ds:'Duty & tax processing',p:35,b:'s',rq:0,on:0,doc:[]},
-  {id:'d6',cat:'DT',n:'Local Transport',ds:'Haulage ≤50km',p:285,b:'c',rq:0,on:0,doc:[]},
-  {id:'d7',cat:'DT',n:'Long Haul',ds:'Inland >50km',p:450,b:'c',rq:0,on:0,doc:[]},
-  {id:'d8',cat:'DT',n:'Destuffing',ds:'Destuff & deliver',p:120,b:'c',rq:0,on:0,doc:[]},
+  {id:'o1',cat:'OL',n:'Terminal Handling',ds:'Lift-on/lift-off at origin terminal',p:185,b:'c',rq:1,on:1,doc:[]},
+  {id:'o2',cat:'OL',n:'B/L Documentation Fee',ds:'Bill of Lading issuance & processing',p:50,b:'b',rq:1,on:1,doc:['bill-of-lading']},
+  {id:'o3',cat:'OL',n:'Seal Charges',ds:'One-time container seal',p:15,b:'c',rq:1,on:1,doc:[]},
+  {id:'o4',cat:'OL',n:'ENS Filing',ds:'EU Entry Summary Declaration',p:30,b:'b',rq:0,on:0,doc:[]},
+  {id:'o5',cat:'OC',n:'Export Customs Clearance',ds:'Full export customs with documentation',p:120,b:'s',rq:0,on:0,doc:['shipping-bill','packing-list','commercial-invoice']},
+  {id:'o6',cat:'OC',n:'Customs Examination',ds:'Physical or X-ray exam coordination',p:75,b:'c',rq:0,on:0,doc:['shipping-bill']},
+  {id:'o7',cat:'OC',n:'Certificate of Origin',ds:'CoO procurement & attestation',p:45,b:'s',rq:0,on:0,doc:['certificate-of-origin']},
+  {id:'o8',cat:'OF',n:'CFS Stuffing',ds:'Cargo consolidation & stuffing',p:95,b:'c',rq:0,on:0,doc:['packing-list']},
+  {id:'o9',cat:'OF',n:'CFS Storage',ds:'Warehouse storage (3 days free)',p:25,b:'c',rq:0,on:0,doc:[]},
+  {id:'o10',cat:'OF',n:'Fumigation',ds:'Pest treatment & certification',p:65,b:'c',rq:0,on:0,doc:['fumigation']},
+  {id:'d1',cat:'DL',n:'Terminal Handling',ds:'Handling at destination terminal',p:210,b:'c',rq:1,on:1,doc:[]},
+  {id:'d2',cat:'DL',n:'Delivery Order Fee',ds:'DO issuance & processing',p:45,b:'b',rq:1,on:1,doc:[]},
+  {id:'d3',cat:'DL',n:'ISPS Security',ds:'International port facility security',p:15,b:'c',rq:1,on:1,doc:[]},
+  {id:'d4',cat:'DC',n:'Import Customs Clearance',ds:'Full import clearance with duty assessment',p:150,b:'s',rq:0,on:0,doc:['commercial-invoice','packing-list','bill-of-lading']},
+  {id:'d5',cat:'DC',n:'Duty Payment Facilitation',ds:'Customs duty & tax processing',p:35,b:'s',rq:0,on:0,doc:[]},
+  {id:'d6',cat:'DT',n:'Local Transportation',ds:'Container haulage within 50km',p:285,b:'c',rq:0,on:0,doc:[]},
+  {id:'d7',cat:'DT',n:'Long Haul Transport',ds:'Inland transport beyond 50km',p:450,b:'c',rq:0,on:0,doc:[]},
+  {id:'d8',cat:'DT',n:'Destuffing & Delivery',ds:'Container destuffing at destination',p:120,b:'c',rq:0,on:0,doc:[]},
 ];
 const FD=[{d:4,l:'Standard',cd:0},{d:7,l:'+$35/day',cd:35},{d:14,l:'+$50/day',cd:50},{d:0,l:'Custom',cd:65,cu:1}];
-const BLS=[{t:'House-BL',l:'House B/L',d:'NVOCC / forwarder'},{t:'Master-BL',l:'Master B/L',d:'Direct by carrier'},
-  {t:'Seaway',l:'Seaway Bill',d:'Non-negotiable'},{t:'Express',l:'Express B/L',d:'Telex release'}];
+const BLS=[{t:'House-BL',l:'House B/L',d:'Issued by NVOCC / forwarder'},{t:'Master-BL',l:'Master B/L',d:'Direct by shipping line'},{t:'Seaway',l:'Seaway Bill',d:'Non-negotiable, faster release'},{t:'Express',l:'Express B/L',d:'Telex release, no original needed'}];
 const RODT={'61':4.3,'62':4.3,'63':3.8,'84':1.6,'85':1.8,'29':2.5,'30':3,'72':1.5,'73':2};
 
-/* ═══════════════════════════════ STATE ══════════════════════════════ */
+/* ═══════════════════ STATE ═══════════════════ */
 const S={o:null,d:null,sz:'20ft',tp:'Standard',qt:1,wt:0,wu:'MT',hs:'',cv:0,
-  svcs:SVCS.map(s=>({...s})),fd:4,fdc:false,fcdv:10,
-  cqs:[],selCr:null,ins:false,cov:'Comprehensive',bl:'House-BL'};
+  svcs:SVCS.map(s=>({...s})),fd:4,fdc:false,
+  cqs:[],selCr:null,ins:false,cov:'Comprehensive',bl:'House-BL',rr:null};
 
-/* ═══════════════════════════════ HELPERS ════════════════════════════ */
+/* ═══════════════════ HELPERS ═══════════════════ */
 const $=id=>document.getElementById(id);
 const fmt=n=>'$'+Math.round(n).toLocaleString();
 function toKG(w,u){return u==='MT'?w*1000:u==='LBS'?w*.4536:w}
-function hav(a,b){
-  const R=3440,dLa=(b.la-a.la)*Math.PI/180,dLo=(b.lo-a.lo)*Math.PI/180;
-  const x=Math.sin(dLa/2)**2+Math.cos(a.la*Math.PI/180)*Math.cos(b.la*Math.PI/180)*Math.sin(dLo/2)**2;
-  return Math.round(R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))*1.15);
-}
+function hav(a,b){const R=3440,dLa=(b.la-a.la)*Math.PI/180,dLo=(b.lo-a.lo)*Math.PI/180;const x=Math.sin(dLa/2)**2+Math.cos(a.la*Math.PI/180)*Math.cos(b.la*Math.PI/180)*Math.sin(dLo/2)**2;return Math.round(R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))*1.15)}
 function addD(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
-function fD(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}
+function fmD(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}
 
-/* ═══════════════════════════════ PORT SELECTOR ═════════════════════ */
+/* ═══════════════════ PORT SELECTOR ═══════════════════ */
 function portSel(iid,did,key){
-  const inp=$(iid),dd=$(did);
-  let open=false;
+  const inp=$(iid),dd=$(did);let open=false;
   function render(q){
-    const ex=key==='o'?S.d:S.o;
-    q=(q||'').toLowerCase();
-    const list=PORTS.filter(p=>{
-      if(ex&&p.c===ex.c)return false;
-      if(!q)return true;
-      return p.n.toLowerCase().includes(q)||p.ci.toLowerCase().includes(q)||p.c.toLowerCase().includes(q);
-    });
-    dd.innerHTML=list.length?list.map(p=>`<div class="port-o" data-c="${p.c}"><span style="font-size:14px">${FL[p.cc]||'🏴'}</span><div><div class="port-o-name">${p.n}</div><div class="port-o-meta">${p.c} · ${p.ci}, ${p.co}</div></div></div>`).join(''):'<div class="port-o" style="justify-content:center;color:var(--t2)">No ports found</div>';
+    const ex=key==='o'?S.d:S.o;q=(q||'').toLowerCase();
+    const list=PORTS.filter(p=>{if(ex&&p.c===ex.c)return false;if(!q)return true;return p.n.toLowerCase().includes(q)||p.ci.toLowerCase().includes(q)||p.c.toLowerCase().includes(q)});
+    dd.innerHTML=list.length?list.map(p=>`<div class="port-o" data-c="${p.c}"><span class="port-o-flag">${FL[p.cc]||'🏴'}</span><div><div class="port-o-name">${p.n}</div><div class="port-o-meta">${p.c} · ${p.ci}, ${p.co}</div></div></div>`).join(''):'<div class="port-o" style="justify-content:center;color:var(--t3)">No ports found</div>';
   }
   inp.addEventListener('focus',()=>{open=true;dd.classList.add('open');inp.value='';render('')});
   inp.addEventListener('input',()=>render(inp.value));
-  dd.addEventListener('click',e=>{
-    const el=e.target.closest('[data-c]');
-    if(!el)return;
-    const p=PORTS.find(x=>x.c===el.dataset.c);
-    S[key]=p;inp.value=p.n+' ('+p.c+')';
-    dd.classList.remove('open');open=false;
-    $('btnSearch').disabled=!(S.o&&S.d);
-  });
-  document.addEventListener('click',e=>{
-    if(open&&!inp.contains(e.target)&&!dd.contains(e.target)){
-      dd.classList.remove('open');open=false;
-      if(S[key])inp.value=S[key].n+' ('+S[key].c+')';
-    }
-  });
+  dd.addEventListener('click',e=>{const el=e.target.closest('[data-c]');if(!el)return;const p=PORTS.find(x=>x.c===el.dataset.c);S[key]=p;inp.value=p.n+' ('+p.c+')';dd.classList.remove('open');open=false;$('btnSearch').disabled=!(S.o&&S.d)});
+  document.addEventListener('click',e=>{if(open&&!inp.contains(e.target)&&!dd.contains(e.target)){dd.classList.remove('open');open=false;if(S[key])inp.value=S[key].n+' ('+S[key].c+')'}});
 }
 
-/* ═══════════════════════════════ MAP ════════════════════════════════ */
+/* ═══════════════════ MAP ═══════════════════ */
 function drawMap(){
   const c=$('mapC'),box=c.parentElement.getBoundingClientRect();
   const dpr=window.devicePixelRatio||1;
@@ -799,167 +881,122 @@ function drawMap(){
   c.style.width=box.width+'px';c.style.height=box.height+'px';
   const ctx=c.getContext('2d');ctx.scale(dpr,dpr);
   const W=box.width,H=box.height;
-  ctx.fillStyle='#080b12';ctx.fillRect(0,0,W,H);
-  // grid
-  ctx.strokeStyle='#111826';ctx.lineWidth=.5;
-  for(let i=0;i<W;i+=32){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke()}
-  for(let i=0;i<H;i+=32){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(W,i);ctx.stroke()}
-  // project
-  const pad=12;
-  const lats=[S.o.la,S.d.la],lngs=[S.o.lo,S.d.lo];
-  const mnLa=Math.min(...lats)-pad,mxLa=Math.max(...lats)+pad;
-  const mnLo=Math.min(...lngs)-pad,mxLo=Math.max(...lngs)+pad;
-  const mx=lo=>((lo-mnLo)/(mxLo-mnLo))*(W-50)+25;
-  const my=la=>H-(((la-mnLa)/(mxLa-mnLa))*(H-50)+25);
+  ctx.fillStyle='#0f172a';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=.5;
+  for(let i=0;i<W;i+=36){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke()}
+  for(let i=0;i<H;i+=36){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(W,i);ctx.stroke()}
+  const pad=12,lats=[S.o.la,S.d.la],lngs=[S.o.lo,S.d.lo];
+  const mnLa=Math.min(...lats)-pad,mxLa=Math.max(...lats)+pad,mnLo=Math.min(...lngs)-pad,mxLo=Math.max(...lngs)+pad;
+  const mx=lo=>((lo-mnLo)/(mxLo-mnLo))*(W-60)+30;
+  const my=la=>H-(((la-mnLa)/(mxLa-mnLa))*(H-60)+30);
   const x0=mx(S.o.lo),y0=my(S.o.la),x1=mx(S.d.lo),y1=my(S.d.la);
-  const cpx=(x0+x1)/2,cpy=Math.min(y0,y1)-25;
-  // glow
-  ctx.beginPath();ctx.strokeStyle='rgba(34,211,238,.12)';ctx.lineWidth=10;
+  const cpx=(x0+x1)/2,cpy=Math.min(y0,y1)-30;
+  ctx.beginPath();ctx.strokeStyle='rgba(59,130,246,.15)';ctx.lineWidth=12;
   ctx.moveTo(x0,y0);ctx.quadraticCurveTo(cpx,cpy,x1,y1);ctx.stroke();
-  // dashed
-  ctx.beginPath();ctx.strokeStyle='#22d3ee';ctx.lineWidth=2;ctx.setLineDash([7,4]);
+  ctx.beginPath();ctx.strokeStyle='#3b82f6';ctx.lineWidth=2.5;ctx.setLineDash([8,4]);
   ctx.moveTo(x0,y0);ctx.quadraticCurveTo(cpx,cpy,x1,y1);ctx.stroke();ctx.setLineDash([]);
-  // dots
   [[x0,y0,S.o,'#3b82f6'],[x1,y1,S.d,'#10b981']].forEach(([x,y,p,col])=>{
-    const g=ctx.createRadialGradient(x,y,0,x,y,16);
-    g.addColorStop(0,col.slice(0,4)==='#3b8'?'rgba(59,130,246,.3)':'rgba(16,185,129,.3)');
+    const g=ctx.createRadialGradient(x,y,0,x,y,18);
+    g.addColorStop(0,col==='#3b82f6'?'rgba(59,130,246,.35)':'rgba(16,185,129,.35)');
     g.addColorStop(1,'transparent');
-    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,16,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
-    ctx.strokeStyle='#080b12';ctx.lineWidth=2;ctx.stroke();
-    ctx.font='10px Inter,sans-serif';ctx.fillStyle='#8b9ab5';ctx.textAlign='center';
-    ctx.fillText(p.n,x,y-11);
-    ctx.font='8px JetBrains Mono,monospace';ctx.fillStyle='#556178';
-    ctx.fillText(p.la.toFixed(2)+'°, '+p.lo.toFixed(2)+'°',x,y+15);
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,18,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+    ctx.strokeStyle='#0f172a';ctx.lineWidth=2.5;ctx.stroke();
+    ctx.font='600 11px Inter,sans-serif';ctx.fillStyle='#e2e8f0';ctx.textAlign='center';ctx.fillText(p.n,x,y-14);
+    ctx.font='10px JetBrains Mono,monospace';ctx.fillStyle='#64748b';ctx.fillText(p.la.toFixed(2)+'°, '+p.lo.toFixed(2)+'°',x,y+18);
   });
 }
 
-/* ═══════════════════════════════ SEARCH ═════════════════════════════ */
+/* ═══════════════════ SEARCH ═══════════════════ */
 function doSearch(){
   if(!S.o||!S.d)return;
   const dist=hav(S.o,S.d),days=Math.max(5,Math.floor(dist/350));
-  $('mDist').textContent=dist.toLocaleString();
-  $('mDays').textContent=days;
-  $('mapWrap').classList.add('vis');
-  drawMap();
-  // rate
-  const k=S.o.c+'-'+S.d.c,base=BP[k]||1200;
+  $('mDist').textContent=dist.toLocaleString();$('mDays').textContent=days;
+  $('mapWrap').classList.add('vis');drawMap();
+  const k=S.o.c+'-'+S.d.c,base=BPR[k]||1200;
   const adj=base*(SM[S.sz]||1)*(TM[S.tp]||1);
-  const mn=Math.round(adj*.88),mx=Math.round(adj*1.12);
-  S.rr={mn,mx};
+  const mn=Math.round(adj*.88),mx=Math.round(adj*1.12);S.rr={mn,mx};
   $('rMin').textContent=fmt(mn);$('rMax').textContent=fmt(mx);
   const tr=['rising','falling','stable'][Math.floor(Math.random()*3)];
   const tp=(Math.random()*5).toFixed(1);
-  const arr=tr==='rising'?'↗':tr==='falling'?'↘':'→';
-  const cl=tr==='rising'?'up':tr==='falling'?'down':'flat';
-  $('rTrend').className='rate-trend '+cl;$('rTrend').textContent=arr+' '+tp+'%';
+  $('rTrend').className='rate-trend '+(tr==='rising'?'up':tr==='falling'?'down':'flat');
+  $('rTrend').textContent=(tr==='rising'?'↗':tr==='falling'?'↘':'→')+' '+tp+'%';
   $('rPts').textContent=Math.floor(Math.random()*200+50)+' data points';
   $('rateBar').classList.add('vis');
-  // gen carriers
   genCQ();
-  // show panels
-  $('panels').classList.remove('hidden');
+  $('heroSection').style.display='none';
+  $('workspace').classList.add('vis');
   renderAll();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function genCQ(){
-  if(!S.rr)return;
-  const now=new Date();
+  if(!S.rr)return;const now=new Date();
   S.cqs=CARRIERS.map((c,i)=>{
     const base=S.rr.mn+Math.random()*(S.rr.mx-S.rr.mn);
     const baf=Math.round(base*.08),caf=Math.round(base*.03),pss=Math.round(base*.05);
-    const total=Math.round(base+baf+caf+pss);
     return{cr:c,base:Math.round(base),sur:[{n:'BAF',a:baf},{n:'CAF',a:caf},{n:'PSS',a:pss}],
-      total,etd:addD(now,3+i),eta:addD(now,3+i+c.d),av:Math.random()>.3?1:0};
+      total:Math.round(base+baf+caf+pss),etd:addD(now,3+i),eta:addD(now,3+i+c.d),av:Math.random()>.3?1:0};
   }).sort((a,b)=>a.total-b.total);
 }
 
-/* ═══════════════════════════════ RENDER ═════════════════════════════ */
-function renderAll(){renderSvcs();renderFD();renderCR();renderBL();renderDocs();recalc();}
+/* ═══════════════════ RENDER ALL ═══════════════════ */
+function renderAll(){renderSvcs();renderFD();renderCR();renderBL();renderDocs();recalc()}
 
-// ── services ──
-const OCATS=[{k:'OL',l:'Origin Local',i:'🏭'},{k:'OC',l:'Origin Customs',i:'📋'},{k:'OF',l:'Origin CFS',i:'📦'}];
-const DCATS=[{k:'DL',l:'Dest Local',i:'🏗️'},{k:'DC',l:'Dest Customs',i:'🛃'},{k:'DT',l:'Dest Transport',i:'🚛'}];
+const OCATS=[{k:'OL',l:'Origin Local Charges',i:'🏭'},{k:'OC',l:'Origin FCL Customs',i:'📋'},{k:'OF',l:'Origin FCL CFS',i:'📦'}];
+const DCATS=[{k:'DL',l:'Destination Local',i:'🏗️'},{k:'DC',l:'Destination FCL Customs',i:'🛃'},{k:'DT',l:'Destination Transportation',i:'🚛'}];
 
-function renderCat(cat,svcs){
-  const items=svcs.filter(s=>s.cat===cat.k);
+function renderCat(cat){
+  const items=S.svcs.filter(s=>s.cat===cat.k);
   const cnt=items.filter(s=>s.on).length;
   let h=`<div class="scat"><div class="scat-h"><span>${cat.i}</span> ${cat.l}<span class="scat-cnt">${cnt}/${items.length}</span></div>`;
   items.forEach(s=>{
     const docs=s.doc.map(d=>`<span class="svc-doc">${d.replace(/-/g,' ')}</span>`).join('');
-    h+=`<div class="svc ${s.on?'on':''} ${s.rq?'lk':''}" data-s="${s.id}">
-      <div class="svc-ck">✓</div>
+    h+=`<div class="svc ${s.on?'on':''} ${s.rq?'lk':''}" data-s="${s.id}"><div class="svc-ck">✓</div>
       <div class="svc-mid"><div class="svc-nm">${s.n}${s.rq?'<span class="svc-rd"></span>':''}</div>
       <div class="svc-ds">${s.ds}</div>${s.doc.length?'<div class="svc-docs">'+docs+'</div>':''}</div>
-      <div><div class="svc-pr">$${s.p}</div><div class="svc-bs">/${s.b==='c'?'cntr':s.b==='b'?'B/L':'ship'}</div></div></div>`;
+      <div><div class="svc-pr">$${s.p}</div><div class="svc-bs">/${s.b==='c'?'container':s.b==='b'?'B/L':'shipment'}</div></div></div>`;
   });
   return h+'</div>';
 }
-
 function renderSvcs(){
-  $('originSvc').innerHTML=OCATS.map(c=>renderCat(c,S.svcs)).join('');
-  $('destSvc').innerHTML=DCATS.map(c=>renderCat(c,S.svcs)).join('');
-  document.querySelectorAll('.svc[data-s]').forEach(el=>{
-    el.onclick=()=>{
-      const s=S.svcs.find(x=>x.id===el.dataset.s);
-      if(s.rq)return;
-      s.on=s.on?0:1;
-      renderSvcs();renderDocs();recalc();
-    };
-  });
+  $('originSvc').innerHTML=OCATS.map(c=>renderCat(c)).join('');
+  $('destSvc').innerHTML=DCATS.map(c=>renderCat(c)).join('');
+  document.querySelectorAll('.svc[data-s]').forEach(el=>{el.onclick=()=>{const s=S.svcs.find(x=>x.id===el.dataset.s);if(s.rq)return;s.on=s.on?0:1;renderSvcs();renderDocs();recalc()}});
 }
 
-// ── free days ──
 function renderFD(){
   $('fdGrid').innerHTML=FD.map((f,i)=>{
     const on=f.cu?S.fdc:(!S.fdc&&S.fd===f.d);
     return `<div class="${on?'on':''}" data-f="${i}"><div class="fd-n">${f.cu?'⚙️':f.d}</div><div class="fd-l">${f.l}</div>${f.cd?`<div class="fd-c">+$${f.cd}/day</div>`:''}</div>`;
   }).join('');
-  if(S.fdc)$('fdCustWrap').classList.remove('hidden');else $('fdCustWrap').classList.add('hidden');
+  S.fdc?$('fdCustWrap').classList.remove('hidden'):$('fdCustWrap').classList.add('hidden');
   const cost=calcDet();
-  if(cost>0){$('fdCost').textContent='⚠️ Extension cost: '+fmt(cost);$('fdCost').classList.remove('hidden')}
-  else $('fdCost').classList.add('hidden');
-  $('fdGrid').querySelectorAll('[data-f]').forEach(el=>{
-    el.onclick=()=>{
-      const f=FD[+el.dataset.f];
-      if(f.cu){S.fdc=true}else{S.fdc=false;S.fd=f.d}
-      renderFD();recalc();
-    };
-  });
+  if(cost>0){$('fdCost').innerHTML='<span style="font:600 12px var(--mono);color:var(--amber)">⚠️ Extension cost: '+fmt(cost)+'</span>';$('fdCost').classList.remove('hidden')}else $('fdCost').classList.add('hidden');
+  $('fdGrid').querySelectorAll('[data-f]').forEach(el=>{el.onclick=()=>{const f=FD[+el.dataset.f];if(f.cu)S.fdc=true;else{S.fdc=false;S.fd=f.d}renderFD();recalc()}});
 }
-function calcDet(){
-  const base=S.selCr?S.selCr.cr.fd:4;
-  const d=S.fdc?(+($('fdCust')?.value)||10):S.fd;
-  if(d<=base)return 0;
-  return(d-base)*(d>7?50:35);
-}
+function calcDet(){const base=S.selCr?S.selCr.cr.fd:4;const d=S.fdc?(+($('fdCust')?.value)||10):S.fd;if(d<=base)return 0;return(d-base)*(d>7?50:35)}
 
-// ── carriers ──
 function renderCR(){
-  $('crCnt').textContent=S.cqs.length+' carriers available';
+  $('crCnt').textContent=S.cqs.length+' carriers with available capacity';
   $('crBody').innerHTML=S.cqs.map((q,i)=>{
     const sel=S.selCr&&S.selCr.cr.id===q.cr.id;
     const rc=q.cr.r>=90?'var(--green)':q.cr.r>=85?'var(--amber)':'var(--red)';
     return `<div class="cr ${sel?'on':''}" data-ci="${i}">
       <div class="cr-logo">${q.cr.cd}</div>
       <div class="cr-info"><div class="cr-nm">${q.cr.n}${q.cr.a?'<span class="cr-bdg">✓ Assured</span>':''}</div>
-      <div class="cr-meta"><span>⏱${q.cr.d}d</span><span>ETD ${fD(q.etd)}</span><span>ETA ${fD(q.eta)}</span>
-      <span><span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${rc};vertical-align:middle;margin-right:2px"></span>${q.cr.r}%</span></div></div>
-      <div class="cr-right"><div class="cr-rate">${fmt(q.total)}</div><div class="cr-per">/container</div>
-      <div class="cr-av ${q.av?'yes':'no'}">${q.av?'✓ Confirmed':'⏳ Subject'}</div></div></div>`;
+      <div class="cr-meta"><span>⏱ ${q.cr.d}d</span><span>ETD ${fmD(q.etd)}</span><span>ETA ${fmD(q.eta)}</span>
+      <span><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${rc};vertical-align:middle;margin-right:3px"></span>${q.cr.r}%</span></div></div>
+      <div class="cr-right"><div class="cr-rate">${fmt(q.total)}</div><div class="cr-per">per container</div>
+      <div class="cr-av ${q.av?'yes':'no'}">${q.av?'✓ Confirmed':'⏳ Subject to Avail.'}</div></div></div>`;
   }).join('');
-  $('crBody').querySelectorAll('[data-ci]').forEach(el=>{
-    el.onclick=()=>{S.selCr=S.cqs[+el.dataset.ci];renderCR();recalc()};
-  });
+  $('crBody').querySelectorAll('[data-ci]').forEach(el=>{el.onclick=()=>{S.selCr=S.cqs[+el.dataset.ci];renderCR();recalc()}});
 }
 
-// ── insurance ──
 function calcIns(v,t){
-  const r={Basic:.003,Standard:.005,Comprehensive:.008};
-  const dd={Basic:.03,Standard:.02,Comprehensive:.01};
+  const r={Basic:.003,Standard:.005,Comprehensive:.008},dd={Basic:.03,Standard:.02,Comprehensive:.01};
   const ca=v*1.1,pr=ca*r[t],de=ca*dd[t];
-  const inc={Basic:['Total Loss','Gen Average','Salvage'],Standard:['Total Loss','Partial Loss','Fire','Collision','Jettison'],
-    Comprehensive:['All Risks','Theft','Breakage','Contamination','War/SRCC','Non-Delivery']};
+  const inc={Basic:['Total Loss','General Average','Salvage'],Standard:['Total Loss','Partial Loss','Fire','Collision','Jettison'],Comprehensive:['All Risks','Theft','Breakage','Contamination','War/SRCC','Non-Delivery']};
   const exc={Basic:['Partial Loss','Delay','War'],Standard:['Delay','Inherent Vice','War'],Comprehensive:['Delay','Inherent Vice','Nuclear']};
   return{t,pr:Math.round(pr*100)/100,rt:r[t]*100,ca:Math.round(ca),de:Math.round(de),inc:inc[t],exc:exc[t]};
 }
@@ -967,153 +1004,91 @@ function renderIns(){
   const v=+(($('cVal')?.value)||0);
   if(!S.ins){$('insBody').classList.add('hidden');return}
   $('insBody').classList.remove('hidden');
-  if(v<=0){$('insBody').innerHTML='<div class="wv wrn vis mt" style="display:flex"><span>⚠️</span><div>Enter cargo value first</div></div>';return}
+  if(v<=0){$('insBody').innerHTML='<div class="wv wrn vis" style="display:flex;margin-top:16px"><span>⚠️</span><div>Enter cargo value in Cargo Requirements first</div></div>';return}
   const types=['Basic','Standard','Comprehensive'];
-  let h='<div class="cov-grid">'+types.map(t=>{
-    const q=calcIns(v,t);
-    return `<div class="${S.cov===t?'on':''}" data-cv="${t}"><div class="cov-nm">${t}</div><div class="cov-rt">${q.rt.toFixed(1)}%</div><div class="cov-pr">${fmt(q.pr)}</div></div>`;
-  }).join('')+'</div>';
+  let h='<div class="cov-grid">'+types.map(t=>{const q=calcIns(v,t);return `<div class="${S.cov===t?'on':''}" data-cv="${t}"><div class="cov-nm">${t}</div><div class="cov-rt">${q.rt.toFixed(1)}% rate</div><div class="cov-pr">${fmt(q.pr)}</div></div>`}).join('')+'</div>';
   const q=calcIns(v,S.cov);
-  h+=`<div class="ins-stats mt"><div><div class="ins-sl">Coverage</div><div class="ins-sv">${fmt(q.ca)}</div></div>
-    <div><div class="ins-sl">Deductible</div><div class="ins-sv" style="color:var(--t0)">${fmt(q.de)}</div></div>
-    <div><div class="ins-sl">Premium</div><div class="ins-sv" style="color:var(--green)">${fmt(q.pr)}</div></div></div>`;
-  h+='<div class="ins-tags mt">'+q.inc.map(i=>`<span class="ins-tg ok">✓ ${i}</span>`).join('')+q.exc.map(i=>`<span class="ins-tg no">✗ ${i}</span>`).join('')+'</div>';
+  h+=`<div class="ins-stats"><div><div class="ins-sl">Coverage</div><div class="ins-sv">${fmt(q.ca)}</div></div><div><div class="ins-sl">Deductible</div><div class="ins-sv" style="color:var(--navy)">${fmt(q.de)}</div></div><div><div class="ins-sl">Premium</div><div class="ins-sv" style="color:var(--green)">${fmt(q.pr)}</div></div></div>`;
+  h+='<div class="ins-tags">'+q.inc.map(i=>`<span class="ins-tg ok">✓ ${i}</span>`).join('')+q.exc.map(i=>`<span class="ins-tg no">✗ ${i}</span>`).join('')+'</div>';
   $('insBody').innerHTML=h;
-  $('insBody').querySelectorAll('[data-cv]').forEach(el=>{
-    el.onclick=()=>{S.cov=el.dataset.cv;renderIns();recalc()};
-  });
+  $('insBody').querySelectorAll('[data-cv]').forEach(el=>{el.onclick=()=>{S.cov=el.dataset.cv;renderIns();recalc()}});
 }
 
-// ── BL & docs ──
 function renderBL(){
   $('blGrid').innerHTML=BLS.map(b=>`<div class="${S.bl===b.t?'on':''}" data-bl="${b.t}"><div class="bl-nm">${b.l}</div><div class="bl-ds">${b.d}</div></div>`).join('');
   $('blGrid').querySelectorAll('[data-bl]').forEach(el=>{el.onclick=()=>{S.bl=el.dataset.bl;renderBL()}});
 }
 function renderDocs(){
-  const allD=new Set();
-  S.svcs.filter(s=>s.on).forEach(s=>s.doc.forEach(d=>allD.add(d)));
-  const cfg={'shipping-bill':{l:'Shipping Bill',r:1},'packing-list':{l:'Packing List',r:1},
-    'commercial-invoice':{l:'Commercial Invoice',r:1},'bill-of-lading':{l:'Bill of Lading',r:1},
-    'certificate-of-origin':{l:'Certificate of Origin',r:0},'fumigation':{l:'Fumigation Certificate',r:0}};
-  const extras=['MSDS Certificate','Cargo Photos','Phytosanitary Cert'];
+  const allD=new Set();S.svcs.filter(s=>s.on).forEach(s=>s.doc.forEach(d=>allD.add(d)));
+  const cfg={'shipping-bill':{l:'Shipping Bill',r:1},'packing-list':{l:'Packing List',r:1},'commercial-invoice':{l:'Commercial Invoice',r:1},'bill-of-lading':{l:'Bill of Lading',r:1},'certificate-of-origin':{l:'Certificate of Origin',r:0},'fumigation':{l:'Fumigation Certificate',r:0}};
   let h='';
-  if(allD.size){
-    h+=`<label class="fl" style="margin-bottom:4px;display:block">Documents (${allD.size})</label>`;
-    allD.forEach(d=>{const c=cfg[d]||{l:d,r:0};
-      h+=`<div class="doc-item"><div class="doc-dot"></div><div class="doc-nm">${c.l}</div>${c.r?'<span class="doc-req">Req</span>':''}<div class="doc-st">Not Started</div></div>`;
-    });
+  if(allD.size){h+=`<label class="fl" style="margin-bottom:6px;display:block">Document Status (${allD.size})</label>`;
+    allD.forEach(d=>{const c=cfg[d]||{l:d,r:0};h+=`<div class="doc-item"><div class="doc-dot"></div><div class="doc-nm">${c.l}</div>${c.r?'<span class="doc-req">Required</span>':''}<div class="doc-st">Not Started</div></div>`});
   }
-  h+='<label class="fl" style="margin:8px 0 4px;display:block">Additional</label>';
-  extras.forEach(n=>{h+=`<div class="doc-item"><div class="doc-dot"></div><div class="doc-nm">${n}</div><div class="doc-st">Optional</div></div>`});
+  h+='<label class="fl" style="margin:12px 0 6px;display:block">Additional Documents</label>';
+  ['MSDS Certificate','Cargo Photos','Phytosanitary Certificate'].forEach(n=>{h+=`<div class="doc-item"><div class="doc-dot"></div><div class="doc-nm">${n}</div><div class="doc-st">Optional</div></div>`});
   $('docList').innerHTML=h;
 }
 
-// ── weight validation ──
 function valWt(){
-  const w=+($('cWt').value)||0,u=$('cWU').value;
-  S.wt=w;S.wu=u;S.sz=$('cSize').value;S.tp=$('cType').value;
+  const w=+($('cWt').value)||0,u=$('cWU').value;S.wt=w;S.wu=u;S.sz=$('cSize').value;S.tp=$('cType').value;
   if(w<=0){$('wvBox').classList.remove('vis');return}
   const spec=CSPECS[S.sz+'-'+S.tp];
   if(!spec){$('wvBox').className='wv vis bad';$('wvBox').innerHTML='<span>❌</span><div>No spec for '+S.sz+' '+S.tp+'</div>';return}
-  const kg=toKG(w,u),pct=Math.min(kg/spec*100,100);
-  let cls,ico,msg;
-  if(kg>spec){cls='bad';ico='❌';msg=`Exceeds max by ${Math.round(kg-spec).toLocaleString()} KG`}
-  else if(pct>90){cls='wrn';ico='⚠️';msg=`${pct.toFixed(1)}% — near limit`}
-  else if(pct<20){cls='wrn';ico='⚠️';msg=`Low utilization (${pct.toFixed(1)}%)`}
-  else{cls='ok';ico='✅';msg=`${pct.toFixed(1)}% of ${spec.toLocaleString()} KG`}
+  const kg=toKG(w,u),pct=Math.min(kg/spec*100,100);let cls,ico,msg;
+  if(kg>spec){cls='bad';ico='❌';msg=`Exceeds max payload by ${Math.round(kg-spec).toLocaleString()} KG`}
+  else if(pct>90){cls='wrn';ico='⚠️';msg=`${pct.toFixed(1)}% utilization — approaching limit`}
+  else if(pct<20){cls='wrn';ico='⚠️';msg=`Low utilization (${pct.toFixed(1)}%) — consider LCL`}
+  else{cls='ok';ico='✅';msg=`Within limits at ${pct.toFixed(1)}% of ${spec.toLocaleString()} KG max`}
   $('wvBox').className='wv vis '+cls;
   $('wvBox').innerHTML=`<span>${ico}</span><div style="flex:1"><div>${msg}</div><div class="wv-bar"><div class="wv-fill ${cls}" style="width:${pct}%"></div></div><div class="wv-meta">${Math.round(kg).toLocaleString()} / ${spec.toLocaleString()} KG</div></div>`;
 }
 
-/* ═══════════════════════════════ SIDEBAR ════════════════════════════ */
+/* ═══════════════════ SIDEBAR ═══════════════════ */
 function recalc(){
-  const qt=+(($('cQty')?.value)||1);
-  S.qt=qt;S.sz=$('cSize')?.value||'20ft';S.tp=$('cType')?.value||'Standard';
+  const qt=+(($('cQty')?.value)||1);S.qt=qt;S.sz=$('cSize')?.value||'20ft';S.tp=$('cType')?.value||'Standard';
   S.cv=+(($('cVal')?.value)||0);S.hs=$('cHS')?.value||'';
   $('sbSpec').textContent=qt+'× '+S.sz+' '+S.tp;
-
   const ocean=S.selCr?S.selCr.total*qt:0;
-  const oSvcs=S.svcs.filter(s=>s.cat[0]==='O'&&s.on);
-  const dSvcs=S.svcs.filter(s=>s.cat[0]==='D'&&s.on);
+  const oSvcs=S.svcs.filter(s=>s.cat[0]==='O'&&s.on),dSvcs=S.svcs.filter(s=>s.cat[0]==='D'&&s.on);
   const oC=oSvcs.map(s=>({n:s.n,a:s.b==='c'?s.p*qt:s.p}));
   const dC=dSvcs.map(s=>({n:s.n,a:s.b==='c'?s.p*qt:s.p}));
-  const det=calcDet();
-  if(det>0)dC.push({n:'Free Days Extension',a:det});
-  const oT=oC.reduce((s,c)=>s+c.a,0);
-  const dT=dC.reduce((s,c)=>s+c.a,0);
-  const sur=S.selCr?S.selCr.sur.map(s=>({n:s.n,a:s.a*qt})):[];
-  const sT=sur.reduce((s,c)=>s+c.a,0);
-  let ins=0;
-  if(S.ins&&S.cv>0)ins=calcIns(S.cv,S.cov).pr;
+  const det=calcDet();if(det>0)dC.push({n:'Free Days Extension',a:det});
+  const oT=oC.reduce((s,c)=>s+c.a,0),dT=dC.reduce((s,c)=>s+c.a,0);
+  const sur=S.selCr?S.selCr.sur.map(s=>({n:s.n,a:s.a*qt})):[];const sT=sur.reduce((s,c)=>s+c.a,0);
+  let ins=0;if(S.ins&&S.cv>0)ins=calcIns(S.cv,S.cov).pr;
   const total=ocean+oT+dT+sT+ins;
-
-  // incentives
   const incs=[];
-  if(S.hs&&S.cv>0){
-    const ch=S.hs.substring(0,2);
-    const rd=RODT[ch]||1.5;
-    incs.push({t:'RoDTEP',a:Math.round(S.cv*rd/100*100)/100,n:`@ ${rd}% on FOB HS${ch}`});
-    incs.push({t:'GST Refund',a:Math.round(S.cv*18/100*.9*100)/100,n:'IGST 18% (90% ITC)'});
+  if(S.hs&&S.cv>0){const ch=S.hs.substring(0,2);const rd=RODT[ch]||1.5;
+    incs.push({t:'RoDTEP',a:Math.round(S.cv*rd/100*100)/100,n:`@ ${rd}% on FOB for HS ${ch}`});
+    incs.push({t:'GST Refund',a:Math.round(S.cv*18/100*.9*100)/100,n:'IGST 18% (estimated 90% ITC)'});
   }
   const incT=incs.reduce((s,i)=>s+i.a,0);
-  const net=total-incT;
 
-  // render
   let h='';
   if(ocean)h+=sec('Ocean Freight',[{n:'Base + Surcharges × '+qt,a:ocean}]);
   if(oC.length)h+=sec('Origin Charges',oC,oT);
   if(dC.length)h+=sec('Destination Charges',dC,dT);
   if(sur.length)h+=sec('Carrier Surcharges',sur,sT);
-  if(ins)h+=sec('Insurance',[{n:'🛡️ '+S.cov,a:ins}]);
-  if(incs.length){
-    h+='<div class="sb-sec"><div class="sb-ttl">📊 Incentives</div>';
-    incs.forEach(i=>{h+=`<div class="sb-inc"><div><div class="sb-inc-tp">${i.t}</div><div class="sb-inc-nt">${i.n}</div></div><div class="sb-inc-am">-${fmt(i.a)}</div></div>`});
-    h+='</div>';
-  }
-  $('sbContent').innerHTML=h||'<div class="sb-sec" style="text-align:center;padding:36px 14px"><div style="font-size:24px;margin-bottom:6px">💰</div><div style="font:400 10px var(--sans);color:var(--t2)">Configure your shipment</div></div>';
-
-  if(total>0){
-    $('sbTotalVal').textContent=fmt(total);
-    if(incT>0){$('sbNet').textContent='Net: '+fmt(net);$('sbNet').classList.remove('hidden')}
-    else $('sbNet').classList.add('hidden');
-    $('sbBottom').classList.remove('hidden');
-  }else{$('sbBottom').classList.add('hidden')}
+  if(ins)h+=sec('Insurance',[{n:'🛡️ '+S.cov+' Coverage',a:ins}]);
+  if(incs.length){h+='<div class="sb-sec"><div class="sb-ttl">📊 Estimated Incentives</div>';
+    incs.forEach(i=>{h+=`<div class="sb-inc"><div><div class="sb-inc-tp">${i.t}</div><div class="sb-inc-nt">${i.n}</div></div><div class="sb-inc-am">−${fmt(i.a)}</div></div>`});h+='</div>';}
+  $('sbContent').innerHTML=h||'<div class="sb-sec" style="text-align:center;padding:40px 20px"><div style="font-size:28px;margin-bottom:8px">📊</div><div style="font:400 13px var(--sans);color:var(--t2)">Select a carrier to see<br>your total landing cost</div></div>';
+  if(total>0){$('sbTotalVal').textContent=fmt(total);
+    if(incT>0){$('sbNet').textContent='Net after incentives: '+fmt(total-incT);$('sbNet').classList.remove('hidden')}else $('sbNet').classList.add('hidden');
+    $('sbBottom').classList.remove('hidden');}else{$('sbBottom').classList.add('hidden')}
 }
+function sec(t,lines,sub){let h='<div class="sb-sec"><div class="sb-ttl">'+t+'</div>';lines.forEach(l=>{h+=`<div class="sb-ln"><span class="sb-lbl">${l.n}</span><span class="sb-amt">${fmt(l.a)}</span></div>`});if(sub!==undefined)h+=`<div class="sb-ln sub"><span class="sb-lbl">Subtotal</span><span class="sb-amt">${fmt(sub)}</span></div>`;return h+'</div>'}
 
-function sec(title,lines,sub){
-  let h='<div class="sb-sec"><div class="sb-ttl">'+title+'</div>';
-  lines.forEach(l=>{h+=`<div class="sb-ln"><span class="sb-lbl">${l.n}</span><span class="sb-amt">${fmt(l.a)}</span></div>`});
-  if(sub!==undefined)h+=`<div class="sb-ln sub"><span class="sb-lbl">Subtotal</span><span class="sb-amt">${fmt(sub)}</span></div>`;
-  return h+'</div>';
-}
-
-/* ═══════════════════════════════ INIT ═══════════════════════════════ */
-(function init(){
-  // clock
-  function tick(){$('clk').textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
-  tick();setInterval(tick,1000);
-
-  portSel('inp-o','dd-o','o');
-  portSel('inp-d','dd-d','d');
+/* ═══════════════════ INIT ═══════════════════ */
+(function(){
+  function tick(){$('clk').textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}tick();setInterval(tick,1000);
+  portSel('inp-o','dd-o','o');portSel('inp-d','dd-d','d');
   $('btnSearch').onclick=doSearch;
-
-  // cargo listeners
-  ['cSize','cType','cQty','cWt','cWU','cHS','cVal','cComm'].forEach(id=>{
-    const el=$(id);if(!el)return;
-    el.addEventListener('input',()=>{valWt();recalc();renderIns()});
-    el.addEventListener('change',()=>{valWt();recalc();renderIns()});
-  });
-
-  // insurance
-  $('insBar').onclick=()=>{
-    S.ins=!S.ins;
-    $('insTog').classList.toggle('on',S.ins);
-    $('insBar').classList.toggle('on',S.ins);
-    renderIns();recalc();
-  };
-
+  ['cSize','cType','cQty','cWt','cWU','cHS','cVal'].forEach(id=>{const el=$(id);if(!el)return;el.addEventListener('input',()=>{valWt();recalc();renderIns()});el.addEventListener('change',()=>{valWt();recalc();renderIns()})});
+  $('insBar').onclick=()=>{S.ins=!S.ins;$('insTog').classList.toggle('on',S.ins);$('insBar').classList.toggle('on',S.ins);renderIns();recalc()};
   $('fdCust')?.addEventListener('input',()=>{renderFD();recalc()});
-  $('btnBook').onclick=()=>alert('Booking submitted! 🎉\n\nDemo — would create a live booking in production.');
+  $('btnBook').onclick=()=>alert('🎉 Booking Confirmed!\n\nYour freight booking has been submitted successfully.\n\nIn production this would create a live booking with tracking.');
 })();
 </script>
 </body>
