@@ -108,18 +108,25 @@ function pendingCount() {
 onAuthStateChanged(auth, async user => {
   if (user) {
     currentUser = user;
-    const snap = await getDoc(doc(db,'users',user.uid));
-    if (snap.exists()) { 
-        userProfile = snap.data(); 
-        enterApp(); 
-    }
-    else { 
-        await signOut(auth); 
-        showScreen('login'); 
+    try {
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      if (snap.exists()) {
+        userProfile = snap.data();
+        enterApp();
+      } else {
+        // Only kick the user out if they are NOT currently trying to register
+        // Check if the registration panel is visible
+        const isRegistering = ge('rp').style.display === 'block';
+        if (!isRegistering) {
+          await signOut(auth);
+          showScreen('login');
+        }
+      }
+    } catch (e) {
+      console.error("Firestore Permission Error:", e);
     }
   } else {
-    currentUser=null; userProfile=null;
-    if(unsubLeads){unsubLeads();unsubLeads=null;}
+    currentUser = null; userProfile = null;
     showScreen('login');
   }
 });
