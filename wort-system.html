@@ -32,6 +32,44 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
+// ── NEW HELPERS & SHOWSCREEN ──
+const ge = id => document.getElementById(id);
+const v  = id => (ge(id)?.value||'').trim();
+
+// This is the function that fixes the "stuck" screen
+function showScreen(s) {
+  const loading = ge('loading-screen');
+  const login   = ge('login-screen');
+  const appShell = ge('app-shell');
+
+  if (loading) loading.style.display = s === 'loading' ? 'flex' : 'none';
+  if (login)   login.style.display   = s === 'login'   ? 'flex' : 'none';
+  if (appShell) appShell.style.display = s === 'app'   ? 'flex' : 'none';
+}
+
+// ── UPDATED AUTH OBSERVER ──
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (snap.exists()) {
+      window.userProfile = snap.data();
+      enterApp(); // Defined in your main logic
+    } else {
+      // Grace period for registration screen
+      const isRegistering = ge('rp') && ge('rp').style.display === 'block';
+      if (!isRegistering) {
+        await signOut(auth);
+        showScreen('login');
+      }
+    }
+  } else {
+    showScreen('login');
+  }
+});
+
+// ... Keep your enterApp, doLogin, and doRegister functions below this ...
+</script>
+
 // ── GLOBALS ──
 let currentUser = null, userProfile = null;
 let leads = [], allUsers = [];
@@ -170,14 +208,33 @@ window.showLogin= ()=>{ ge('lp').style.display='block';ge('rp').style.display='n
 
 // ── ENTER APP ──
 function enterApp() {
-  const {name,role}=userProfile;
-  ge('uav').textContent=name[0].toUpperCase();
-  ge('uname').textContent=name;
-  ge('urole').textContent=role==='admin'?'Administrator':'Employee';
-  ge('sb-tag').textContent=role==='admin'?'Admin':'Employee';
-  buildNav();
-  subscribeLeads();
-  showScreen('app');
+  console.log("Entering App..."); // Look for this in F12 console
+  const {name, role} = userProfile;
+  
+  // Update Profile UI safely
+  const uav = ge('uav'), uname = ge('uname'), urole = ge('urole'), sbt = ge('sb-tag');
+  
+  if (uav) uav.textContent = name[0].toUpperCase();
+  if (uname) uname.textContent = name;
+  if (urole) urole.textContent = role === 'admin' ? 'Administrator' : 'Employee';
+  if (sbt) sbt.textContent = role === 'admin' ? 'Admin' : 'Employee';
+
+  // Initialize Navigation and Data
+  try {
+    buildNav();
+    subscribeLeads();
+  } catch (err) {
+    console.error("Navigation or Subscription error:", err);
+  }
+
+  // Switch to the dashboard by default
+  const defaultPage = role === 'admin' ? 'dashboard' : 'mywork';
+  goTo(defaultPage);
+
+  // Switch screens
+  showScreen('app'); 
+  console.log("App Screen should now be visible.");
+}
 }
 
 // ── FIRESTORE REAL-TIME ──
