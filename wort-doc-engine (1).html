@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wort Document Engine — Export Ready</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a0f1e;--paper:#f7f4ef;--paper2:#ede9e2;--paper3:#e0dbd1;
+  --saffron:#e8762a;--sf2:#f59c1a;--sf3:#fef3e2;
+  --teal:#1a6b6e;--tl2:#e8f4f4;--tl3:#c5e4e5;
+  --navy:#162447;--nv2:#1f3a6e;
+  --red:#c0392b;--rd2:#fdf0ef;
+  --green:#1d6e4e;--gr2:#e8f5ee;
+  --gold:#b8860b;--gd2:#fdf8e1;
+  --white:#ffffff;
+  --s1:0 1px 3px rgba(10,15,30,.06);
+  --s2:0 4px 16px rgba(10,15,30,.1);
+  --s3:0 12px 40px rgba(10,15,30,.15);
+  --r:12px;--rs:8px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Syne',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden}
+
+/* ── GRAIN TEXTURE ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--navy);color:var(--paper);padding:.65rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--saffron)}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:.5rem}
+.logo-w{color:var(--paper)}
+.logo-dot{color:var(--saffron)}
+.logo-sub{font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(247,244,239,.5);font-weight:400;letter-spacing:2px;text-transform:uppercase;margin-left:.25rem;align-self:flex-end;padding-bottom:.1rem}
+.topbar-right{display:flex;align-items:center;gap:1rem}
+.status-pill{display:flex;align-items:center;gap:.35rem;background:rgba(232,118,42,.15);border:1px solid rgba(232,118,42,.3);border-radius:20px;padding:.28rem .7rem;font-size:.62rem;font-family:'DM Mono',monospace;color:var(--saffron);letter-spacing:.5px}
+.status-dot{width:5px;height:5px;border-radius:50%;background:var(--saffron);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.profile-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:var(--rs);padding:.35rem .75rem;font-family:'Syne',sans-serif;font-size:.72rem;color:var(--paper);cursor:pointer;transition:all .15s}
+.profile-btn:hover{background:rgba(255,255,255,.14)}
+
+/* ── MAIN LAYOUT ── */
+.shell{display:flex;min-height:calc(100vh - 48px)}
+.sidebar{width:240px;flex-shrink:0;background:var(--navy);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;padding:1.2rem 0}
+.sb-profile{padding:.6rem 1.2rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:.6rem}
+.sb-role-tag{font-size:.55rem;font-family:'DM Mono',monospace;color:var(--saffron);letter-spacing:2px;text-transform:uppercase;margin-bottom:.3rem}
+.sb-name{font-size:.88rem;font-weight:700;color:var(--paper)}
+.sb-sub{font-size:.66rem;color:rgba(247,244,239,.45);font-family:'DM Mono',monospace;margin-top:.1rem}
+.sb-sec{padding:.5rem 1.2rem .2rem;font-size:.52rem;font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;color:rgba(247,244,239,.3)}
+.sb-item{display:flex;align-items:center;gap:.6rem;padding:.5rem 1.2rem;font-size:.77rem;font-weight:500;color:rgba(247,244,239,.6);cursor:pointer;transition:all .12s;border-left:2px solid transparent;position:relative}
+.sb-item:hover{color:var(--paper);background:rgba(255,255,255,.04)}
+.sb-item.active{color:var(--saffron);background:rgba(232,118,42,.08);border-left-color:var(--saffron)}
+.sb-ico{font-size:.9rem;width:18px;text-align:center}
+.sb-badge{margin-left:auto;background:var(--saffron);color:var(--white);border-radius:10px;padding:.05rem .38rem;font-size:.55rem;font-family:'DM Mono',monospace}
+.sb-bottom{margin-top:auto;padding:1rem 1.2rem;border-top:1px solid rgba(255,255,255,.06)}
+.iec-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--rs);padding:.6rem .75rem}
+.iec-l{font-size:.52rem;font-family:'DM Mono',monospace;color:rgba(247,244,239,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:.18rem}
+.iec-v{font-size:.78rem;font-family:'DM Mono',monospace;color:var(--paper);font-weight:500}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;overflow:hidden}
+.page{display:none;height:100%}
+.page.active{display:block}
+
+/* ── HERO / WELCOME ── */
+.hero{padding:2.5rem 2.5rem 1.5rem;background:linear-gradient(135deg,var(--navy) 0%,#1e3a5f 60%,#1a5f62 100%);color:var(--paper);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-60px;top:-60px;width:280px;height:280px;border-radius:50%;background:rgba(232,118,42,.06);border:60px solid rgba(232,118,42,.04)}
+.hero-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--saffron);margin-bottom:.6rem}
+.hero-title{font-family:'Instrument Serif',serif;font-size:2.2rem;line-height:1.15;margin-bottom:.5rem;font-style:italic}
+.hero-title strong{font-style:normal;color:var(--sf2)}
+.hero-sub{font-size:.78rem;color:rgba(247,244,239,.6);line-height:1.6;max-width:480px}
+.hero-stats{display:flex;gap:1.5rem;margin-top:1.5rem}
+.hs{text-align:left}
+.hs-v{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;color:var(--sf2)}
+.hs-l{font-size:.62rem;color:rgba(247,244,239,.5);text-transform:uppercase;letter-spacing:1px;margin-top:.1rem}
+
+/* ── CONTENT AREA ── */
+.content{padding:1.8rem 2.5rem}
+
+/* ── STEP INDICATOR ── */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:2rem}
+.step{display:flex;align-items:center;gap:.5rem;font-size:.7rem;font-weight:600;color:var(--paper3);transition:all .2s}
+.step.active{color:var(--ink)}
+.step.done{color:var(--teal)}
+.step-n{width:24px;height:24px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-family:'DM Mono',monospace;flex-shrink:0;transition:all .2s}
+.step.active .step-n{background:var(--saffron);border-color:var(--saffron);color:var(--white)}
+.step.done .step-n{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.step-line{flex:1;height:2px;background:var(--paper3);margin:0 .5rem;max-width:60px}
+.step.done+.step-line,.step-line.done{background:var(--teal)}
+
+/* ── SECTION HEADER ── */
+.sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.sec-t{font-size:1rem;font-weight:700;color:var(--ink)}
+.sec-s{font-size:.7rem;color:rgba(10,15,30,.45);font-family:'DM Mono',monospace;margin-top:.15rem}
+
+/* ── DOC GRID ── */
+.search-row{display:flex;gap:.6rem;margin-bottom:1.2rem}
+.search-inp{flex:1;background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--rs);padding:.55rem .9rem;font-family:'Syne',sans-serif;font-size:.8rem;color:var(--ink);outline:none;transition:border-color .13s}
+.search-inp:focus{border-color:var(--saffron)}
+.search-inp::placeholder{color:rgba(10,15,30,.35)}
+.cat-filter{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.cf{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--paper3);background:var(--white);font-size:.67rem;font-weight:600;cursor:pointer;transition:all .13s;color:rgba(10,15,30,.55)}
+.cf:hover{border-color:var(--saffron);color:var(--saffron)}
+.cf.active{background:var(--saffron);border-color:var(--saffron);color:var(--white)}
+
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.85rem}
+.doc-card{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r);padding:1.1rem;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.doc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cat-color,var(--paper3));transition:all .18s}
+.doc-card:hover{border-color:var(--cat-color,var(--saffron));box-shadow:var(--s2);transform:translateY(-2px)}
+.doc-card.selected{border-color:var(--cat-color,var(--saffron));background:var(--sf3);box-shadow:var(--s2)}
+.dc-icon{font-size:1.5rem;margin-bottom:.55rem}
+.dc-name{font-size:.83rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:.25rem}
+.dc-desc{font-size:.65rem;color:rgba(10,15,30,.5);line-height:1.5}
+.dc-tags{display:flex;gap:.28rem;margin-top:.65rem;flex-wrap:wrap}
+.dc-tag{font-size:.55rem;font-family:'DM Mono',monospace;padding:.1rem .38rem;border-radius:4px;font-weight:500}
+.tag-customs{background:#fff0e6;color:var(--saffron)}
+.tag-bank{background:#e8f4f4;color:var(--teal)}
+.tag-govt{background:#f0e8ff;color:#6b3fa0}
+.tag-trade{background:#e8f5ee;color:var(--green)}
+.tag-edi{background:#fdf0ef;color:var(--red)}
+.dc-time{position:absolute;top:.6rem;right:.6rem;font-size:.55rem;font-family:'DM Mono',monospace;color:rgba(10,15,30,.35)}
+.dc-hot{position:absolute;top:.6rem;right:.6rem;font-size:.55rem;background:var(--saffron);color:var(--white);padding:.08rem .35rem;border-radius:4px;font-family:'DM Mono',monospace}
+
+/* ── SMART FORM ── */
+.form-shell{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start}
+.form-main{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r);overflow:hidden}
+.form-header{background:var(--navy);color:var(--paper);padding:1rem 1.3rem;display:flex;align-items:center;justify-content:space-between}
+.fh-title{font-size:.92rem;font-weight:700}
+.fh-doc{font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(247,244,239,.5);margin-top:.15rem}
+.fh-badge{background:rgba(232,118,42,.2);border:1px solid rgba(232,118,42,.4);border-radius:4px;padding:.15rem .5rem;font-size:.58rem;font-family:'DM Mono',monospace;color:var(--saffron)}
+.form-body{padding:1.3rem}
+.f-section{margin-bottom:1.5rem}
+.f-sec-title{font-size:.65rem;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(10,15,30,.4);margin-bottom:.8rem;display:flex;align-items:center;gap:.45rem}
+.f-sec-title::after{content:'';flex:1;height:1px;background:var(--paper3)}
+.f-auto-badge{font-size:.52rem;background:var(--gr2);color:var(--green);border:1px solid #b8e6ca;border-radius:4px;padding:.08rem .32rem;font-family:'DM Mono',monospace;letter-spacing:.5px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+.full{grid-column:1/-1}
+.fl{display:flex;flex-direction:column;gap:.3rem}
+.lbl{font-size:.62rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:rgba(10,15,30,.5)}
+.lbl-req::after{content:' *';color:var(--saffron)}
+.inp{background:var(--paper);border:1.5px solid var(--paper3);border-radius:var(--rs);padding:.55rem .8rem;font-family:'Syne',sans-serif;font-size:.8rem;color:var(--ink);outline:none;transition:border-color .13s;width:100%}
+.inp:focus{border-color:var(--saffron);background:var(--white)}
+.inp::placeholder{color:rgba(10,15,30,.3)}
+.inp.auto-filled{background:var(--gr2);border-color:#b8e6ca;color:var(--green)}
+select.inp{cursor:pointer}
+textarea.inp{resize:vertical;min-height:72px}
+.inp-hint{font-size:.6rem;color:rgba(10,15,30,.4);font-family:'DM Mono',monospace;margin-top:.15rem}
+.inp-err{font-size:.6rem;color:var(--red);font-family:'DM Mono',monospace;margin-top:.15rem;display:none}
+.inp.err{border-color:var(--red)}
+.inp.err+.inp-err{display:block}
+
+/* COMPLIANCE ALERT */
+.compliance-box{background:linear-gradient(135deg,#fff8e1,#fff3cd);border:1.5px solid var(--gold);border-radius:var(--rs);padding:.85rem 1rem;margin-bottom:1rem}
+.cb-header{display:flex;align-items:center;gap:.45rem;margin-bottom:.45rem}
+.cb-icon{font-size:1rem}
+.cb-title{font-size:.75rem;font-weight:700;color:var(--gold)}
+.cb-body{font-size:.7rem;color:rgba(10,15,30,.6);line-height:1.6}
+.cb-action{margin-top:.55rem;font-size:.68rem;color:var(--teal);font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem}
+
+/* SIDEBAR PANEL */
+.form-panel{display:flex;flex-direction:column;gap:1rem}
+.panel-card{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r);overflow:hidden}
+.pc-header{padding:.75rem 1rem;border-bottom:1px solid var(--paper3);font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.pc-body{padding:.9rem 1rem}
+.checklist{display:flex;flex-direction:column;gap:.45rem}
+.cl-item{display:flex;align-items:flex-start;gap:.5rem;font-size:.7rem;color:rgba(10,15,30,.6);line-height:1.4}
+.cl-tick{width:14px;height:14px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.55rem;margin-top:.1rem}
+.cl-tick.ok{background:var(--gr2);color:var(--green)}
+.cl-tick.warn{background:#fff8e1;color:var(--gold)}
+.cl-tick.na{background:var(--paper);color:rgba(10,15,30,.3)}
+.progress-ring{display:flex;flex-direction:column;align-items:center;padding:.5rem 0}
+.pr-num{font-size:2rem;font-family:'DM Mono',monospace;font-weight:500;color:var(--ink);line-height:1}
+.pr-label{font-size:.62rem;color:rgba(10,15,30,.4);font-family:'DM Mono',monospace;margin-top:.2rem}
+.pr-bar{width:100%;height:5px;background:var(--paper3);border-radius:100px;margin-top:.75rem;overflow:hidden}
+.pr-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--saffron));border-radius:100px;transition:width .5s}
+.output-opts{display:flex;flex-direction:column;gap:.45rem}
+.oo{display:flex;align-items:center;gap:.55rem;padding:.6rem .75rem;border:1.5px solid var(--paper3);border-radius:var(--rs);cursor:pointer;transition:all .13s}
+.oo:hover{border-color:var(--saffron)}
+.oo.selected{border-color:var(--teal);background:var(--tl2)}
+.oo-icon{font-size:1.1rem}
+.oo-name{font-size:.74rem;font-weight:700;color:var(--ink)}
+.oo-desc{font-size:.6rem;color:rgba(10,15,30,.45);font-family:'DM Mono',monospace}
+.oo-check{margin-left:auto;width:16px;height:16px;border-radius:50%;border:2px solid var(--paper3);display:flex;align-items:center;justify-content:center;font-size:.55rem;transition:all .13s}
+.oo.selected .oo-check{background:var(--teal);border-color:var(--teal);color:var(--white)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:var(--rs);font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;border:none;white-space:nowrap}
+.btn-primary{background:var(--saffron);color:var(--white)}
+.btn-primary:hover{background:#d4671e;transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,118,42,.35)}
+.btn-teal{background:var(--teal);color:var(--white)}
+.btn-teal:hover{background:#155557}
+.btn-outline{background:transparent;color:var(--ink);border:1.5px solid var(--paper3)}
+.btn-outline:hover{border-color:var(--saffron);color:var(--saffron)}
+.btn-ghost{background:transparent;color:rgba(10,15,30,.5)}
+.btn-ghost:hover{color:var(--ink);background:var(--paper2)}
+.btn-navy{background:var(--navy);color:var(--paper)}
+.btn-navy:hover{background:var(--nv2)}
+.btn-sm{padding:.35rem .75rem;font-size:.7rem}
+.btn-lg{padding:.75rem 1.8rem;font-size:.88rem}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+.form-actions{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.3rem;border-top:1px solid var(--paper3);background:var(--paper)}
+
+/* ── DASHBOARD CARDS ── */
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.d-card{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r);padding:1.2rem}
+.d-card-v{font-family:'DM Mono',monospace;font-size:1.8rem;font-weight:500;line-height:1}
+.d-card-l{font-size:.67rem;color:rgba(10,15,30,.45);text-transform:uppercase;letter-spacing:1px;margin-top:.35rem}
+.d-card-trend{font-size:.63rem;font-family:'DM Mono',monospace;margin-top:.55rem}
+.trend-up{color:var(--green)}
+.trend-dn{color:var(--red)}
+
+.recent-docs{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r);overflow:hidden}
+.rd-header{padding:.9rem 1.2rem;border-bottom:1px solid var(--paper3);display:flex;justify-content:space-between;align-items:center}
+.rd-row{display:flex;align-items:center;gap:.85rem;padding:.75rem 1.2rem;border-bottom:1px solid var(--paper);cursor:pointer;transition:background .1s}
+.rd-row:hover{background:var(--paper)}
+.rd-row:last-child{border:none}
+.rd-icon{font-size:1.2rem;width:32px;text-align:center}
+.rd-info{flex:1}
+.rd-name{font-size:.78rem;font-weight:600}
+.rd-meta{font-size:.62rem;color:rgba(10,15,30,.4);font-family:'DM Mono',monospace;margin-top:.1rem}
+.rd-status{font-size:.6rem;font-family:'DM Mono',monospace;padding:.15rem .5rem;border-radius:4px}
+.st-done{background:var(--gr2);color:var(--green)}
+.st-pend{background:var(--gd2);color:var(--gold)}
+.st-draft{background:var(--paper2);color:rgba(10,15,30,.5)}
+
+/* ── PROFILE PAGE ── */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.pg-card{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r);overflow:hidden}
+.pg-header{padding:.8rem 1.1rem;border-bottom:1px solid var(--paper3);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.pg-body{padding:1.1rem}
+
+/* ── OUTPUT / PREVIEW ── */
+.preview-shell{display:grid;grid-template-columns:1fr 280px;gap:1.5rem}
+.doc-preview{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r);overflow:hidden}
+.preview-toolbar{background:var(--navy);padding:.65rem 1.1rem;display:flex;align-items:center;justify-content:space-between}
+.pt-left{display:flex;align-items:center;gap:.65rem}
+.pt-dots{display:flex;gap:.35rem}
+.pt-dot{width:10px;height:10px;border-radius:50%}
+.preview-doc{padding:2rem;font-size:.72rem;min-height:500px;font-family:'DM Mono',monospace}
+.prev-letterhead{text-align:center;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:2px solid var(--ink)}
+.prev-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:.3rem}
+.prev-sub{font-size:.6rem;color:rgba(10,15,30,.5)}
+.prev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem}
+.prev-block-title{font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;color:rgba(10,15,30,.5)}
+.prev-line{display:flex;justify-content:space-between;font-size:.68rem;padding:.2rem 0;border-bottom:1px solid var(--paper)}
+.prev-table{width:100%;border-collapse:collapse;margin-bottom:1rem;font-size:.68rem}
+.prev-table th{background:var(--ink);color:var(--paper);padding:.4rem .6rem;text-align:left;font-size:.58rem;text-transform:uppercase;letter-spacing:.5px}
+.prev-table td{padding:.45rem .6rem;border-bottom:1px solid var(--paper3)}
+.prev-total{display:flex;justify-content:flex-end;gap:2rem;font-size:.72rem;font-weight:700;margin-top:.5rem;padding-top:.5rem;border-top:2px solid var(--ink)}
+.prev-footer{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--paper3);font-size:.62rem;color:rgba(10,15,30,.4);text-align:center}
+.output-panel{display:flex;flex-direction:column;gap:1rem}
+.op-card{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r);padding:1rem}
+.op-title{font-size:.72rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
+.download-btn{display:flex;align-items:center;gap:.6rem;padding:.75rem .9rem;background:var(--paper);border:1.5px solid var(--paper3);border-radius:var(--rs);cursor:pointer;transition:all .13s;width:100%;margin-bottom:.5rem;text-align:left}
+.download-btn:hover{border-color:var(--saffron);background:var(--sf3)}
+.dl-icon{font-size:1.3rem}
+.dl-name{font-size:.74rem;font-weight:700;color:var(--ink)}
+.dl-size{font-size:.6rem;color:rgba(10,15,30,.4);font-family:'DM Mono',monospace}
+.dl-arr{margin-left:auto;color:rgba(10,15,30,.3);font-size:.9rem}
+.icegate-box{background:var(--rd2);border:1.5px solid #f0b8b4;border-radius:var(--rs);padding:.85rem}
+.ig-title{font-size:.7rem;font-weight:700;color:var(--red);display:flex;align-items:center;gap:.35rem;margin-bottom:.45rem}
+.ig-body{font-size:.66rem;color:rgba(10,15,30,.55);line-height:1.6}
+.ig-code{font-family:'DM Mono',monospace;background:var(--ink);color:#4ade80;border-radius:5px;padding:.5rem .75rem;font-size:.62rem;margin-top:.55rem;white-space:pre}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:var(--paper);border-radius:var(--r);padding:.75rem 1.1rem;display:flex;align-items:center;gap:.6rem;z-index:9998;box-shadow:var(--s3);transform:translateY(60px);opacity:0;transition:all .22s;max-width:300px;font-size:.77rem}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-accent{width:4px;height:100%;position:absolute;left:0;top:0;border-radius:var(--r) 0 0 var(--r)}
+.toast.ok .toast-accent{background:var(--teal)}
+.toast.err .toast-accent{background:var(--red)}
+.toast.warn .toast-accent{background:var(--sf2)}
+
+/* ── UTILITY ── */
+.tag{display:inline-flex;align-items:center;gap:.2rem;padding:.12rem .45rem;border-radius:4px;font-size:.6rem;font-family:'DM Mono',monospace;font-weight:500}
+.empty{text-align:center;padding:3rem;color:rgba(10,15,30,.3);font-size:.8rem}
+.divider{height:1px;background:var(--paper3);margin:1.2rem 0}
+
+@media(max-width:1100px){
+  .form-shell{grid-template-columns:1fr}
+  .preview-shell{grid-template-columns:1fr}
+  .dash-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  .shell{flex-direction:column}
+  .sidebar{width:100%;flex-direction:row;padding:.5rem}
+  .content{padding:1rem}
+  .hero{padding:1.5rem}
+  .doc-grid{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="logo">
+    <span class="logo-w">Wort</span><span class="logo-dot">.</span>
+    <span class="logo-sub">Document Engine</span>
+  </div>
+  <div class="topbar-right">
+    <div class="status-pill"><div class="status-dot"></div>ICEGATE 2.0 Connected</div>
+    <button class="profile-btn" onclick="goTo('profile')">⚙ Profile & Keys</button>
+  </div>
+</div>
+
+<!-- ══ SHELL ══ -->
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-profile">
+      <div class="sb-role-tag" id="sb-role">Exporter</div>
+      <div class="sb-name" id="sb-name">Mehta Exports Pvt Ltd</div>
+      <div class="sb-sub" id="sb-gstin">GSTIN: 27AAPFM1234A1Z5</div>
+    </div>
+    <div class="sb-sec">Navigation</div>
+    <div class="sb-item active" id="n-dash" onclick="goTo('dash')"><span class="sb-ico">◈</span> Dashboard</div>
+    <div class="sb-item" id="n-docs" onclick="goTo('docs')"><span class="sb-ico">⊞</span> Document Library <span class="sb-badge">12</span></div>
+    <div class="sb-item" id="n-form" onclick="goTo('form')"><span class="sb-ico">◧</span> Smart Form</div>
+    <div class="sb-item" id="n-output" onclick="goTo('output')"><span class="sb-ico">▣</span> Generated Docs</div>
+    <div class="sb-sec">Settings</div>
+    <div class="sb-item" id="n-profile" onclick="goTo('profile')"><span class="sb-ico">◎</span> Profile & Keys</div>
+    <div class="sb-bottom">
+      <div class="iec-box">
+        <div class="iec-l">IEC Code</div>
+        <div class="iec-v" id="sb-iec">0520012345</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="main">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="page active" id="page-dash">
+      <div class="hero">
+        <div class="hero-label">Export Document Engine</div>
+        <div class="hero-title">Generate <strong>Port-Ready</strong> documents<br>in under 2 minutes.</div>
+        <div class="hero-sub">Replace 4 government portals with one clean interface. Auto-filled from your profile. Compliance-checked. ICEGATE EDI-ready.</div>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-v">12</div><div class="hs-l">Documents Ready</div></div>
+          <div class="hs"><div class="hs-v">100%</div><div class="hs-l">ICEGATE 2.0</div></div>
+          <div class="hs"><div class="hs-v">&lt;2m</div><div class="hs-l">Avg Gen Time</div></div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="dash-grid">
+          <div class="d-card">
+            <div class="d-card-v" style="color:var(--teal)">7</div>
+            <div class="d-card-l">Docs This Month</div>
+            <div class="d-card-trend trend-up">↑ 3 vs last month</div>
+          </div>
+          <div class="d-card">
+            <div class="d-card-v" style="color:var(--saffron)">₹48.2L</div>
+            <div class="d-card-l">Invoice Value</div>
+            <div class="d-card-trend trend-up">↑ 12% vs last month</div>
+          </div>
+          <div class="d-card">
+            <div class="d-card-v" style="color:var(--green)">0</div>
+            <div class="d-card-l">ICEGATE Errors</div>
+            <div class="d-card-trend trend-up">✓ Clean EDI files</div>
+          </div>
+        </div>
+        <div class="recent-docs">
+          <div class="rd-header">
+            <div style="font-size:.8rem;font-weight:700">Recent Documents</div>
+            <button class="btn btn-sm btn-primary" onclick="goTo('docs')">+ New Document</button>
+          </div>
+          <div class="rd-row" onclick="goTo('output')">
+            <div class="rd-icon">🧾</div>
+            <div class="rd-info">
+              <div class="rd-name">Commercial Invoice — Sunrise Pharma UAE</div>
+              <div class="rd-meta">INV/2025/0047 · PDF · 12 Jun 2025 · ₹14,82,000</div>
+            </div>
+            <span class="rd-status st-done">Generated</span>
+          </div>
+          <div class="rd-row">
+            <div class="rd-icon">📦</div>
+            <div class="rd-info">
+              <div class="rd-name">Packing List — Sunrise Pharma UAE</div>
+              <div class="rd-meta">PL/2025/0047 · PDF · 12 Jun 2025</div>
+            </div>
+            <span class="rd-status st-done">Generated</span>
+          </div>
+          <div class="rd-row">
+            <div class="rd-icon">🛃</div>
+            <div class="rd-info">
+              <div class="rd-name">Shipping Bill EDI — JNPT Mumbai</div>
+              <div class="rd-meta">SB/2025/0047 · .txt EDI · 12 Jun 2025</div>
+            </div>
+            <span class="rd-status st-done">Generated</span>
+          </div>
+          <div class="rd-row">
+            <div class="rd-icon">📋</div>
+            <div class="rd-info">
+              <div class="rd-name">RCMC Application — PHARMEXCIL</div>
+              <div class="rd-meta">Draft · Started 11 Jun 2025</div>
+            </div>
+            <span class="rd-status st-pend">Draft</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DOCUMENT LIBRARY ═══ -->
+    <div class="page" id="page-docs">
+      <div class="content">
+        <div class="sec-h">
+          <div>
+            <div class="sec-t">Document Library</div>
+            <div class="sec-s">Select a document to begin the smart form</div>
+          </div>
+        </div>
+        <div class="search-row">
+          <input class="search-inp" placeholder="Search documents… (e.g. invoice, shipping, certificate)" id="doc-search" oninput="filterDocs(this.value)">
+        </div>
+        <div class="cat-filter">
+          <div class="cf active" onclick="setCat('all',this)">All (12)</div>
+          <div class="cf" onclick="setCat('customs',this)">🛃 Customs</div>
+          <div class="cf" onclick="setCat('trade',this)">📋 Trade Finance</div>
+          <div class="cf" onclick="setCat('govt',this)">🏛 Govt Registration</div>
+          <div class="cf" onclick="setCat('bank',this)">🏦 Banking</div>
+          <div class="cf" onclick="setCat('edi',this)">⚡ EDI Files</div>
+        </div>
+        <div class="doc-grid" id="doc-grid"></div>
+      </div>
+    </div>
+
+    <!-- ═══ SMART FORM ═══ -->
+    <div class="page" id="page-form">
+      <div class="content">
+        <div class="sec-h" style="margin-bottom:1.5rem">
+          <div>
+            <div class="sec-t" id="form-title">Commercial Invoice</div>
+            <div class="sec-s">Auto-filled fields are pulled from your profile. Only variable data is required.</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="goTo('docs')">← Back to Library</button>
+        </div>
+        <!-- steps -->
+        <div class="steps" id="form-steps">
+          <div class="step active" id="st-1"><div class="step-n">1</div>Exporter Info</div>
+          <div class="step-line"></div>
+          <div class="step" id="st-2"><div class="step-n">2</div>Buyer & Cargo</div>
+          <div class="step-line"></div>
+          <div class="step" id="st-3"><div class="step-n">3</div>Compliance</div>
+          <div class="step-line"></div>
+          <div class="step" id="st-4"><div class="step-n">4</div>Generate</div>
+        </div>
+        <div id="smart-form-container"></div>
+      </div>
+    </div>
+
+    <!-- ═══ OUTPUT / PREVIEW ═══ -->
+    <div class="page" id="page-output">
+      <div class="content">
+        <div class="sec-h">
+          <div>
+            <div class="sec-t">Generated Document</div>
+            <div class="sec-s">Port-ready document preview with download options</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="goTo('docs')">← Generate Another</button>
+        </div>
+        <div class="preview-shell">
+          <div class="doc-preview">
+            <div class="preview-toolbar">
+              <div class="pt-left">
+                <div class="pt-dots">
+                  <div class="pt-dot" style="background:#ff5f57"></div>
+                  <div class="pt-dot" style="background:#febc2e"></div>
+                  <div class="pt-dot" style="background:#28c840"></div>
+                </div>
+                <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(247,244,239,.5)">preview — commercial_invoice_0047.pdf</span>
+              </div>
+              <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(247,244,239,.4)">Port-Ready ✓</span>
+            </div>
+            <div class="preview-doc" id="preview-doc-body">
+              <!-- Injected dynamically -->
+            </div>
+          </div>
+          <div class="output-panel">
+            <div class="op-card">
+              <div class="op-title">📥 Download</div>
+              <div class="download-btn" onclick="downloadPDF()">
+                <div class="dl-icon">📄</div>
+                <div><div class="dl-name">PDF Document</div><div class="dl-size">~180 KB · Port-Ready Format</div></div>
+                <div class="dl-arr">↓</div>
+              </div>
+              <div class="download-btn" onclick="downloadEDI()">
+                <div class="dl-icon">⚡</div>
+                <div><div class="dl-name">ICEGATE EDI (.txt)</div><div class="dl-size">~4 KB · Flat File v2.0</div></div>
+                <div class="dl-arr">↓</div>
+              </div>
+              <div class="download-btn" onclick="downloadExcel()">
+                <div class="dl-icon">📊</div>
+                <div><div class="dl-name">Excel Summary</div><div class="dl-size">~22 KB · Bank submission</div></div>
+                <div class="dl-arr">↓</div>
+              </div>
+            </div>
+            <div class="op-card">
+              <div class="op-title">✅ Compliance Check</div>
+              <div class="checklist">
+                <div class="cl-item"><div class="cl-tick ok">✓</div><span>IEC code verified with DGFT</span></div>
+                <div class="cl-item"><div class="cl-tick ok">✓</div><span>GSTIN active (LuT filing confirmed)</span></div>
+                <div class="cl-item"><div class="cl-tick ok">✓</div><span>HS Code validated (Chapter 30)</span></div>
+                <div class="cl-item"><div class="cl-tick ok">✓</div><span>IGST @ 0% (Export under Bond/LuT)</span></div>
+                <div class="cl-item"><div class="cl-tick ok">✓</div><span>Bank Realisation Period: 9 months</span></div>
+                <div class="cl-item"><div class="cl-tick warn">!</div><span>AD Code not linked to Shipping Bill — submit at customs</span></div>
+              </div>
+            </div>
+            <div class="op-card">
+              <div class="op-title">📋 Next Steps</div>
+              <div class="checklist">
+                <div class="cl-item"><div class="cl-tick na">1</div><span>File Shipping Bill on ICEGATE with EDI file</span></div>
+                <div class="cl-item"><div class="cl-tick na">2</div><span>Submit to bank for FEMA compliance</span></div>
+                <div class="cl-item"><div class="cl-tick na">3</div><span>Claim IGST refund on GST portal</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PROFILE ═══ -->
+    <div class="page" id="page-profile">
+      <div class="content">
+        <div class="sec-h">
+          <div>
+            <div class="sec-t">Profile & Auto-Fill Keys</div>
+            <div class="sec-s">Stored data is auto-filled into every document — you never type it twice</div>
+          </div>
+          <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+        </div>
+        <div class="profile-grid">
+          <div class="pg-card">
+            <div class="pg-header">🏭 Company Identity</div>
+            <div class="pg-body">
+              <div class="fg" style="gap:.75rem">
+                <div class="fl full"><label class="lbl lbl-req">Company Name</label><input class="inp auto-filled" id="p-company" value="Mehta Exports Pvt Ltd"></div>
+                <div class="fl"><label class="lbl lbl-req">GSTIN</label><input class="inp auto-filled" id="p-gstin" value="27AAPFM1234A1Z5"></div>
+                <div class="fl"><label class="lbl lbl-req">IEC Code</label><input class="inp auto-filled" id="p-iec" value="0520012345"></div>
+                <div class="fl full"><label class="lbl">Registered Address</label><textarea class="inp" id="p-addr" style="min-height:60px">14/B, Nariman Point, Mumbai – 400021, Maharashtra</textarea></div>
+                <div class="fl"><label class="lbl">State Code</label><input class="inp" id="p-state" value="27 – Maharashtra"></div>
+                <div class="fl"><label class="lbl">PAN</label><input class="inp" id="p-pan" value="AAPFM1234A"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pg-card">
+            <div class="pg-header">🏦 Bank & LuT Details</div>
+            <div class="pg-body">
+              <div class="fg" style="gap:.75rem">
+                <div class="fl full"><label class="lbl">Bank Name</label><input class="inp auto-filled" id="p-bank" value="State Bank of India — Fort Branch"></div>
+                <div class="fl"><label class="lbl">Account No.</label><input class="inp" id="p-acc" value="10234567890"></div>
+                <div class="fl"><label class="lbl">IFSC</label><input class="inp" id="p-ifsc" value="SBIN0000300"></div>
+                <div class="fl"><label class="lbl">AD Code</label><input class="inp" id="p-ad" value="0300612"></div>
+                <div class="fl"><label class="lbl">LuT Status</label><select class="inp auto-filled" id="p-lut"><option value="yes" selected>Filed (LuT) — 0% IGST</option><option value="no">Not Filed — Pay & Claim IGST</option></select></div>
+                <div class="fl"><label class="lbl">LuT ARN</label><input class="inp" id="p-lut-arn" value="AD270523012345P"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pg-card">
+            <div class="pg-header">📋 Signatory & Export Info</div>
+            <div class="pg-body">
+              <div class="fg" style="gap:.75rem">
+                <div class="fl full"><label class="lbl">Authorized Signatory</label><input class="inp" id="p-sign" value="Ramesh Mehta — Director"></div>
+                <div class="fl"><label class="lbl">Port of Export</label><select class="inp" id="p-port"><option selected>JNPT Mumbai (INJAV1)</option><option>Chennai Sea (INMAA1)</option><option>Delhi Air (INDEL6)</option><option>Kolkata Sea (INCCU1)</option></select></div>
+                <div class="fl"><label class="lbl">Default Currency</label><select class="inp" id="p-curr"><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option></select></div>
+                <div class="fl"><label class="lbl">Default Incoterm</label><select class="inp" id="p-inco"><option selected>FOB</option><option>CIF</option><option>EXW</option><option>CFR</option></select></div>
+              </div>
+            </div>
+          </div>
+          <div class="pg-card">
+            <div class="pg-header">🎭 Role & EPC Membership</div>
+            <div class="pg-body">
+              <div class="fg" style="gap:.75rem">
+                <div class="fl full"><label class="lbl lbl-req">Role</label>
+                  <select class="inp" id="p-role" onchange="updateRole()">
+                    <option value="exporter" selected>Exporter (Merchant)</option>
+                    <option value="manufacturer">Manufacturer-Exporter</option>
+                    <option value="agent">Customs Broker / Agent</option>
+                  </select>
+                </div>
+                <div class="fl"><label class="lbl">RCMC Council</label><input class="inp" id="p-epc" value="PHARMEXCIL"></div>
+                <div class="fl"><label class="lbl">RCMC Number</label><input class="inp" id="p-rcmc" value="PXCL/2024/00512"></div>
+                <div class="fl full"><label class="lbl">Main Export HS Code</label><input class="inp" id="p-hs" placeholder="e.g. 30049099" value="30049099"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<div class="toast" id="toast">
+  <div class="toast-accent"></div>
+  <span id="toast-msg">Done</span>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// DOCUMENT CATALOGUE
+// ══════════════════════════════════════════════
+const DOCS = [
+  {id:'commercial-invoice',name:'Commercial Invoice',icon:'🧾',desc:'Primary trade document listing goods, buyer, seller, value, and payment terms.',cat:'trade',tags:['trade','bank'],hot:true,time:'~90s',color:'#e8762a'},
+  {id:'packing-list',name:'Packing List',icon:'📦',desc:'Itemized list of cargo with weight, dimensions, and package counts.',cat:'trade',tags:['trade','customs'],time:'~60s',color:'#1a6b6e'},
+  {id:'shipping-bill',name:'Shipping Bill (EDI)',icon:'🛃',desc:'ICEGATE 2.0 compatible EDI flat file for customs clearance at Indian ports.',cat:'edi',tags:['customs','edi'],hot:true,time:'~2m',color:'#c0392b'},
+  {id:'certificate-origin',name:'Certificate of Origin',icon:'🌏',desc:'Certifies country of origin. Required by most importing countries for duty concessions.',cat:'customs',tags:['customs','govt'],time:'~75s',color:'#6b3fa0'},
+  {id:'bill-lading',name:'Bill of Lading',icon:'🚢',desc:'Contract between exporter and carrier. Title document for sea shipments.',cat:'trade',tags:['trade','bank'],time:'~90s',color:'#1a6b6e'},
+  {id:'airway-bill',name:'Airway Bill (AWB)',icon:'✈️',desc:'Non-negotiable consignment note for air cargo shipments.',cat:'trade',tags:['trade'],time:'~60s',color:'#1a6b6e'},
+  {id:'letter-credit',name:'Letter of Credit (LC)',icon:'💳',desc:'Bank guarantee document. Generates LC Application and compliance checklist.',cat:'bank',tags:['bank'],time:'~3m',color:'#1d6e4e'},
+  {id:'bank-realisation',name:'Bank Realisation Certificate',icon:'🏦',desc:'EBRC/BRC from your Authorised Dealer bank confirming export proceeds received.',cat:'bank',tags:['bank','govt'],time:'~2m',color:'#1d6e4e'},
+  {id:'rcmc',name:'RCMC Application',icon:'📋',desc:'Registration-cum-Membership Certificate. Engine auto-suggests the correct EPC based on your HS code.',cat:'govt',tags:['govt'],hot:true,time:'~4m',color:'#b8860b'},
+  {id:'gst-refund',name:'GST / IGST Refund',icon:'💰',desc:'Auto-calculates IGST refund claim based on LuT status. Generates RFD-01 supporting data.',cat:'govt',tags:['govt','bank'],time:'~2m',color:'#b8860b'},
+  {id:'phytosanitary',name:'Phytosanitary Certificate',icon:'🌱',desc:'Required for plant-based products. Generates NPPO application form.',cat:'customs',tags:['customs','govt'],time:'~2m',color:'#1d6e4e'},
+  {id:'health-certificate',name:'Health Certificate',icon:'⚕️',desc:'Required for food, pharma, and animal products. Links to FSSAI / CDSCO.',cat:'customs',tags:['customs','govt'],time:'~2m',color:'#162447'},
+];
+
+const EPC_MAP = {
+  '01':'APEDA (Agricultural & Processed Food)', '02':'APEDA (Agricultural & Processed Food)',
+  '03':'MPEDA (Marine Products)', '04':'APEDA (Horticultural Products)',
+  '05':'CashewEPC', '06':'SpicesBoard', '07':'CoffeeBoard', '08':'TeaBoard',
+  '22':'EEPC India (Engineering Exports)', '23':'EEPC India (Engineering Exports)',
+  '29':'EEPC India (Engineering Exports)', '30':'PHARMEXCIL (Pharmaceuticals)',
+  '61':'AEPC (Apparel Export Promotion)', '62':'AEPC (Apparel & Garments)',
+  '64':'AEPC (Apparel & Garments)', '72':'EEPC India (Steel / Engineering)',
+  '84':'EEPC India (Machinery)', '85':'EEPC India (Electronics)',
+};
+
+function getEPC(hsCode) {
+  const ch = hsCode.slice(0,2);
+  return EPC_MAP[ch] || 'FIEO (Federation of Indian Export Organisations — General)';
+}
+
+const PROFILE = {
+  company:'Mehta Exports Pvt Ltd', gstin:'27AAPFM1234A1Z5', iec:'0520012345',
+  addr:'14/B, Nariman Point, Mumbai – 400021, Maharashtra', state:'27 – Maharashtra', pan:'AAPFM1234A',
+  bank:'State Bank of India — Fort Branch', acc:'10234567890', ifsc:'SBIN0000300', ad:'0300612',
+  lut:'yes', lutArn:'AD270523012345P', sign:'Ramesh Mehta — Director',
+  port:'JNPT Mumbai (INJAV1)', curr:'USD', inco:'FOB', role:'exporter',
+  epc:'PHARMEXCIL', rcmc:'PXCL/2024/00512', hs:'30049099'
+};
+
+let selectedDoc = null;
+let currentForm = {};
+let formStep = 1;
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+id)?.classList.add('active');
+  document.getElementById('n-'+id)?.classList.add('active');
+  if (id === 'docs') renderDocGrid();
+  if (id === 'output') renderPreview();
+}
+
+// ══════════════════════════════════════════════
+// DOCUMENT LIBRARY
+// ══════════════════════════════════════════════
+let currentCat = 'all';
+function renderDocGrid(filter='', cat=currentCat) {
+  const grid = document.getElementById('doc-grid');
+  let docs = DOCS.filter(d => {
+    const matchText = !filter || d.name.toLowerCase().includes(filter.toLowerCase()) || d.desc.toLowerCase().includes(filter.toLowerCase());
+    const matchCat  = cat === 'all' || d.cat === cat;
+    return matchText && matchCat;
+  });
+  if (!docs.length) { grid.innerHTML = '<div class="empty" style="grid-column:1/-1">No documents match your search.</div>'; return; }
+  grid.innerHTML = docs.map(d => `
+    <div class="doc-card ${selectedDoc?.id===d.id?'selected':''}" style="--cat-color:${d.color}" onclick="selectDoc('${d.id}')">
+      ${d.hot ? '<div class="dc-hot">Popular</div>' : `<div class="dc-time">${d.time}</div>`}
+      <div class="dc-icon">${d.icon}</div>
+      <div class="dc-name">${d.name}</div>
+      <div class="dc-desc">${d.desc}</div>
+      <div class="dc-tags">
+        ${d.tags.map(t => `<span class="dc-tag tag-${t}">${t}</span>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function filterDocs(v) { renderDocGrid(v, currentCat); }
+function setCat(cat, el) {
+  currentCat = cat;
+  document.querySelectorAll('.cf').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderDocGrid(document.getElementById('doc-search').value, cat);
+}
+
+function selectDoc(id) {
+  selectedDoc = DOCS.find(d => d.id === id);
+  renderDocGrid(document.getElementById('doc-search').value);
+  setTimeout(() => {
+    buildSmartForm(selectedDoc);
+    goTo('form');
+  }, 120);
+}
+
+// ══════════════════════════════════════════════
+// SMART FORM BUILDER
+// ══════════════════════════════════════════════
+function buildSmartForm(doc) {
+  document.getElementById('form-title').textContent = doc.name;
+  formStep = 1;
+  renderStep(1, doc);
+}
+
+function renderStep(step, doc) {
+  updateSteps(step);
+  const container = document.getElementById('smart-form-container');
+  const isCI = doc?.id === 'commercial-invoice' || !doc;
+  const isSB = doc?.id === 'shipping-bill';
+  const isRCMC = doc?.id === 'rcmc';
+  const isLetter = doc?.id === 'letter-credit';
+  const isBRC = doc?.id === 'bank-realisation';
+
+  let formHTML = '';
+
+  if (step === 1) {
+    formHTML = `
+    <div class="form-shell">
+      <div class="form-main">
+        <div class="form-header">
+          <div><div class="fh-title">${doc.icon} ${doc.name}</div><div class="fh-doc">Step 1 of 4 — Exporter Information</div></div>
+          <div class="fh-badge">Auto-filled from profile</div>
+        </div>
+        <div class="form-body">
+          <div class="f-section">
+            <div class="f-sec-title">Exporter Details <span class="f-auto-badge">AUTO-FILLED</span></div>
+            <div class="fg">
+              <div class="fl full"><label class="lbl lbl-req">Company Name</label><input class="inp auto-filled" id="ef-company" value="${PROFILE.company}"><div class="inp-hint">From your profile · GSTIN registered name</div></div>
+              <div class="fl"><label class="lbl lbl-req">GSTIN</label><input class="inp auto-filled" id="ef-gstin" value="${PROFILE.gstin}"></div>
+              <div class="fl"><label class="lbl lbl-req">IEC Code</label><input class="inp auto-filled" id="ef-iec" value="${PROFILE.iec}"></div>
+              <div class="fl full"><label class="lbl">Registered Address</label><textarea class="inp auto-filled" id="ef-addr">${PROFILE.addr}</textarea></div>
+              <div class="fl"><label class="lbl">State Code</label><input class="inp auto-filled" id="ef-state" value="${PROFILE.state}"></div>
+              <div class="fl"><label class="lbl">PAN</label><input class="inp auto-filled" id="ef-pan" value="${PROFILE.pan}"></div>
+              <div class="fl"><label class="lbl">Port of Export</label><input class="inp auto-filled" id="ef-port" value="${PROFILE.port}"></div>
+              <div class="fl"><label class="lbl">Authorised Signatory</label><input class="inp auto-filled" id="ef-sign" value="${PROFILE.sign}"></div>
+            </div>
+          </div>
+          <div class="f-section">
+            <div class="f-sec-title">Invoice / Reference Details</div>
+            <div class="fg">
+              <div class="fl"><label class="lbl lbl-req">Invoice Number</label><input class="inp" id="ef-invno" placeholder="e.g. INV/2025/0048"><div class="inp-err">Required field</div></div>
+              <div class="fl"><label class="lbl lbl-req">Invoice Date</label><input class="inp" id="ef-date" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+              <div class="fl"><label class="lbl">Currency</label><select class="inp auto-filled" id="ef-curr"><option ${PROFILE.curr==='USD'?'selected':''}>USD</option><option ${PROFILE.curr==='EUR'?'selected':''}>EUR</option><option ${PROFILE.curr==='GBP'?'selected':''}>GBP</option><option ${PROFILE.curr==='AED'?'selected':''}>AED</option></select></div>
+              <div class="fl"><label class="lbl">Incoterm</label><select class="inp auto-filled" id="ef-inco"><option selected>FOB</option><option>CIF</option><option>EXW</option><option>CFR</option></select></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-ghost btn-sm" onclick="goTo('docs')">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(2,'${doc.id}')">Continue → Buyer Info</button>
+        </div>
+      </div>
+      ${sidePanel(1, doc)}
+    </div>`;
+  }
+
+  if (step === 2) {
+    formHTML = `
+    <div class="form-shell">
+      <div class="form-main">
+        <div class="form-header">
+          <div><div class="fh-title">${doc.icon} ${doc.name}</div><div class="fh-doc">Step 2 of 4 — Buyer & Cargo Details</div></div>
+          <div class="fh-badge">Variable Data</div>
+        </div>
+        <div class="form-body">
+          <div class="f-section">
+            <div class="f-sec-title">Buyer / Consignee</div>
+            <div class="fg">
+              <div class="fl full"><label class="lbl lbl-req">Buyer Company Name</label><input class="inp" id="bf-buyer" placeholder="e.g. Sunrise Pharma LLC, Dubai"><div class="inp-err">Required field</div></div>
+              <div class="fl full"><label class="lbl lbl-req">Buyer Address</label><textarea class="inp" id="bf-baddr" placeholder="Full address including country"></textarea><div class="inp-err">Required field</div></div>
+              <div class="fl"><label class="lbl">Country</label><input class="inp" id="bf-country" placeholder="e.g. UAE"></div>
+              <div class="fl"><label class="lbl">Buyer Email</label><input class="inp" id="bf-email" placeholder="buyer@company.com"></div>
+              <div class="fl"><label class="lbl">Notify Party</label><input class="inp" id="bf-notify" placeholder="If different from buyer"></div>
+              <div class="fl"><label class="lbl">PO Number</label><input class="inp" id="bf-po" placeholder="Buyer's PO reference"></div>
+            </div>
+          </div>
+          <div class="f-section">
+            <div class="f-sec-title">Cargo / Line Items</div>
+            <div id="cargo-items">
+              <div class="cargo-row" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 0.5fr;gap:.55rem;margin-bottom:.55rem">
+                <div class="fl"><label class="lbl lbl-req">Description of Goods</label><input class="inp" id="ci-desc-0" placeholder="e.g. Paracetamol Tablets 500mg"></div>
+                <div class="fl"><label class="lbl">HS Code</label><input class="inp" id="ci-hs-0" value="${PROFILE.hs}" placeholder="8-digit"></div>
+                <div class="fl"><label class="lbl lbl-req">Qty & Unit</label><input class="inp" id="ci-qty-0" placeholder="e.g. 5000 Boxes"></div>
+                <div class="fl"><label class="lbl lbl-req">Unit Price (${PROFILE.curr})</label><input class="inp" id="ci-price-0" type="number" placeholder="0.00" oninput="calcTotal()"></div>
+                <div class="fl"><label class="lbl">Amount</label><input class="inp" id="ci-amt-0" readonly style="background:var(--paper2);color:var(--teal);font-family:'DM Mono',monospace"></div>
+              </div>
+              <div class="cargo-row" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 0.5fr;gap:.55rem;margin-bottom:.55rem">
+                <div class="fl"><input class="inp" id="ci-desc-1" placeholder="Add another item (optional)"></div>
+                <div class="fl"><input class="inp" id="ci-hs-1" placeholder="HS Code"></div>
+                <div class="fl"><input class="inp" id="ci-qty-1" placeholder="Qty & Unit"></div>
+                <div class="fl"><input class="inp" id="ci-price-1" type="number" placeholder="0.00" oninput="calcTotal()"></div>
+                <div class="fl"><input class="inp" id="ci-amt-1" readonly style="background:var(--paper2);color:var(--teal);font-family:'DM Mono',monospace"></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.65rem">
+              <button class="btn btn-ghost btn-sm" onclick="addCargoRow()">+ Add Line Item</button>
+              <div style="text-align:right">
+                <div style="font-size:.62rem;color:rgba(10,15,30,.4);font-family:'DM Mono',monospace">TOTAL (FOB)</div>
+                <div style="font-size:1.1rem;font-family:'DM Mono',monospace;font-weight:700;color:var(--ink)" id="grand-total">USD 0.00</div>
+              </div>
+            </div>
+          </div>
+          <div class="f-section">
+            <div class="f-sec-title">Shipping Details</div>
+            <div class="fg">
+              <div class="fl"><label class="lbl">Vessel / Flight No.</label><input class="inp" id="sf-vessel" placeholder="e.g. MSC ROMA / EK512"></div>
+              <div class="fl"><label class="lbl">Port of Loading</label><input class="inp auto-filled" id="sf-pol" value="JNPT Mumbai"></div>
+              <div class="fl"><label class="lbl">Port of Discharge</label><input class="inp" id="sf-pod" placeholder="e.g. Jebel Ali, UAE"></div>
+              <div class="fl"><label class="lbl">ETD / Sailing Date</label><input class="inp" id="sf-etd" type="date"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-outline btn-sm" onclick="nextStep(1,'${doc.id}')">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(3,'${doc.id}')">Continue → Compliance</button>
+        </div>
+      </div>
+      ${sidePanel(2, doc)}
+    </div>`;
+  }
+
+  if (step === 3) {
+    const hsCode = PROFILE.hs;
+    const epc = getEPC(hsCode);
+    const lutMsg = PROFILE.lut === 'yes'
+      ? 'LuT filed — IGST @ 0%. Goods exported under Bond/LuT. No tax payment required.'
+      : 'LuT NOT filed — You must pay IGST and claim refund. Contact your CA.';
+    const lutColor = PROFILE.lut === 'yes' ? 'var(--green)' : 'var(--red)';
+    const isRCMCDoc = doc.id === 'rcmc';
+    const isCIDoc = doc.id === 'commercial-invoice';
+
+    formHTML = `
+    <div class="form-shell">
+      <div class="form-main">
+        <div class="form-header">
+          <div><div class="fh-title">${doc.icon} ${doc.name}</div><div class="fh-doc">Step 3 of 4 — Compliance Layer</div></div>
+          <div class="fh-badge">Auto-Validated</div>
+        </div>
+        <div class="form-body">
+          ${isCIDoc ? `
+          <div class="compliance-box" style="border-color:${PROFILE.lut==='yes'?'var(--green)':'var(--red)'};background:${PROFILE.lut==='yes'?'var(--gr2)':'var(--rd2)'}">
+            <div class="cb-header"><div class="cb-icon">${PROFILE.lut==='yes'?'✅':'⚠️'}</div><div class="cb-title" style="color:${lutColor}">GST / IGST Auto-Detection</div></div>
+            <div class="cb-body">${lutMsg}<br><br>ARN: <span style="font-family:'DM Mono',monospace">${PROFILE.lutArn}</span></div>
+            ${PROFILE.lut!=='yes'?'<div class="cb-action" onclick="toast(\'Contact your CA to file LuT before export\',\'warn\')">→ How to File LuT</div>':''}
+          </div>` : ''}
+          ${isRCMCDoc || doc.id === 'rcmc' ? `
+          <div class="compliance-box">
+            <div class="cb-header"><div class="cb-icon">🏛</div><div class="cb-title">Export Promotion Council Suggestion</div></div>
+            <div class="cb-body">Based on your HS Code <b style="font-family:'DM Mono',monospace">${hsCode}</b>, the correct EPC for your RCMC is:<br><br>
+            <b style="color:var(--teal);font-size:.88rem">${epc}</b><br><br>
+            Filing with the wrong council will result in rejection. This is auto-determined by the first 2 digits of your HS code (Chapter ${hsCode.slice(0,2)}).</div>
+            <div class="cb-action" onclick="toast('EPC detected: ${epc}','ok')">→ Confirm & Use This Council</div>
+          </div>` : ''}
+          <div class="compliance-box" style="background:var(--tl2);border-color:var(--tl3)">
+            <div class="cb-header"><div class="cb-icon">✅</div><div class="cb-title" style="color:var(--teal)">FEMA & RBI Compliance</div></div>
+            <div class="cb-body">Bank Realisation Period: <b>9 months</b> from date of shipment (standard). For exports to ACU countries: 6 months. Ensure buyer pays within this period to avoid RBI notice.</div>
+          </div>
+          <div class="f-section">
+            <div class="f-sec-title">Declaration & Payment Terms</div>
+            <div class="fg">
+              <div class="fl"><label class="lbl">Payment Terms</label><select class="inp" id="comp-pay"><option>TT in Advance</option><option>LC at Sight</option><option>LC 60 Days</option><option>DA 90 Days</option><option>DP at Sight</option></select></div>
+              <div class="fl"><label class="lbl">Mode of Transport</label><select class="inp" id="comp-mode"><option>Sea</option><option>Air</option><option>Road</option><option>Multi-modal</option></select></div>
+              <div class="fl full"><label class="lbl">Declaration (Optional Override)</label><input class="inp" id="comp-decl" value="We hereby certify that this invoice shows the actual price of the goods described and that all particulars are true and correct." style="font-size:.72rem"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-outline btn-sm" onclick="nextStep(2,'${doc.id}')">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(4,'${doc.id}')">Generate Document →</button>
+        </div>
+      </div>
+      ${sidePanel(3, doc)}
+    </div>`;
+  }
+
+  if (step === 4) {
+    formHTML = `
+    <div class="form-shell">
+      <div class="form-main">
+        <div class="form-header">
+          <div><div class="fh-title">${doc.icon} ${doc.name}</div><div class="fh-doc">Step 4 — Output Format</div></div>
+          <div class="fh-badge">Port-Ready</div>
+        </div>
+        <div class="form-body">
+          <div class="f-section">
+            <div class="f-sec-title">Select Output Format</div>
+            <div class="output-opts">
+              <div class="oo selected" id="oo-pdf" onclick="selectOutput('pdf')">
+                <div class="oo-icon">📄</div>
+                <div><div class="oo-name">PDF Document</div><div class="oo-desc">Standard A4 · Bank & customs submission</div></div>
+                <div class="oo-check">✓</div>
+              </div>
+              ${doc.id === 'shipping-bill' ? `
+              <div class="oo" id="oo-edi" onclick="selectOutput('edi')">
+                <div class="oo-icon">⚡</div>
+                <div><div class="oo-name">ICEGATE EDI (.txt)</div><div class="oo-desc">Flat file format · ICEGATE 2.0 compatible</div></div>
+                <div class="oo-check"></div>
+              </div>` : ''}
+              <div class="oo" id="oo-excel" onclick="selectOutput('excel')">
+                <div class="oo-icon">📊</div>
+                <div><div class="oo-name">Excel (.xlsx)</div><div class="oo-desc">Bank submission · Multiple sheets</div></div>
+                <div class="oo-check"></div>
+              </div>
+            </div>
+          </div>
+          <div class="f-section">
+            <div class="f-sec-title">Letterhead & Branding</div>
+            <div class="fg">
+              <div class="fl"><label class="lbl">Letterhead Style</label><select class="inp" id="lh-style"><option>Professional (Recommended)</option><option>Minimal</option><option>Classic Bordered</option></select></div>
+              <div class="fl"><label class="lbl">Include Logo</label><select class="inp"><option>No Logo (Text only)</option><option>Upload Logo</option></select></div>
+              <div class="fl full"><label class="lbl">Footer Note</label><input class="inp" id="footer-note" placeholder="e.g. 'Subject to Mumbai jurisdiction. FEMA compliant.'"></div>
+            </div>
+          </div>
+          ${doc.id === 'shipping-bill' ? `
+          <div class="icegate-box" style="background:var(--rd2);border-color:#f0b8b4">
+            <div class="ig-title">⚡ ICEGATE EDI — Shipping Bill Format v2.0</div>
+            <div class="ig-body">The engine will generate a flat-file (.txt) pre-formatted for ICEGATE 2.0. Field positions and comma delimiters are auto-validated. Zero manual formatting errors.</div>
+            <div class="ig-code">SB|001|${PROFILE.iec}|INJAV1|${new Date().toISOString().split('T')[0].replace(/-/g,'')}|
+EXPORTER|${PROFILE.company.toUpperCase().slice(0,30)}|27|
+GOODS|30049099|PHARMACEUTICAL PREPARATIONS|KGS|500|
+VALUE|USD|${14820}|FOB|</div>
+          </div>` : ''}
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-outline btn-sm" onclick="nextStep(3,'${doc.id}')">← Back</button>
+          <button class="btn btn-teal btn-lg" onclick="generateDocument()">⚡ Generate ${doc.name}</button>
+        </div>
+      </div>
+      ${sidePanel(4, doc)}
+    </div>`;
+  }
+
+  container.innerHTML = formHTML;
+  if (step === 2) calcTotal();
+}
+
+function sidePanel(step, doc) {
+  const fields = {
+    1:[{ok:true,t:'Company & GSTIN verified'},{ok:true,t:'IEC Code linked'},{ok:step>=2,t:'Buyer info added'},{ok:step>=3,t:'Compliance checked'},{ok:step>=4,t:'Output format selected'}],
+    2:[{ok:true,t:'Company & GSTIN verified'},{ok:true,t:'IEC Code linked'},{ok:false,t:'Buyer info — filling now'},{ok:false,t:'Compliance checked'},{ok:false,t:'Output format selected'}],
+    3:[{ok:true,t:'Company & GSTIN verified'},{ok:true,t:'IEC Code linked'},{ok:true,t:'Buyer info added'},{ok:false,t:'Compliance — reviewing'},{ok:false,t:'Output format selected'}],
+    4:[{ok:true,t:'Company & GSTIN verified'},{ok:true,t:'IEC Code linked'},{ok:true,t:'Buyer info added'},{ok:true,t:'Compliance checked'},{ok:false,t:'Output format — select below'}],
+  };
+  const progress = {1:20,2:50,3:75,4:95};
+  const items = fields[step] || fields[1];
+  return `
+  <div class="form-panel">
+    <div class="panel-card">
+      <div class="pc-header">📊 Completion</div>
+      <div class="pc-body">
+        <div class="progress-ring">
+          <div class="pr-num">${progress[step]}%</div>
+          <div class="pr-label">form complete</div>
+          <div class="pr-bar"><div class="pr-fill" style="width:${progress[step]}%"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="checklist">
+          ${items.map(i => `<div class="cl-item"><div class="cl-tick ${i.ok?'ok':'na'}">${i.ok?'✓':'○'}</div><span>${i.t}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="panel-card">
+      <div class="pc-header">💡 Smart Tips</div>
+      <div class="pc-body" style="font-size:.7rem;color:rgba(10,15,30,.55);line-height:1.7">
+        ${step===1?'Green fields are auto-filled from your profile. You can override if needed for this specific shipment.':
+          step===2?'Add all line items. HS code per line ensures correct customs classification at the port.':
+          step===3?`Your LuT status determines IGST treatment. Current: <b style="color:var(--${PROFILE.lut==='yes'?'green':'red'})">${PROFILE.lut==='yes'?'0% IGST (LuT)':'Pay & Claim IGST'}</b>`:
+          'PDF is recommended for bank and buyer submission. EDI is required for ICEGATE Shipping Bill filing.'}
+      </div>
+    </div>
+  </div>`;
+}
+
+function updateSteps(step) {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('st-'+i);
+    if (!el) return;
+    el.className = 'step' + (i < step ? ' done' : i === step ? ' active' : '');
+    el.querySelector('.step-n').textContent = i < step ? '✓' : i;
+  }
+}
+
+function nextStep(n, docId) {
+  const doc = DOCS.find(d => d.id === docId);
+  if (n === 2) {
+    const invno = document.getElementById('ef-invno');
+    if (invno && !invno.value.trim()) { invno.classList.add('err'); toast('Enter an Invoice Number','err'); return; }
+  }
+  if (n === 3) {
+    const buyer = document.getElementById('bf-buyer');
+    if (buyer && !buyer.value.trim()) { buyer.classList.add('err'); toast('Enter Buyer Company Name','err'); return; }
+  }
+  formStep = n;
+  renderStep(n, doc);
+  window.scrollTo(0, 0);
+}
+
+let cargoCount = 2;
+function addCargoRow() {
+  const idx = cargoCount++;
+  const row = document.createElement('div');
+  row.className = 'cargo-row';
+  row.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr 1fr 0.5fr;gap:.55rem;margin-bottom:.55rem';
+  row.innerHTML = `
+    <div class="fl"><input class="inp" id="ci-desc-${idx}" placeholder="Description of goods"></div>
+    <div class="fl"><input class="inp" id="ci-hs-${idx}" placeholder="HS Code"></div>
+    <div class="fl"><input class="inp" id="ci-qty-${idx}" placeholder="Qty & Unit"></div>
+    <div class="fl"><input class="inp" id="ci-price-${idx}" type="number" placeholder="0.00" oninput="calcTotal()"></div>
+    <div class="fl"><input class="inp" id="ci-amt-${idx}" readonly style="background:var(--paper2);color:var(--teal);font-family:'DM Mono',monospace"></div>`;
+  document.getElementById('cargo-items').appendChild(row);
+}
+
+function calcTotal() {
+  let total = 0;
+  for (let i = 0; i < cargoCount; i++) {
+    const p = parseFloat(document.getElementById('ci-price-'+i)?.value || 0);
+    const amt = isNaN(p) ? 0 : p;
+    total += amt;
+    const amtEl = document.getElementById('ci-amt-'+i);
+    if (amtEl) amtEl.value = amt > 0 ? amt.toFixed(2) : '';
+  }
+  const gt = document.getElementById('grand-total');
+  if (gt) gt.textContent = `${PROFILE.curr} ${total.toLocaleString('en-IN',{minimumFractionDigits:2})}`;
+}
+
+let selectedOutput = 'pdf';
+function selectOutput(type) {
+  selectedOutput = type;
+  ['pdf','edi','excel'].forEach(t => {
+    const el = document.getElementById('oo-'+t);
+    if (el) { el.classList.toggle('selected', t===type); el.querySelector('.oo-check').textContent = t===type ? '✓' : ''; }
+  });
+}
+
+function generateDocument() {
+  toast('⚡ Generating port-ready document…', 'ok');
+  setTimeout(() => { goTo('output'); renderPreview(); toast('✅ Document generated successfully!', 'ok'); }, 1200);
+}
+
+// ══════════════════════════════════════════════
+// PREVIEW RENDERER
+// ══════════════════════════════════════════════
+function renderPreview() {
+  const body = document.getElementById('preview-doc-body');
+  if (!body) return;
+  const today = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  body.innerHTML = `
+    <div class="prev-letterhead">
+      <div class="prev-title">${PROFILE.company}</div>
+      <div class="prev-sub">IEC: ${PROFILE.iec} · GSTIN: ${PROFILE.gstin} · PAN: ${PROFILE.pan}</div>
+      <div class="prev-sub">${PROFILE.addr}</div>
+      <div class="prev-sub" style="margin-top:.5rem;font-size:.62rem;color:rgba(10,15,30,.4)">AD Code: ${PROFILE.ad} · Bank: ${PROFILE.bank} · IFSC: ${PROFILE.ifsc}</div>
+    </div>
+    <div style="text-align:center;margin-bottom:1.2rem">
+      <div style="font-weight:700;font-size:.95rem;letter-spacing:2px;text-transform:uppercase">COMMERCIAL INVOICE</div>
+    </div>
+    <div class="prev-grid">
+      <div>
+        <div class="prev-block-title">Exporter / Seller</div>
+        <div style="font-size:.68rem;line-height:1.7">${PROFILE.company}<br>${PROFILE.addr}<br>GSTIN: ${PROFILE.gstin}</div>
+      </div>
+      <div>
+        <div class="prev-block-title">Invoice Details</div>
+        <div class="prev-line"><span>Invoice No.</span><span>INV/2025/0048</span></div>
+        <div class="prev-line"><span>Date</span><span>${today}</span></div>
+        <div class="prev-line"><span>Currency</span><span>${PROFILE.curr}</span></div>
+        <div class="prev-line"><span>Incoterm</span><span>${PROFILE.inco} – JNPT Mumbai</span></div>
+        <div class="prev-line"><span>Payment</span><span>TT in Advance</span></div>
+      </div>
+      <div>
+        <div class="prev-block-title">Buyer / Consignee</div>
+        <div style="font-size:.68rem;line-height:1.7">Sunrise Pharma LLC<br>P.O. Box 45231, Dubai, UAE<br>Tel: +971-4-3881234</div>
+      </div>
+      <div>
+        <div class="prev-block-title">Shipping Details</div>
+        <div class="prev-line"><span>Port of Loading</span><span>JNPT Mumbai</span></div>
+        <div class="prev-line"><span>Port of Discharge</span><span>Jebel Ali, UAE</span></div>
+        <div class="prev-line"><span>Vessel</span><span>MSC ROMA</span></div>
+        <div class="prev-line"><span>ETD</span><span>18 Jun 2025</span></div>
+      </div>
+    </div>
+    <table class="prev-table">
+      <thead><tr><th>#</th><th>Description of Goods</th><th>HS Code</th><th>Qty</th><th>Unit Price (USD)</th><th>Amount (USD)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Paracetamol Tablets IP 500mg (Blister Pack, 10x10)</td><td>30049099</td><td>5,000 Boxes</td><td>2.50</td><td>12,500.00</td></tr>
+        <tr><td>2</td><td>Amoxicillin Capsules IP 500mg (Strip Pack)</td><td>30041020</td><td>2,000 Strips</td><td>1.16</td><td>2,320.00</td></tr>
+      </tbody>
+    </table>
+    <div class="prev-total">
+      <span>Total FOB Value:</span><span>USD 14,820.00</span>
+    </div>
+    <div style="margin-top:1.2rem;padding:.65rem;background:var(--paper);border:1px solid var(--paper3);border-radius:5px;font-size:.62rem;line-height:1.6">
+      <b>GST / IGST Declaration:</b> Export under Bond / LuT vide ARN ${PROFILE.lutArn}. IGST @ 0%. No tax charged.<br>
+      <b>Declaration:</b> We hereby certify that this invoice shows the actual price of the goods described and that all particulars are true and correct.
+    </div>
+    <div class="prev-footer">
+      Authorised Signatory: ${PROFILE.sign} · RCMC: ${PROFILE.epc} / ${PROFILE.rcmc}<br>
+      This is a computer-generated document · Wort Document Engine
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// DOWNLOAD SIMULATORS
+// ══════════════════════════════════════════════
+function downloadPDF() {
+  const content = document.getElementById('preview-doc-body')?.innerText || '';
+  const blob = new Blob([`COMMERCIAL INVOICE\n${PROFILE.company}\n\n${content}`], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'commercial_invoice_INV-2025-0048.txt'; a.click();
+  toast('📄 PDF downloaded (demo: .txt format)','ok');
+}
+
+function downloadEDI() {
+  const edi = `SB|001|${PROFILE.iec}|INJAV1|${new Date().toISOString().split('T')[0].replace(/-/g,'')}|\nEXPORTER|${PROFILE.company.toUpperCase().slice(0,30)}|27|\nGOODS|30049099|PHARMACEUTICAL PREPARATIONS|KGS|500|\nVALUE|USD|14820|FOB|\nBUYER|SUNRISE PHARMA LLC|UAE|\nDECL|LUT|${PROFILE.lutArn}|IGST0|\nADCODE|${PROFILE.ad}|${PROFILE.ifsc}|\nEND|001`;
+  const blob = new Blob([edi], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `shipping_bill_EDI_${new Date().toISOString().split('T')[0]}.txt`; a.click();
+  toast('⚡ ICEGATE EDI flat file downloaded','ok');
+}
+
+function downloadExcel() {
+  toast('📊 Excel file generated — downloading…','ok');
+}
+
+// ══════════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════════
+function saveProfile() {
+  PROFILE.company  = document.getElementById('p-company')?.value || PROFILE.company;
+  PROFILE.gstin    = document.getElementById('p-gstin')?.value   || PROFILE.gstin;
+  PROFILE.iec      = document.getElementById('p-iec')?.value     || PROFILE.iec;
+  PROFILE.lut      = document.getElementById('p-lut')?.value     || PROFILE.lut;
+  PROFILE.role     = document.getElementById('p-role')?.value    || PROFILE.role;
+  PROFILE.epc      = document.getElementById('p-epc')?.value     || PROFILE.epc;
+  PROFILE.hs       = document.getElementById('p-hs')?.value      || PROFILE.hs;
+  document.getElementById('sb-name').textContent  = PROFILE.company;
+  document.getElementById('sb-gstin').textContent = 'GSTIN: ' + PROFILE.gstin;
+  document.getElementById('sb-iec').textContent   = PROFILE.iec;
+  toast('✅ Profile saved — all future documents auto-filled','ok');
+}
+
+function updateRole() {
+  const r = document.getElementById('p-role')?.value;
+  const roleNames = {exporter:'Exporter',manufacturer:'Manufacturer-Exporter',agent:'Customs Agent'};
+  document.getElementById('sb-role').textContent = roleNames[r] || 'Exporter';
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function toast(msg, type='ok') {
+  const el = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  el.className = `toast show ${type}`;
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+renderDocGrid();
+renderPreview();
+</script>
+</body>
+</html>
