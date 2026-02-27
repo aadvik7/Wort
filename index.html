@@ -634,174 +634,205 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* PRODUCT SECTION */
+  /* ── PRODUCTS SECTION ── */
   .product-section {
     background: var(--navy);
-    padding: 6rem 4rem 7rem;
+    padding: 5rem 4rem;
     border-top: 1px solid rgba(201,168,76,0.15);
   }
 
-  .product-inner {
+  .product-section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .products-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
     max-width: 1100px;
     margin: 0 auto;
   }
 
-  .product-features { display: flex; flex-direction: column; gap: 0.85rem; }
-
-  .pf-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.5;
-  }
-
-  .pf-check {
-    color: var(--gold);
-    font-weight: 700;
-    font-size: 0.85rem;
-    margin-top: 0.1rem;
-    flex-shrink: 0;
-  }
-
-  .product-preview {
-    background: #0d0f14;
+  .product-card {
+    background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 32px 64px rgba(0,0,0,0.4);
-  }
-
-  .preview-bar {
-    background: #1a1d24;
-    padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .preview-dots { display: flex; gap: 0.35rem; }
-  .preview-dots span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); }
-  .preview-dots span:first-child { background: #ef4444; }
-  .preview-dots span:nth-child(2) { background: #f59e0b; }
-  .preview-dots span:nth-child(3) { background: #10b981; }
-
-  .preview-url {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.7rem;
-    color: rgba(255,255,255,0.3);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .preview-body { display: flex; height: 220px; }
-
-  .preview-sidebar {
-    width: 100px;
-    background: #151820;
-    border-right: 1px solid rgba(255,255,255,0.06);
-    padding: 0.75rem 0;
-    flex-shrink: 0;
-  }
-
-  .ps-logo {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: #c9a84c;
-    padding: 0 0.75rem 0.75rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    margin-bottom: 0.5rem;
-  }
-
-  .ps-item {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.65rem;
-    color: rgba(255,255,255,0.35);
-    cursor: pointer;
-  }
-
-  .ps-item.active {
-    color: #c9a84c;
-    background: rgba(201,168,76,0.08);
-    border-left: 2px solid #c9a84c;
-  }
-
-  .preview-content { flex: 1; padding: 0.75rem; overflow: hidden; }
-
-  .pc-stat-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
-
-  .pc-stat {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border-radius: 6px;
-    padding: 0.5rem;
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .pc-num { font-size: 0.9rem; font-weight: 700; color: #c9a84c; }
-  .pc-lbl { font-size: 0.55rem; color: rgba(255,255,255,0.35); text-transform: uppercase; margin-top: 0.1rem; }
-
-  .pc-row-label { font-size: 0.62rem; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-
-  .pc-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .pc-bar-fill { height: 5px; border-radius: 100px; flex-shrink: 0; transition: width 0.6s; }
-  .pc-bar span { font-size: 0.6rem; color: rgba(255,255,255,0.3); white-space: nowrap; }
-
-  /* PRODUCT DIVIDER */
-  .product-divider {
-    border: none;
-    border-top: 1px solid rgba(201,168,76,0.12);
-    margin: 0 4rem;
-  }
-
-  /* DOC ENGINE PREVIEW */
-  .de-preview-body {
+    transition: all 0.25s;
     display: flex;
     flex-direction: column;
-    padding: 0.75rem;
-    gap: 0.5rem;
-    overflow: hidden;
-    height: 220px;
   }
 
-  .de-doc-row {
+  .product-card:hover {
+    border-color: rgba(201,168,76,0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 48px rgba(0,0,0,0.4);
+  }
+
+  .product-card.featured {
+    border-color: rgba(201,168,76,0.3);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .pc-mock {
+    background: #0d0f14;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    height: 160px;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .pc-mock-bar {
+    background: #1a1d24;
+    padding: 0.55rem 0.85rem;
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 6px;
-    padding: 0.45rem 0.65rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
 
-  .de-doc-icon { font-size: 0.85rem; width: 22px; text-align: center; flex-shrink: 0; }
-  .de-doc-name { font-size: 0.62rem; color: rgba(255,255,255,0.7); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .de-doc-badge { font-size: 0.52rem; padding: 0.1rem 0.45rem; border-radius: 3px; font-weight: 600; flex-shrink: 0; }
-  .de-badge-done { background: rgba(74,222,128,0.15); color: #4ade80; }
-  .de-badge-edi  { background: rgba(201,168,76,0.2);  color: #c9a84c; }
-  .de-badge-pdf  { background: rgba(96,165,250,0.15); color: #60a5fa; }
+  .mock-dots { display: flex; gap: 0.3rem; }
+  .mock-dots span { width: 7px; height: 7px; border-radius: 50%; }
+  .mock-dots span:nth-child(1) { background: #ef4444; }
+  .mock-dots span:nth-child(2) { background: #f59e0b; }
+  .mock-dots span:nth-child(3) { background: #10b981; }
 
-  .de-bottom-row { display: flex; gap: 0.5rem; margin-top: auto; }
-  .de-stat { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 0.45rem; text-align: center; }
-  .de-stat-num { font-size: 0.85rem; font-weight: 700; color: #c9a84c; }
-  .de-stat-lbl { font-size: 0.5rem; color: rgba(255,255,255,0.35); text-transform: uppercase; margin-top: 0.1rem; }
+  .mock-url {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.25);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* MOCK INTERNALS — Logistics */
+  .mock-logistics { display: flex; height: 118px; }
+  .ml-sidebar { width: 72px; background: #151820; border-right: 1px solid rgba(255,255,255,0.05); padding: 0.5rem 0; flex-shrink: 0; }
+  .ml-logo { font-size: 0.6rem; font-weight: 800; color: #c9a84c; padding: 0 0.5rem 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 0.35rem; }
+  .ml-item { padding: 0.3rem 0.5rem; font-size: 0.52rem; color: rgba(255,255,255,0.3); }
+  .ml-item.active { color: #c9a84c; background: rgba(201,168,76,0.08); border-left: 2px solid #c9a84c; }
+  .ml-content { flex: 1; padding: 0.6rem; }
+  .ml-stat-row { display: flex; gap: 0.35rem; margin-bottom: 0.5rem; }
+  .ml-stat { flex: 1; background: rgba(255,255,255,0.04); border-radius: 4px; padding: 0.35rem; border: 1px solid rgba(255,255,255,0.05); }
+  .ml-num { font-size: 0.72rem; font-weight: 700; color: #c9a84c; }
+  .ml-lbl { font-size: 0.44rem; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+  .ml-bar { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.3rem; }
+  .ml-bar-fill { height: 4px; border-radius: 3px; flex-shrink: 0; }
+  .ml-bar span { font-size: 0.48rem; color: rgba(255,255,255,0.25); }
+
+  /* MOCK INTERNALS — Doc Engine */
+  .mock-docs { display: flex; flex-direction: column; gap: 0.35rem; padding: 0.65rem; height: 118px; }
+  .md-row { display: flex; align-items: center; gap: 0.45rem; background: rgba(255,255,255,0.04); border-radius: 5px; padding: 0.35rem 0.5rem; border: 1px solid rgba(255,255,255,0.05); }
+  .md-ico { font-size: 0.7rem; }
+  .md-name { font-size: 0.58rem; color: rgba(255,255,255,0.65); flex: 1; }
+  .md-tag { font-size: 0.44rem; padding: 0.06rem 0.3rem; border-radius: 3px; font-weight: 600; }
+  .md-green { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .md-gold { background: rgba(201,168,76,0.15); color: #c9a84c; }
+  .md-blue { background: rgba(96,165,250,0.15); color: #60a5fa; }
+
+  /* MOCK INTERNALS — Freight */
+  .mock-freight { height: 118px; position: relative; overflow: hidden; }
+  .mf-top { display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .mf-route { font-size: 0.58rem; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 0.35rem; }
+  .mf-price { font-size: 0.85rem; font-family: 'DM Mono', monospace; font-weight: 700; color: #c9a84c; }
+  .mf-carriers { display: flex; gap: 0.4rem; padding: 0.5rem 0.75rem; }
+  .mf-c { font-size: 0.52rem; font-weight: 700; padding: 0.22rem 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.03); }
+  .mf-c.sel { border-color: rgba(201,168,76,0.5); color: #c9a84c; background: rgba(201,168,76,0.08); }
+  .mf-total { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.75rem; background: rgba(201,168,76,0.06); border-top: 1px solid rgba(201,168,76,0.1); }
+  .mf-tl { font-size: 0.52rem; color: rgba(255,255,255,0.4); }
+  .mf-tv { font-size: 0.72rem; font-family: 'DM Mono', monospace; font-weight: 700; color: #c9a84c; }
+
+  .pc-body {
+    padding: 1.4rem 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pc-number {
+    font-size: 0.6rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+    opacity: 0.7;
+  }
+
+  .pc-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.25;
+    margin-bottom: 0.65rem;
+  }
+
+  .pc-desc {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+
+  .pc-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .pc-feat {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.4;
+  }
+
+  .pc-feat-check { color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 0.05rem; }
+
+  .pc-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .pc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 0.55rem 1.1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .pc-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .pc-btn.outline {
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .pc-btn.outline:hover { border-color: var(--gold); color: var(--gold); background: transparent; }
+
+  .pc-status { font-size: 0.62rem; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.3); }
 
   @media (max-width: 900px) {
-    .product-divider { margin: 0 1.5rem; }
     nav { padding: 1.25rem 1.5rem; }
     .nav-links { display: none; }
     .hero { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; }
@@ -814,9 +845,8 @@
     .cta-section { padding: 4rem 1.5rem; }
     .cta-form { flex-direction: column; }
     footer { padding: 1.5rem; flex-direction: column; text-align: center; }
-    .product-section { padding: 4rem 1.5rem; }
-    .product-inner { grid-template-columns: 1fr; gap: 2rem; }
-    .product-right { display: none; }
+    .product-section { padding: 3rem 1.5rem; }
+    .products-grid { grid-template-columns: 1fr; }
     .stats-band { padding: 1.5rem; }
   }
 </style>
@@ -992,116 +1022,129 @@
   </div>
 </section>
 
-<!-- PRODUCT SECTION -->
+<!-- PRODUCTS SECTION -->
 <section class="product-section" id="product">
+  <div class="product-section-header">
+    <div class="section-tag" style="text-align:center;margin-bottom:0.6rem">Live Now</div>
+    <h2 class="section-title" style="color:var(--white);text-align:center;margin-bottom:0.5rem">Three tools.<br>One export ecosystem.</h2>
+    <p style="color:rgba(255,255,255,0.4);font-size:0.9rem;max-width:480px;margin:0 auto;line-height:1.7;text-align:center">Each product handles a different layer of the export journey — and they all talk to each other.</p>
+  </div>
 
-  <!-- PRODUCT 1 — Logistics System -->
-  <div class="product-inner">
-    <div class="product-left">
-      <div class="section-tag">Live Now · Product 01</div>
-      <h2 class="section-title" style="color:var(--white)">Logistics<br>Management System.</h2>
-      <p style="color:rgba(255,255,255,0.5);font-size:1rem;line-height:1.75;margin-bottom:2rem;max-width:420px">Our internal logistics management system is live and ready to use. Built for freight forwarders and logistics teams to manage leads, quotes, and shipment pipelines — all in one place.</p>
-      <div class="product-features">
-        <div class="pf-item"><div class="pf-check">✓</div><div>Lead lifecycle management from submission to close</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>Quote tracking per shipment with status updates</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>Admin and employee role-based dashboards</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>Analytics on lead sources, conversion rates, and team performance</div></div>
-      </div>
-      <div style="margin-top:2rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
-        <a href="wort-system.html" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
-          Open Logistics System <span style="font-size:0.85rem">&#8599;</span>
-        </a>
-        <span style="font-size:0.82rem;color:rgba(255,255,255,0.35)">Opens in a new tab &nbsp;·&nbsp; Free to use</span>
-      </div>
-    </div>
-    <div class="product-right">
-      <div class="product-preview">
-        <div class="preview-bar">
-          <div class="preview-dots"><span></span><span></span><span></span></div>
-          <div class="preview-url">wort.vercel.app/wort-system</div>
+  <div class="products-grid">
+
+    <!-- CARD 1: Logistics System -->
+    <div class="product-card">
+      <div class="pc-mock">
+        <div class="pc-mock-bar">
+          <div class="mock-dots"><span></span><span></span><span></span></div>
+          <div class="mock-url">wort.vercel.app/wort-system</div>
         </div>
-        <div class="preview-body">
-          <div class="preview-sidebar">
-            <div class="ps-logo">Wort</div>
-            <div class="ps-item active">Dashboard</div>
-            <div class="ps-item">All Leads</div>
-            <div class="ps-item">Reports</div>
+        <div class="mock-logistics">
+          <div class="ml-sidebar">
+            <div class="ml-logo">Wort</div>
+            <div class="ml-item active">Dashboard</div>
+            <div class="ml-item">Leads</div>
+            <div class="ml-item">Reports</div>
           </div>
-          <div class="preview-content">
-            <div class="pc-stat-row">
-              <div class="pc-stat"><div class="pc-num">24</div><div class="pc-lbl">Total Leads</div></div>
-              <div class="pc-stat"><div class="pc-num">8</div><div class="pc-lbl">Completed</div></div>
-              <div class="pc-stat"><div class="pc-num">33%</div><div class="pc-lbl">Rate</div></div>
+          <div class="ml-content">
+            <div class="ml-stat-row">
+              <div class="ml-stat"><div class="ml-num">24</div><div class="ml-lbl">Leads</div></div>
+              <div class="ml-stat"><div class="ml-num">8</div><div class="ml-lbl">Closed</div></div>
+              <div class="ml-stat"><div class="ml-num">33%</div><div class="ml-lbl">Rate</div></div>
             </div>
-            <div class="pc-row-label">Lead Sources</div>
-            <div class="pc-bar"><div class="pc-bar-fill" style="width:80%;background:#c9a84c"></div><span>Repeat Client</span></div>
-            <div class="pc-bar"><div class="pc-bar-fill" style="width:55%;background:#60a5fa"></div><span>Sales Visit</span></div>
-            <div class="pc-bar"><div class="pc-bar-fill" style="width:35%;background:#34d399"></div><span>Referral</span></div>
+            <div class="ml-bar"><div class="ml-bar-fill" style="width:60px;background:#c9a84c"></div><span>Repeat</span></div>
+            <div class="ml-bar"><div class="ml-bar-fill" style="width:42px;background:#60a5fa"></div><span>Sales Visit</span></div>
+            <div class="ml-bar"><div class="ml-bar-fill" style="width:28px;background:#34d399"></div><span>Referral</span></div>
           </div>
         </div>
       </div>
+      <div class="pc-body">
+        <div class="pc-number">PRODUCT 01</div>
+        <div class="pc-name">Logistics Management</div>
+        <div class="pc-desc">For freight teams managing leads, quotes, and shipment pipelines with role-based dashboards.</div>
+        <div class="pc-features">
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>Lead lifecycle & quote tracking</div>
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>Admin & employee dashboards</div>
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>Real-time analytics & reports</div>
+        </div>
+        <div class="pc-action">
+          <a href="wort-system.html" target="_blank" class="pc-btn">Open App ↗</a>
+          <span class="pc-status">Free to use</span>
+        </div>
+      </div>
     </div>
+
+    <!-- CARD 2: Document Engine -->
+    <div class="product-card">
+      <div class="pc-mock">
+        <div class="pc-mock-bar">
+          <div class="mock-dots"><span></span><span></span><span></span></div>
+          <div class="mock-url">wort.vercel.app/wort-doc-engine</div>
+        </div>
+        <div class="mock-docs">
+          <div class="md-row"><div class="md-ico">🧾</div><div class="md-name">Commercial Invoice — Sunrise Pharma</div><div class="md-tag md-green">✓ Done</div></div>
+          <div class="md-row"><div class="md-ico">🛃</div><div class="md-name">Shipping Bill EDI — JNPT Mumbai</div><div class="md-tag md-gold">EDI</div></div>
+          <div class="md-row"><div class="md-ico">🌏</div><div class="md-name">Certificate of Origin</div><div class="md-tag md-blue">PDF</div></div>
+          <div class="md-row"><div class="md-ico">📋</div><div class="md-name">RCMC — PHARMEXCIL Auto-Detected</div><div class="md-tag md-green">✓</div></div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-number">PRODUCT 02</div>
+        <div class="pc-name">Document Engine</div>
+        <div class="pc-desc">Generate port-ready export documents in &lt;2 minutes — auto-filled, compliance-checked, ICEGATE EDI-ready.</div>
+        <div class="pc-features">
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>12 documents — Invoice to Shipping Bill</div>
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>IGST / LuT auto-detection</div>
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>ICEGATE 2.0 EDI flat files</div>
+        </div>
+        <div class="pc-action">
+          <a href="wort-doc-engine.html" target="_blank" class="pc-btn">Open App ↗</a>
+          <span class="pc-status">Free to use</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3: Freight Configurator -->
+    <div class="product-card featured">
+      <div class="pc-mock">
+        <div class="pc-mock-bar">
+          <div class="mock-dots"><span></span><span></span><span></span></div>
+          <div class="mock-url">wort.vercel.app/wort-freight</div>
+        </div>
+        <div class="mock-freight">
+          <div class="mf-top">
+            <div class="mf-route">JNPT Mumbai <span style="color:#c9a84c">→</span> Jebel Ali</div>
+            <div class="mf-price">$1,256 – $1,485</div>
+          </div>
+          <div class="mf-carriers">
+            <div class="mf-c sel">Maersk</div>
+            <div class="mf-c">CMA CGM</div>
+            <div class="mf-c">MSC</div>
+            <div class="mf-c">+67</div>
+          </div>
+          <div class="mf-total">
+            <div class="mf-tl">Total Landing Cost</div>
+            <div class="mf-tv">$1,531 all-in</div>
+          </div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-number" style="display:flex;align-items:center;gap:0.5rem">PRODUCT 03 <span style="background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.4);color:var(--gold);font-size:0.5rem;padding:0.06rem 0.4rem;border-radius:3px;letter-spacing:1px">FLAGSHIP</span></div>
+        <div class="pc-name">Freight Configurator</div>
+        <div class="pc-desc">Financial terminal–style freight marketplace. Compare 70+ carriers, build your full service stack, see your true landed cost.</div>
+        <div class="pc-features">
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>Live rates from 70+ carriers</div>
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>Full cost breakdown + RoDTEP tracker</div>
+          <div class="pc-feat"><span class="pc-feat-check">✓</span>Insurance, customs & doc integration</div>
+        </div>
+        <div class="pc-action">
+          <a href="wort-freight.html" target="_blank" class="pc-btn">Open App ↗</a>
+          <span class="pc-status">Free to use</span>
+        </div>
+      </div>
+    </div>
+
   </div>
-
-  <!-- DIVIDER -->
-  <hr class="product-divider">
-
-  <!-- PRODUCT 2 — Document Engine -->
-  <div class="product-inner" style="margin-top:5rem">
-    <div class="product-left">
-      <div class="section-tag">Live Now · Product 02</div>
-      <h2 class="section-title" style="color:var(--white)">Document<br>Engine.</h2>
-      <p style="color:rgba(255,255,255,0.5);font-size:1rem;line-height:1.75;margin-bottom:2rem;max-width:420px">Generate port-ready export documents in under 2 minutes. Auto-filled from your profile — GSTIN, IEC, bank details. Compliance-checked. ICEGATE 2.0 EDI-compatible. No more switching between 4 government portals.</p>
-      <div class="product-features">
-        <div class="pf-item"><div class="pf-check">✓</div><div>12 documents: Commercial Invoice, Shipping Bill, COO, BRC, RCMC & more</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>Auto-detects IGST / LuT status and suggests the correct Export Promotion Council</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>Generates ICEGATE 2.0 EDI flat files — zero format errors at customs</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>One-time profile setup auto-fills every future document</div></div>
-      </div>
-      <div style="margin-top:2rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
-        <a href="wort-doc-engine.html" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
-          Open Document Engine <span style="font-size:0.85rem">&#8599;</span>
-        </a>
-        <span style="font-size:0.82rem;color:rgba(255,255,255,0.35)">Opens in a new tab &nbsp;·&nbsp; Free to use</span>
-      </div>
-    </div>
-    <div class="product-right">
-      <div class="product-preview">
-        <div class="preview-bar">
-          <div class="preview-dots"><span></span><span></span><span></span></div>
-          <div class="preview-url">wort.vercel.app/wort-doc-engine</div>
-        </div>
-        <div class="de-preview-body">
-          <div class="de-doc-row">
-            <div class="de-doc-icon">🧾</div>
-            <div class="de-doc-name">Commercial Invoice — Sunrise Pharma UAE</div>
-            <div class="de-doc-badge de-badge-done">✓ PDF Ready</div>
-          </div>
-          <div class="de-doc-row">
-            <div class="de-doc-icon">🛃</div>
-            <div class="de-doc-name">Shipping Bill — JNPT Mumbai</div>
-            <div class="de-doc-badge de-badge-edi">EDI Ready</div>
-          </div>
-          <div class="de-doc-row">
-            <div class="de-doc-icon">🌏</div>
-            <div class="de-doc-name">Certificate of Origin</div>
-            <div class="de-doc-badge de-badge-pdf">PDF Ready</div>
-          </div>
-          <div class="de-doc-row">
-            <div class="de-doc-icon">📋</div>
-            <div class="de-doc-name">RCMC — PHARMEXCIL Auto-Detected</div>
-            <div class="de-doc-badge de-badge-done">✓ Done</div>
-          </div>
-          <div class="de-bottom-row">
-            <div class="de-stat"><div class="de-stat-num">12</div><div class="de-stat-lbl">Documents</div></div>
-            <div class="de-stat"><div class="de-stat-num">&lt;2m</div><div class="de-stat-lbl">Gen Time</div></div>
-            <div class="de-stat"><div class="de-stat-num">0</div><div class="de-stat-lbl">EDI Errors</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </section>
 
 <!-- FOOTER -->
