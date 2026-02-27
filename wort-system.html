@@ -68,7 +68,7 @@ onAuthStateChanged(auth, async user => {
 });
 
 // ... Keep your enterApp, doLogin, and doRegister functions below this ...
-</script>
+<script>
 // ── GLOBALS ──
 let currentUser = null, userProfile = null;
 let leads = [], allUsers = [];
@@ -76,7 +76,7 @@ let unsubLeads = null;
 let editingLeadId = null, quotingLeadId = null, reqLeadId = null, shareLeadId = null;
 let invSet = new Set();
 let fText='', fSt='', fdText='', fdSt='';
-
+<script>
 // ── HELPERS ──
 const ge = id => document.getElementById(id);
 const v  = id => (ge(id)?.value||'').trim();
@@ -99,7 +99,7 @@ function friendlyErr(e) {
     'auth/invalid-credential':'Incorrect email or password',
   })[e.code] || e.message;
 }
-
+<script>
 function showScreen(s) {
   ge('loading-screen').style.display = s==='loading'?'flex':'none';
   ge('login-screen').style.display   = s==='login'  ?'flex':'none';
