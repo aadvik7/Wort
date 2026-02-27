@@ -634,154 +634,65 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* PRODUCT SECTION */
-  .product-section {
-    background: var(--navy);
-    padding: 6rem 4rem;
-    border-top: 1px solid rgba(201,168,76,0.15);
-  }
+  /* UPDATED PRODUCT SECTION CSS */
+:root {
+  /* ... existing variables ... */
+  --saffron: #e8762a; /* New color for Doc Engine */
+}
 
-  .product-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+.product-section {
+  background: var(--navy);
+  padding: 6rem 4rem;
+  border-top: 1px solid rgba(201,168,76,0.15);
+}
 
-  .product-features { display: flex; flex-direction: column; gap: 0.85rem; }
+/* Changed to a grid that holds two large cards */
+.products-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  .pf-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.5;
-  }
+.product-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
 
-  .pf-check {
-    color: var(--gold);
-    font-weight: 700;
-    font-size: 0.85rem;
-    margin-top: 0.1rem;
-    flex-shrink: 0;
-  }
+.product-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.05);
+}
 
-  .product-preview {
-    background: #0d0f14;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 32px 64px rgba(0,0,0,0.4);
-  }
+/* Document Engine Branding */
+.card-doc-engine { border-color: rgba(232, 118, 42, 0.3); }
+.card-doc-engine .pf-check { color: var(--saffron); }
+.card-doc-engine .btn-primary { background: var(--saffron); }
 
-  .preview-bar {
-    background: #1a1d24;
-    padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
+.product-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
 
-  .preview-dots { display: flex; gap: 0.35rem; }
-  .preview-dots span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); }
-  .preview-dots span:first-child { background: #ef4444; }
-  .preview-dots span:nth-child(2) { background: #f59e0b; }
-  .preview-dots span:nth-child(3) { background: #10b981; }
+.product-card p {
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
 
-  .preview-url {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.7rem;
-    color: rgba(255,255,255,0.3);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .preview-body { display: flex; height: 220px; }
-
-  .preview-sidebar {
-    width: 100px;
-    background: #151820;
-    border-right: 1px solid rgba(255,255,255,0.06);
-    padding: 0.75rem 0;
-    flex-shrink: 0;
-  }
-
-  .ps-logo {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: #c9a84c;
-    padding: 0 0.75rem 0.75rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    margin-bottom: 0.5rem;
-  }
-
-  .ps-item {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.65rem;
-    color: rgba(255,255,255,0.35);
-    cursor: pointer;
-  }
-
-  .ps-item.active {
-    color: #c9a84c;
-    background: rgba(201,168,76,0.08);
-    border-left: 2px solid #c9a84c;
-  }
-
-  .preview-content { flex: 1; padding: 0.75rem; overflow: hidden; }
-
-  .pc-stat-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
-
-  .pc-stat {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border-radius: 6px;
-    padding: 0.5rem;
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .pc-num { font-size: 0.9rem; font-weight: 700; color: #c9a84c; }
-  .pc-lbl { font-size: 0.55rem; color: rgba(255,255,255,0.35); text-transform: uppercase; margin-top: 0.1rem; }
-
-  .pc-row-label { font-size: 0.62rem; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-
-  .pc-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .pc-bar-fill { height: 5px; border-radius: 100px; flex-shrink: 0; transition: width 0.6s; }
-  .pc-bar span { font-size: 0.6rem; color: rgba(255,255,255,0.3); white-space: nowrap; }
-
-  @media (max-width: 900px) {
-    nav { padding: 1.25rem 1.5rem; }
-    .nav-links { display: none; }
-    .hero { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; }
-    .hero-visual { display: none; }
-    .section { padding: 4rem 1.5rem; }
-    .steps { grid-template-columns: 1fr 1fr; }
-    .steps::before { display: none; }
-    .for-who { padding: 4rem 1.5rem; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .cta-section { padding: 4rem 1.5rem; }
-    .cta-form { flex-direction: column; }
-    footer { padding: 1.5rem; flex-direction: column; text-align: center; }
-    .product-section { padding: 4rem 1.5rem; }
-    .product-inner { grid-template-columns: 1fr; gap: 2rem; }
-    .product-right { display: none; }
-    .stats-band { padding: 1.5rem; }
-  }
-</style>
-</head>
-<body>
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .products-container { grid-template-columns: 1fr; }
+  .product-section { padding: 4rem 1.5rem; }
+}
 
 <!-- NAV -->
 <nav>
@@ -953,52 +864,46 @@
 </section>
 
 <!-- PRODUCT SECTION -->
-<section class="product-section" id="product">
-  <div class="product-inner">
-    <div class="product-left">
-      <div class="section-tag">Live Now</div>
-      <h2 class="section-title" style="color:var(--white)">Try our first<br>product today.</h2>
-      <p style="color:rgba(255,255,255,0.5);font-size:1rem;line-height:1.75;margin-bottom:2rem;max-width:420px">Our internal logistics management system is live and ready to use. Built for freight forwarders and logistics teams to manage leads, quotes, and shipment pipelines — all in one place.</p>
-      <div class="product-features">
-        <div class="pf-item"><div class="pf-check">✓</div><div>Lead lifecycle management from submission to close</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>Quote tracking per shipment with status updates</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>Admin and employee role-based dashboards</div></div>
-        <div class="pf-item"><div class="pf-check">✓</div><div>Analytics on lead sources, conversion rates, and team performance</div></div>
+<section class="product-section" id="products">
+  <div style="text-align: center; margin-bottom: 4rem;">
+    <div class="section-tag">Our Products</div>
+    <h2 class="section-title" style="color:var(--white)">The Wort Trade Suite</h2>
+  </div>
+
+  <div class="products-container">
+    
+    <div class="product-card card-doc-engine">
+      <div class="who-label" style="color: var(--saffron);">Standalone Tool</div>
+      <h3>Document Engine</h3>
+      <p>Generate port-ready, ICEGATE-compliant documents in under 2 minutes. Eliminate manual data entry and compliance errors instantly.</p>
+      
+      <div class="product-features" style="margin-bottom: 2.5rem;">
+        <div class="pf-item"><div class="pf-check">✓</div><div>Auto-generate Invoice & Packing Lists</div></div>
+        <div class="pf-item"><div class="pf-check">✓</div><div>ICEGATE 2.0 EDI (.txt) flat file output</div></div>
+        <div class="pf-item"><div class="pf-check">✓</div><div>HS Code & EPC council auto-suggestions</div></div>
       </div>
-      <div style="margin-top:2rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
-        <a href="wort-system.html" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
-          Open Logistics System <span style="font-size:0.85rem">&#8599;</span>
-        </a>
-        <span style="font-size:0.82rem;color:rgba(255,255,255,0.35)">Opens in a new tab &nbsp;·&nbsp; Free to use</span>
-      </div>
+
+      <a href="wort-doc-engine.html" target="_blank" class="btn-primary" style="text-align: center;">
+        Launch Doc Engine ↗
+      </a>
     </div>
-    <div class="product-right">
-      <div class="product-preview">
-        <div class="preview-bar">
-          <div class="preview-dots"><span></span><span></span><span></span></div>
-          <div class="preview-url">wort.vercel.app/wort-system</div>
-        </div>
-        <div class="preview-body">
-          <div class="preview-sidebar">
-            <div class="ps-logo">Wort</div>
-            <div class="ps-item active">Dashboard</div>
-            <div class="ps-item">All Leads</div>
-            <div class="ps-item">Reports</div>
-          </div>
-          <div class="preview-content">
-            <div class="pc-stat-row">
-              <div class="pc-stat"><div class="pc-num">24</div><div class="pc-lbl">Total Leads</div></div>
-              <div class="pc-stat"><div class="pc-num">8</div><div class="pc-lbl">Completed</div></div>
-              <div class="pc-stat"><div class="pc-num">33%</div><div class="pc-lbl">Rate</div></div>
-            </div>
-            <div class="pc-row-label">Lead Sources</div>
-            <div class="pc-bar"><div class="pc-bar-fill" style="width:80%;background:#c9a84c"></div><span>Repeat Client</span></div>
-            <div class="pc-bar"><div class="pc-bar-fill" style="width:55%;background:#60a5fa"></div><span>Sales Visit</span></div>
-            <div class="pc-bar"><div class="pc-bar-fill" style="width:35%;background:#34d399"></div><span>Referral</span></div>
-          </div>
-        </div>
+
+    <div class="product-card">
+      <div class="who-label">Internal OS</div>
+      <h3>Logistics System</h3>
+      <p>A complete management platform for freight forwarders to track leads, manage quotes, and monitor team performance in real-time.</p>
+      
+      <div class="product-features" style="margin-bottom: 2.5rem;">
+        <div class="pf-item"><div class="pf-check">✓</div><div>Lead lifecycle & pipeline management</div></div>
+        <div class="pf-item"><div class="pf-check">✓</div><div>Real-time quote tracking per shipment</div></div>
+        <div class="pf-item"><div class="pf-check">✓</div><div>Admin & Employee role dashboards</div></div>
       </div>
+
+      <a href="wort-system.html" target="_blank" class="btn-secondary" style="text-align: center;">
+        Open Logistics System ↗
+      </a>
     </div>
+
   </div>
 </section>
 
