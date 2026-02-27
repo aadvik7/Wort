@@ -3,1093 +3,1809 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wort — Freight Configurator</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Wort Freight Configurator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --navy:#0a1628; --navy-mid:#112240; --navy-light:#1c304f;
-  --gold:#c9a84c; --gold-light:#e8c97a; --gold-dim:rgba(201,168,76,0.1);
-  --white:#fff; --gray:#8892a4;
-  --green:#22c55e; --green-dim:rgba(34,197,94,0.09);
-  --blue:#60a5fa; --blue-dim:rgba(96,165,250,0.09);
-  --amber:#f59e0b;
-  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
-  --muted:rgba(255,255,255,0.38); --dim:rgba(255,255,255,0.58);
-}
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;overflow-x:hidden}
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --bg-0: #06090f;
+  --bg-1: #0c1017;
+  --bg-2: #111620;
+  --bg-3: #171d2a;
+  --bg-4: #1e2636;
+  --bg-hover: #232d40;
 
-/* ── INLINE SVG ICON SYSTEM ── */
-.ico{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-.ico svg{display:block}
+  --border-0: #1a2235;
+  --border-1: #243050;
+  --border-focus: #3b82f6;
 
-/* ── TOPBAR ── */
-.topbar{
-  background:rgba(7,16,31,0.98);backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(201,168,76,0.18);
-  height:52px;padding:0 2rem;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:200;
-}
-.tb-logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;letter-spacing:-0.5px}
-.tb-logo span{color:var(--gold)}
-.tb-pill{
-  display:flex;align-items:center;gap:0.7rem;
-  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
-  border-radius:6px;padding:0.38rem 1rem;
-  font-family:'DM Mono',monospace;font-size:0.75rem;
-}
-.tb-pill .sep{color:var(--gold);opacity:0.5}
-.tb-pill .meta{color:var(--muted);font-size:0.68rem}
-.tb-right{display:flex;align-items:center;gap:0.85rem}
-.live-dot{
-  display:flex;align-items:center;gap:0.4rem;
-  font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:1.2px;
-  color:var(--green);background:var(--green-dim);
-  border:1px solid rgba(34,197,94,0.18);border-radius:4px;
-  padding:0.2rem 0.6rem;
-}
-.live-dot::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.tb-av{
-  width:28px;height:28px;border-radius:50%;
-  background:var(--gold-dim);border:1px solid rgba(201,168,76,0.22);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:700;color:var(--gold);cursor:pointer;
+  --text-0: #f0f4f8;
+  --text-1: #94a3b8;
+  --text-2: #5a6a80;
+
+  --cyan: #22d3ee;
+  --blue: #3b82f6;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --purple: #a78bfa;
+
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 10px;
 }
 
-/* ── LAYOUT ── */
-.shell{display:grid;grid-template-columns:1fr 308px;min-height:calc(100vh - 52px);align-items:start}
-.main-col{border-right:1px solid var(--border)}
-.side-col{
-  background:rgba(7,16,31,0.5);
-  position:sticky;top:52px;height:calc(100vh - 52px);
-  overflow-y:auto;display:flex;flex-direction:column;
-  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg-0);
+  color: var(--text-0);
+  font-size: 13px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* ── SEARCH ── */
-.search-wrap{
-  background:linear-gradient(150deg,var(--navy-mid),#0c1d35);
-  border-bottom:1px solid var(--border);padding:1.25rem 1.75rem;
-}
-.s-eyebrow{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);opacity:0.75;margin-bottom:0.9rem}
-.s-fields{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:0.55rem;align-items:end}
-.s-field{display:flex;flex-direction:column;gap:0.25rem}
-.s-lbl{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.s-inp{
-  background:rgba(255,255,255,0.04);border:1.5px solid var(--border2);
-  border-radius:6px;padding:0.58rem 0.7rem;
-  font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;
-  color:var(--white);outline:none;transition:border-color 0.15s;
-}
-.s-inp:focus{border-color:var(--gold)}
-.s-inp::placeholder{color:var(--muted)}
-select.s-inp option{background:var(--navy-mid)}
-.s-btn{
-  background:var(--gold);color:var(--navy);border:none;border-radius:6px;
-  padding:0.58rem 1.35rem;height:38px;
-  font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;
-  cursor:pointer;transition:all 0.15s;white-space:nowrap;
-}
-.s-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-1); border-radius: 3px; }
 
-/* ── RATE BANNER ── */
-.rate-banner{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0.85rem 1.75rem;
-  background:rgba(201,168,76,0.04);border-bottom:1px solid rgba(201,168,76,0.1);
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════════════ */
+#app {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  grid-template-rows: 48px 1fr;
+  height: 100vh;
 }
-.rb-group{display:flex;align-items:baseline;gap:1rem}
-.rb-lbl{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.rb-range{font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:500;color:var(--gold);line-height:1}
-.rb-sub{font-size:0.6rem;color:var(--muted);margin-top:0.15rem}
-.rb-trend{
-  display:flex;align-items:center;gap:0.35rem;
-  font-family:'DM Mono',monospace;font-size:0.63rem;color:var(--green);
-}
-.rb-right{display:flex;align-items:center;gap:0.6rem}
-.c-stack{display:flex}
-.c-avatar{
-  width:26px;height:26px;border-radius:50%;
-  background:var(--navy-light);border:1.5px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-size:0.48rem;font-weight:700;color:var(--dim);
-  margin-left:-7px;
-}
-.c-avatar:first-child{margin-left:0}
-.c-count{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted)}
 
-/* ── MAP ── */
-.map-wrap{
-  height:200px;position:relative;overflow:hidden;
-  background:linear-gradient(150deg,#07101f,#0a1628);
-  border-bottom:1px solid var(--border);
+/* ─── Top Bar ──────────────────────────────────────────────── */
+.topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--border-0);
+  z-index: 10;
 }
-.map-svg{position:absolute;inset:0;width:100%;height:100%}
-.map-ov{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 2.5rem;pointer-events:none;
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.map-port{display:flex;flex-direction:column;align-items:center;gap:0.4rem}
-.port-dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--gold);box-shadow:0 0 10px rgba(201,168,76,0.5);position:relative;
+.topbar-logo {
+  width: 26px; height: 26px;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  font: 700 13px var(--mono);
+  color: #fff;
 }
-.port-dot::after{
-  content:'';position:absolute;inset:-5px;border-radius:50%;
-  border:1.5px solid rgba(201,168,76,0.2);animation:ring 2.5s ease-in-out infinite;
+.topbar-name { font: 700 14px var(--mono); letter-spacing: -.02em; }
+.topbar-tag {
+  font: 500 9px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 2px 7px;
+  border-radius: var(--r-sm);
+  background: rgba(59,130,246,.1);
+  color: var(--blue);
+  border: 1px solid rgba(59,130,246,.2);
 }
-@keyframes ring{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:0}}
-.port-dot.dest{background:var(--green);box-shadow:0 0 10px rgba(34,197,94,0.5)}
-.port-dot.dest::after{border-color:rgba(34,197,94,0.2)}
-.port-name{font-size:0.68rem;font-weight:600}
-.port-code{font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--muted)}
-.vessel-box{text-align:center}
-.vessel-icon-wrap{
-  width:36px;height:36px;border-radius:7px;
-  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 0.3rem;
-  animation:sail 5s ease-in-out infinite;
+.topbar-status {
+  font: 400 10px var(--mono);
+  color: var(--text-2);
+  display: flex; align-items: center; gap: 6px;
 }
-@keyframes sail{0%,100%{transform:translateX(-18px)}50%{transform:translateX(18px)}}
-.vessel-lbl{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted)}
-.vessel-eta{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--gold);margin-top:0.08rem}
-.map-foot{position:absolute;bottom:0.55rem;right:1rem;font-family:'DM Mono',monospace;font-size:0.48rem;color:rgba(255,255,255,0.18)}
+.topbar-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 50% { opacity: .4; } }
 
-/* ── SECTION ── */
-.sec{border-bottom:1px solid var(--border);padding:1.3rem 1.75rem}
-.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
-.sec-title{
-  display:flex;align-items:center;gap:0.5rem;
-  font-size:0.7rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;
-  color:rgba(255,255,255,0.85);
+/* ─── Main Panel ───────────────────────────────────────────── */
+.main {
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-.sec-icon{
-  width:22px;height:22px;border-radius:5px;
-  background:rgba(255,255,255,0.05);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.sec-icon svg{width:12px;height:12px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.sec-badge{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted)}
 
-/* ── CARGO ── */
-.cargo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:0.8rem}
-.cf{background:rgba(255,255,255,0.03);border:1.5px solid var(--border2);border-radius:7px;padding:0.68rem 0.8rem;transition:border-color 0.15s}
-.cf:focus-within{border-color:rgba(201,168,76,0.45)}
-.cf-lbl{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.28rem}
-.cf-val{font-size:0.87rem;font-weight:600}
-.cf-val input,.cf-val select{background:transparent;border:none;outline:none;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.87rem;font-weight:600;width:100%}
-.cf-val select option{background:var(--navy-mid)}
-.cf-hint{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);margin-top:0.25rem}
-.cf-hint.ok{color:var(--green)}.cf-hint.warn{color:var(--amber)}
-.chips{display:flex;gap:0.38rem;flex-wrap:wrap}
-.chip{
-  padding:0.26rem 0.65rem;border-radius:5px;
-  border:1.5px solid var(--border2);
-  font-family:'DM Mono',monospace;font-size:0.63rem;font-weight:500;
-  color:var(--muted);cursor:pointer;transition:all 0.12s;
+/* ─── Sidebar ──────────────────────────────────────────────── */
+.sidebar {
+  background: var(--bg-1);
+  border-left: 1px solid var(--border-0);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
-.chip:hover{border-color:var(--gold);color:var(--gold)}
-.chip.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.38);color:var(--gold)}
 
-/* ── SERVICES ── */
-.svc-cols{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem}
-.svc-grp-lbl{
-  font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;
-  color:var(--muted);margin-bottom:0.45rem;
-  padding-bottom:0.38rem;border-bottom:1px solid var(--border);
+/* ═══════════════════════════════════════════════════════════════
+   CARDS
+   ═══════════════════════════════════════════════════════════════ */
+.card {
+  background: var(--bg-2);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-lg);
+  overflow: hidden;
 }
-.svc{
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(255,255,255,0.02);border:1.5px solid var(--border);
-  border-radius:7px;padding:0.58rem 0.8rem;
-  cursor:pointer;transition:all 0.12s;user-select:none;margin-bottom:0.38rem;
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-3);
+  border-bottom: 1px solid var(--border-0);
 }
-.svc:hover{border-color:var(--border2)}
-.svc.on{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.04)}
-.svc-left{display:flex;align-items:center;gap:0.55rem}
-.svc-ico{
-  width:28px;height:28px;border-radius:5px;flex-shrink:0;
-  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 600 13px var(--sans);
 }
-.svc-ico svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.svc.on .svc-ico{background:var(--gold-dim);border-color:rgba(201,168,76,0.28)}
-.svc.on .svc-ico svg{stroke:var(--gold)}
-.svc-name{font-size:0.75rem;font-weight:600;color:var(--dim)}
-.svc-desc{font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);margin-top:0.07rem}
-.svc.on .svc-name{color:var(--white)}
-.svc-r{display:flex;align-items:center;gap:0.6rem;flex-shrink:0}
-.svc-price{font-family:'DM Mono',monospace;font-size:0.73rem;color:var(--gold)}
-.tog{
-  width:30px;height:17px;border-radius:9px;
-  background:var(--border2);position:relative;transition:background 0.15s;flex-shrink:0;
+.card-icon {
+  width: 26px; height: 26px;
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  font-size: 13px;
 }
-.tog::after{
-  content:'';position:absolute;top:2px;left:2px;
-  width:13px;height:13px;border-radius:50%;
-  background:rgba(255,255,255,0.3);transition:all 0.15s;
+.card-icon.bl { background: rgba(59,130,246,.12); }
+.card-icon.gr { background: rgba(16,185,129,.12); }
+.card-icon.am { background: rgba(245,158,11,.12); }
+.card-icon.pu { background: rgba(167,139,250,.12); }
+.card-icon.rd { background: rgba(239,68,68,.12); }
+.card-sub { font: 400 10px var(--sans); color: var(--text-2); margin-top: 1px; }
+.card-badge {
+  font: 500 9px var(--mono);
+  padding: 2px 8px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
 }
-.svc.on .tog{background:var(--gold)}
-.svc.on .tog::after{left:15px;background:var(--navy)}
+.card-badge.req { background: rgba(239,68,68,.1); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
+.card-badge.opt { background: rgba(59,130,246,.1); color: var(--blue); border: 1px solid rgba(59,130,246,.2); }
+.card-body { padding: 16px; }
 
-.doc-notice{
-  display:none;align-items:center;gap:0.55rem;
-  padding:0.45rem 0.7rem;margin-top:0.35rem;
-  background:var(--blue-dim);border:1px solid rgba(96,165,250,0.13);
-  border-radius:5px;font-size:0.63rem;color:rgba(96,165,250,0.8);cursor:pointer;
+/* ═══════════════════════════════════════════════════════════════
+   FORM ELEMENTS
+   ═══════════════════════════════════════════════════════════════ */
+.fg { display: flex; flex-direction: column; gap: 5px; }
+.fl {
+  font: 500 9px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-2);
 }
-.doc-notice:hover{border-color:rgba(96,165,250,0.28)}
-.dn-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0}
-.dn-link{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--blue);white-space:nowrap}
+.fi, .fs {
+  padding: 7px 10px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+  color: var(--text-0);
+  font: 400 12px var(--mono);
+  outline: none;
+  transition: border .15s;
+}
+.fi:focus, .fs:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px rgba(59,130,246,.1);
+}
+.fi::placeholder { color: var(--text-2); }
+.fi.err { border-color: var(--red); }
+.fs {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%235a6a80' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 24px;
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+.fhint { font: 400 9px var(--sans); color: var(--text-2); }
 
-.freedays-box{
-  margin-top:0.85rem;padding:0.78rem 0.88rem;
-  background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:7px;
+/* ═══════════════════════════════════════════════════════════════
+   PORT SELECTOR
+   ═══════════════════════════════════════════════════════════════ */
+.port-wrap { position: relative; }
+.port-input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+  color: var(--text-0);
+  font: 400 12px var(--sans);
+  outline: none;
+  transition: border .15s;
 }
-.fdb-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.5rem}
-.fdb-title{font-size:0.7rem;font-weight:600;color:var(--dim)}
-.fdb-sub{font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted)}
-.fd-row{display:flex;align-items:center;gap:0.38rem}
-.fd-chip{
-  padding:0.25rem 0.6rem;border-radius:5px;
-  border:1.5px solid var(--border2);
-  font-family:'DM Mono',monospace;font-size:0.63rem;font-weight:500;
-  color:var(--muted);cursor:pointer;transition:all 0.12s;
+.port-input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 2px rgba(59,130,246,.1); }
+.port-ico {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
 }
-.fd-chip:hover{border-color:var(--gold);color:var(--gold)}
-.fd-chip.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.38);color:var(--gold)}
-.fd-custom-inp{
-  background:transparent;border:1.5px solid var(--border2);border-radius:5px;
-  padding:0.25rem 0.6rem;font-family:'DM Mono',monospace;font-size:0.63rem;
-  color:var(--muted);outline:none;width:70px;display:none;transition:border-color 0.12s;
+.port-dd {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 0; right: 0;
+  background: var(--bg-4);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  box-shadow: 0 12px 32px rgba(0,0,0,.5);
+  z-index: 200;
+  max-height: 240px;
+  overflow-y: auto;
+  display: none;
 }
-.fd-custom-inp:focus{border-color:var(--gold)}
+.port-dd.open { display: block; }
+.port-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-0);
+  transition: background .1s;
+}
+.port-opt:last-child { border-bottom: none; }
+.port-opt:hover { background: var(--bg-hover); }
+.port-opt-flag { font-size: 15px; width: 20px; text-align: center; }
+.port-opt-name { font: 500 12px var(--sans); }
+.port-opt-meta { font: 400 9px var(--mono); color: var(--text-2); }
 
-/* ── CARRIERS ── */
-.carrier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.45rem}
-.c-card{
-  background:rgba(255,255,255,0.02);border:1.5px solid var(--border);
-  border-radius:7px;padding:0.72rem 0.6rem;
-  cursor:pointer;transition:all 0.15s;text-align:center;position:relative;
+/* ═══════════════════════════════════════════════════════════════
+   MAP
+   ═══════════════════════════════════════════════════════════════ */
+.map-box {
+  position: relative;
+  height: 240px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-lg);
+  overflow: hidden;
 }
-.c-card:hover{border-color:var(--border2);background:rgba(255,255,255,0.04)}
-.c-card.sel{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.05)}
-.c-badge{
-  position:absolute;top:-7px;left:50%;transform:translateX(-50%);
-  font-family:'DM Mono',monospace;font-size:0.46rem;font-weight:700;letter-spacing:0.5px;
-  padding:0.07rem 0.42rem;border-radius:3px;white-space:nowrap;
+.map-box canvas { width: 100%; height: 100%; display: block; }
+.map-chips {
+  position: absolute;
+  bottom: 10px; left: 10px;
+  display: flex; gap: 6px;
 }
-.b-assured{background:var(--green);color:var(--navy)}
-.b-pop{background:var(--navy-light);color:var(--gold);border:1px solid rgba(201,168,76,0.25)}
-.c-monogram{
-  width:32px;height:32px;border-radius:5px;
-  background:var(--navy-light);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 0.42rem;
-  font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:700;
-  color:var(--dim);letter-spacing:-0.5px;
+.map-chip {
+  font: 500 10px var(--mono);
+  padding: 4px 10px;
+  background: rgba(6,9,15,.85);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-sm);
+  color: var(--text-1);
 }
-.c-card.sel .c-monogram{border-color:rgba(201,168,76,0.28);color:var(--gold)}
-.c-name{font-size:0.7rem;font-weight:700;color:var(--dim);margin-bottom:0.15rem}
-.c-card.sel .c-name{color:var(--white)}
-.c-price{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--gold);font-weight:500}
-.c-eta{font-family:'DM Mono',monospace;font-size:0.53rem;color:var(--muted);margin-top:0.1rem}
-.more-link{
-  margin-top:0.62rem;text-align:center;
-  font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);
-  padding:0.42rem;border:1px dashed var(--border2);border-radius:5px;
-  cursor:pointer;transition:all 0.12s;
-}
-.more-link:hover{border-color:var(--gold);color:var(--gold)}
+.map-chip b { color: var(--cyan); font-weight: 600; }
 
-/* ── INSURANCE ── */
-.ins-row{
-  display:flex;align-items:center;
-  background:rgba(255,255,255,0.02);border:1.5px solid var(--border);
-  border-radius:7px;padding:0.78rem 0.95rem;
+/* ═══════════════════════════════════════════════════════════════
+   RATE RANGE
+   ═══════════════════════════════════════════════════════════════ */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, rgba(59,130,246,.04), rgba(34,211,238,.04));
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-lg);
+  margin-top: 12px;
 }
-.ins-ico{
-  width:34px;height:34px;border-radius:6px;flex-shrink:0;
-  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;margin-right:0.82rem;
+.rate-prices { display: flex; align-items: baseline; gap: 6px; font-family: var(--mono); }
+.rate-val { font: 700 20px var(--mono); color: var(--cyan); }
+.rate-sep { color: var(--text-2); font-size: 13px; }
+.rate-label { font: 500 9px var(--mono); color: var(--text-2); text-transform: uppercase; letter-spacing: .05em; }
+.rate-trend {
+  font: 500 11px var(--mono);
+  padding: 2px 7px;
+  border-radius: var(--r-sm);
 }
-.ins-ico svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.ins-name{font-size:0.82rem;font-weight:600;margin-bottom:0.1rem}
-.ins-desc{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted)}
-.ins-price{font-family:'DM Mono',monospace;font-size:0.73rem;color:var(--gold);margin-left:auto;margin-right:0.85rem}
-.big-tog{
-  width:44px;height:24px;border-radius:12px;
-  background:var(--border2);position:relative;cursor:pointer;
-  transition:background 0.18s;flex-shrink:0;
-}
-.big-tog::after{
-  content:'';position:absolute;top:3px;left:3px;
-  width:18px;height:18px;border-radius:50%;
-  background:rgba(255,255,255,0.32);transition:all 0.18s;
-}
-.big-tog.on{background:var(--gold)}
-.big-tog.on::after{left:23px;background:var(--navy)}
-.ins-note{margin-top:0.58rem;font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted);line-height:1.65}
+.rate-trend.up { color: var(--red); background: rgba(239,68,68,.1); }
+.rate-trend.down { color: var(--green); background: rgba(16,185,129,.1); }
+.rate-trend.flat { color: var(--amber); background: rgba(245,158,11,.1); }
 
-/* ── UPLOAD DOCS ── */
-.upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.45rem}
-.upl{
-  border:1.5px dashed var(--border2);border-radius:7px;
-  padding:0.72rem;text-align:center;cursor:pointer;transition:all 0.12s;
+/* ═══════════════════════════════════════════════════════════════
+   WEIGHT VALIDATION
+   ═══════════════════════════════════════════════════════════════ */
+.wv {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  font-size: 11px;
+  margin-top: 12px;
 }
-.upl:hover{border-color:var(--gold);background:rgba(201,168,76,0.03)}
-.upl.done{border-style:solid;border-color:rgba(201,168,76,0.32);background:rgba(201,168,76,0.04)}
-.upl-ico{
-  width:28px;height:28px;border-radius:5px;
-  background:rgba(255,255,255,0.04);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 0.42rem;
-}
-.upl-ico svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.upl.done .upl-ico svg{stroke:var(--gold)}
-.upl-name{font-size:0.66rem;font-weight:600;color:var(--dim)}
-.upl-sub{font-family:'DM Mono',monospace;font-size:0.53rem;color:var(--muted);margin-top:0.07rem}
-.bl-row{display:flex;gap:0.38rem;margin-top:0.72rem}
-.bl-opt{
-  flex:1;padding:0.42rem 0.5rem;text-align:center;
-  border:1.5px solid var(--border2);border-radius:5px;
-  font-size:0.65rem;font-weight:600;color:var(--muted);
-  cursor:pointer;transition:all 0.12s;
-}
-.bl-opt:hover{border-color:var(--gold);color:var(--gold)}
-.bl-opt.active{background:var(--gold-dim);border-color:rgba(201,168,76,0.38);color:var(--gold)}
+.wv.ok  { background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.2); color: #34d399; }
+.wv.wrn { background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.2); color: var(--amber); }
+.wv.bad { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); color: var(--red); }
+.wv-bar { height: 4px; background: var(--bg-0); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+.wv-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+.wv-fill.ok  { background: var(--green); }
+.wv-fill.wrn { background: var(--amber); }
+.wv-fill.bad { background: var(--red); }
+.wv-nums { font: 400 9px var(--mono); color: var(--text-2); margin-top: 4px; }
 
-/* ── SIDEBAR ── */
-.s-top{padding:1.1rem 1.2rem;border-bottom:1px solid var(--border)}
-.s-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:0.48rem}
-.s-total{font-family:'DM Mono',monospace;font-size:1.85rem;font-weight:500;color:var(--gold);line-height:1}
-.s-sub{font-size:0.58rem;color:var(--muted);margin-top:0.2rem}
-.s-route{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.45rem;display:flex;align-items:center;gap:0.38rem}
-.s-route .arr{color:var(--gold);opacity:0.5}
+/* ═══════════════════════════════════════════════════════════════
+   SERVICE ADD-ONS
+   ═══════════════════════════════════════════════════════════════ */
+.svc-cat { margin-bottom: 14px; }
+.svc-cat:last-child { margin-bottom: 0; }
+.svc-cat-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border-0);
+  font: 600 10px var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-1);
+}
+.svc-cat-cnt {
+  font: 400 9px var(--mono);
+  padding: 1px 5px;
+  background: var(--bg-0);
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+}
+.svc {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 12px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: all .12s;
+}
+.svc:hover { border-color: var(--border-1); background: var(--bg-hover); }
+.svc.on { border-color: var(--blue); background: rgba(59,130,246,.06); }
+.svc.locked { opacity: .7; cursor: default; }
+.svc.locked.on { opacity: 1; }
+.svc-chk {
+  width: 16px; height: 16px;
+  border: 2px solid var(--border-1);
+  border-radius: 3px;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all .12s;
+  font: 700 9px var(--sans);
+  color: transparent;
+}
+.svc.on .svc-chk { background: var(--blue); border-color: var(--blue); color: #fff; }
+.svc-info { flex: 1; min-width: 0; }
+.svc-name { font: 500 12px var(--sans); display: flex; align-items: center; gap: 5px; }
+.svc-req-dot { width: 4px; height: 4px; background: var(--red); border-radius: 50%; }
+.svc-desc { font: 400 10px var(--sans); color: var(--text-2); margin-top: 1px; }
+.svc-docs { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 5px; }
+.svc-doc-tag {
+  font: 500 8px var(--mono);
+  padding: 1px 5px;
+  background: rgba(167,139,250,.08);
+  border: 1px solid rgba(167,139,250,.15);
+  border-radius: 2px;
+  color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+.svc-price { font: 600 12px var(--mono); color: var(--cyan); white-space: nowrap; }
+.svc-basis { font: 400 9px var(--mono); color: var(--text-2); text-align: right; }
 
-.s-sec{padding:0.9rem 1.2rem;border-bottom:1px solid var(--border)}
-.s-sec-title{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.65rem}
+/* ═══════════════════════════════════════════════════════════════
+   FREE DAYS
+   ═══════════════════════════════════════════════════════════════ */
+.fd-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+.fd-opt {
+  padding: 10px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  text-align: center;
+  transition: all .12s;
+}
+.fd-opt:hover { border-color: var(--border-1); }
+.fd-opt.on { border-color: var(--blue); background: rgba(59,130,246,.06); }
+.fd-num { font: 700 18px var(--mono); }
+.fd-label { font: 400 9px var(--sans); color: var(--text-2); margin-top: 2px; }
+.fd-cost { font: 400 9px var(--mono); color: var(--amber); margin-top: 3px; }
 
-.bp-row{display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0;font-size:0.68rem}
-.bp-name{color:var(--dim)}
-.bp-val{font-family:'DM Mono',monospace;color:var(--white);font-weight:500}
-.bp-val.gold{color:var(--gold)}.bp-val.off{color:var(--muted)}
-.bp-div{height:1px;background:var(--border);margin:0.35rem 0}
-.bp-total{display:flex;justify-content:space-between;align-items:center;padding:0.42rem 0}
-.bpt-n{font-size:0.76rem;font-weight:700}
-.bpt-v{font-family:'DM Mono',monospace;color:var(--gold);font-size:0.92rem;font-weight:700}
+/* ═══════════════════════════════════════════════════════════════
+   CARRIER CARDS
+   ═══════════════════════════════════════════════════════════════ */
+.cr {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all .12s;
+  margin-bottom: 6px;
+}
+.cr:hover { border-color: var(--border-1); background: var(--bg-hover); }
+.cr.on {
+  border-color: var(--blue);
+  background: rgba(59,130,246,.05);
+  box-shadow: 0 0 16px rgba(59,130,246,.08);
+}
+.cr-logo {
+  width: 48px; height: 48px;
+  background: var(--bg-3);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  font: 700 10px var(--mono);
+  color: var(--text-1);
+}
+.cr-name { font: 600 13px var(--sans); display: flex; align-items: center; gap: 6px; }
+.cr-badge {
+  font: 500 8px var(--mono);
+  padding: 2px 6px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  background: rgba(16,185,129,.1);
+  color: var(--green);
+  border: 1px solid rgba(16,185,129,.2);
+}
+.cr-meta {
+  display: flex; gap: 12px;
+  margin-top: 4px;
+  font: 400 10px var(--mono);
+  color: var(--text-2);
+}
+.cr-rate { font: 700 18px var(--mono); text-align: right; }
+.cr-per { font: 400 9px var(--mono); color: var(--text-2); text-align: right; }
+.cr-avail {
+  font: 500 9px var(--mono);
+  margin-top: 3px;
+  padding: 1px 5px;
+  border-radius: var(--r-sm);
+  display: inline-block;
+}
+.cr-avail.yes { background: rgba(16,185,129,.1); color: var(--green); }
+.cr-avail.maybe { background: rgba(245,158,11,.1); color: var(--amber); }
 
-.incentive{
-  background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.13);
-  border-radius:7px;padding:0.78rem 0.85rem;
+/* ═══════════════════════════════════════════════════════════════
+   INSURANCE
+   ═══════════════════════════════════════════════════════════════ */
+.ins-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(16,185,129,.04), rgba(34,211,238,.04));
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-lg);
+  cursor: pointer;
+  transition: all .15s;
 }
-.inc-title{
-  font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--green);margin-bottom:0.58rem;
-  display:flex;align-items:center;gap:0.32rem;
+.ins-toggle.on { border-color: var(--green); box-shadow: 0 0 14px rgba(16,185,129,.08); }
+.ins-toggle-info { display: flex; align-items: center; gap: 10px; }
+.ins-label { font: 600 13px var(--sans); }
+.ins-sub { font: 400 10px var(--sans); color: var(--text-2); margin-top: 1px; }
+.tog {
+  width: 38px; height: 20px;
+  background: var(--bg-0);
+  border: 2px solid var(--border-1);
+  border-radius: 10px;
+  position: relative;
+  transition: all .2s;
 }
-.inc-row{display:flex;justify-content:space-between;padding:0.23rem 0;font-size:0.67rem}
-.inc-lbl{color:var(--muted)}.inc-val{font-family:'DM Mono',monospace;color:var(--green);font-weight:600}
-.inc-net{
-  display:flex;justify-content:space-between;
-  padding-top:0.45rem;margin-top:0.38rem;
-  border-top:1px solid rgba(34,197,94,0.1);
-  font-size:0.7rem;font-weight:700;
+.tog.on { background: var(--green); border-color: var(--green); }
+.tog-knob {
+  width: 14px; height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 1px; left: 1px;
+  transition: transform .2s;
 }
-.inc-net-lbl{color:var(--dim)}.inc-net-val{font-family:'DM Mono',monospace;color:var(--gold)}
+.tog.on .tog-knob { transform: translateX(18px); }
 
-.ds-list{display:flex;flex-direction:column;gap:0.32rem}
-.ds-row{
-  display:flex;align-items:center;gap:0.48rem;
-  padding:0.35rem 0.58rem;
-  background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:5px;
-  font-size:0.64rem;
+.cov-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-top: 14px; }
+.cov-opt {
+  padding: 10px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  text-align: center;
+  transition: all .12s;
 }
-.ds-ico{
-  width:18px;height:18px;border-radius:3px;
-  background:rgba(255,255,255,0.04);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.ds-ico svg{width:10px;height:10px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.ds-name{flex:1;color:var(--dim)}
-.ds-badge{font-family:'DM Mono',monospace;font-size:0.5rem;padding:0.06rem 0.36rem;border-radius:3px}
-.st-done{background:var(--green-dim);color:var(--green)}
-.st-need{background:rgba(201,168,76,0.09);color:var(--gold)}
-.st-linked{background:var(--blue-dim);color:var(--blue)}
-.ds-link{
-  margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:0.58rem;
-  color:rgba(201,168,76,0.6);cursor:pointer;transition:color 0.12s;
-  display:flex;align-items:center;gap:0.32rem;
-}
-.ds-link:hover{color:var(--gold)}
+.cov-opt:hover { border-color: var(--border-1); }
+.cov-opt.on { border-color: var(--green); background: rgba(16,185,129,.06); }
+.cov-name { font: 600 12px var(--sans); }
+.cov-rate { font: 400 10px var(--mono); color: var(--text-2); margin-top: 2px; }
+.cov-prem { font: 700 14px var(--mono); color: var(--green); margin-top: 6px; }
 
-.side-cta{padding:1.1rem 1.2rem;margin-top:auto}
-.book-btn{
-  width:100%;background:var(--gold);color:var(--navy);border:none;border-radius:7px;
-  padding:0.82rem;font-family:'DM Sans',sans-serif;font-size:0.87rem;font-weight:700;
-  cursor:pointer;transition:all 0.15s;letter-spacing:0.15px;
+.ins-detail { margin-top: 14px; }
+.ins-stat { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.ins-stat-label { font: 400 9px var(--mono); color: var(--text-2); text-transform: uppercase; letter-spacing: .04em; }
+.ins-stat-val { font: 600 13px var(--mono); color: var(--cyan); margin-top: 2px; }
+.ins-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 10px; }
+.ins-tag {
+  font: 500 8px var(--mono);
+  padding: 2px 6px;
+  border-radius: 2px;
 }
-.book-btn:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 8px 22px rgba(201,168,76,0.18)}
-.book-note{text-align:center;font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted);margin-top:0.52rem}
+.ins-tag.inc { background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.15); color: var(--green); }
+.ins-tag.exc { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.15); color: var(--red); }
 
-@media(max-width:960px){
-  .shell{grid-template-columns:1fr}
-  .side-col{position:static;height:auto}
-  .cargo-grid{grid-template-columns:1fr 1fr}
-  .carrier-grid{grid-template-columns:1fr 1fr}
-  .s-fields{grid-template-columns:1fr 1fr}
+/* ═══════════════════════════════════════════════════════════════
+   DOCUMENTS & BL
+   ═══════════════════════════════════════════════════════════════ */
+.bl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.bl-opt {
+  padding: 10px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  text-align: center;
+  transition: all .12s;
+}
+.bl-opt:hover { border-color: var(--border-1); }
+.bl-opt.on { border-color: var(--blue); background: rgba(59,130,246,.06); }
+.bl-name { font: 500 12px var(--sans); }
+.bl-desc { font: 400 9px var(--sans); color: var(--text-2); margin-top: 2px; }
+
+.doc-list { display: grid; gap: 4px; margin-top: 14px; }
+.doc-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-0);
+  border: 1px solid var(--border-0);
+  border-radius: var(--r-md);
+}
+.doc-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.doc-dot.pending { background: var(--text-2); }
+.doc-dot.review  { background: var(--blue); }
+.doc-dot.done    { background: var(--green); }
+.doc-name { flex: 1; font: 500 11px var(--sans); }
+.doc-req {
+  font: 500 8px var(--mono);
+  padding: 1px 5px;
+  background: rgba(239,68,68,.08);
+  border: 1px solid rgba(239,68,68,.15);
+  border-radius: 2px;
+  color: var(--red);
+}
+.doc-status { font: 400 9px var(--mono); color: var(--text-2); }
+
+/* ═══════════════════════════════════════════════════════════════
+   SIDEBAR – PRICE BREAKDOWN
+   ═══════════════════════════════════════════════════════════════ */
+.sb-section {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-0);
+}
+.sb-title {
+  font: 600 9px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.sb-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+  font-size: 11px;
+}
+.sb-line.sub {
+  padding-top: 6px;
+  margin-top: 6px;
+  border-top: 1px solid var(--border-0);
+  font-weight: 600;
+}
+.sb-label { color: var(--text-1); }
+.sb-amt { font-family: var(--mono); font-weight: 500; }
+.sb-amt.neg { color: var(--green); }
+
+.sb-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, var(--bg-3), var(--bg-4));
+  border-top: 2px solid var(--blue);
+}
+.sb-total-label { font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: .04em; }
+.sb-total-val { font: 700 22px var(--mono); color: var(--cyan); }
+.sb-net { font: 400 10px var(--mono); color: var(--green); text-align: right; margin-top: 2px; }
+
+.sb-incent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: rgba(16,185,129,.06);
+  border: 1px solid rgba(16,185,129,.15);
+  border-radius: var(--r-md);
+  margin-bottom: 5px;
+}
+.sb-incent-type { font: 500 11px var(--sans); color: #34d399; }
+.sb-incent-amt { font: 600 11px var(--mono); color: var(--green); }
+.sb-incent-note { font: 400 8px var(--mono); color: var(--text-2); margin-top: 1px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: var(--r-md);
+  font: 600 12px var(--sans);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all .15s;
+}
+.btn-pri {
+  background: linear-gradient(135deg, var(--blue), #2563eb);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(59,130,246,.25);
+}
+.btn-pri:hover { box-shadow: 0 4px 14px rgba(59,130,246,.35); transform: translateY(-1px); }
+.btn-pri:disabled { opacity: .4; cursor: default; transform: none; box-shadow: none; }
+.btn-suc {
+  background: linear-gradient(135deg, var(--green), #059669);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16,185,129,.25);
+}
+.btn-suc:hover { box-shadow: 0 4px 14px rgba(16,185,129,.35); transform: translateY(-1px); }
+.btn-full { width: 100%; }
+.btn-lg { padding: 12px 20px; font-size: 13px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.mb-2 { margin-bottom: 8px; }
+.hidden { display: none !important; }
+.row { display: flex; gap: 8px; }
+.row-center { display: flex; align-items: center; gap: 8px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim { animation: fadeUp .25s ease forwards; }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 960px) {
+  #app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    max-height: 42vh;
+    border-left: none;
+    border-top: 2px solid var(--blue);
+    z-index: 50;
+  }
 }
 </style>
 </head>
+
 <body>
+<div id="app">
 
-<!-- NAV -->
-<div class="topbar">
-  <div class="tb-logo">W<span>o</span>rt</div>
-  <div class="tb-pill">
-    <span>JNPT Mumbai</span>
-    <span class="sep">→</span>
-    <span>Jebel Ali, UAE</span>
-    <span class="meta">· FCL · 20ft · 18 MT</span>
-  </div>
-  <div class="tb-right">
-    <div class="live-dot">LIVE RATES</div>
-    <div class="tb-av">ME</div>
-  </div>
-</div>
+  <!-- ═══ TOP BAR ═══ -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">W</div>
+      <span class="topbar-name">Wort Freight</span>
+      <span class="topbar-tag">Terminal v2.0</span>
+    </div>
+    <div class="topbar-status">
+      <span class="topbar-dot"></span>
+      Market Data: Live &middot; <span id="clock"></span>
+    </div>
+  </header>
 
-<div class="shell">
-<div class="main-col">
+  <!-- ═══ MAIN PANEL ═══ -->
+  <main class="main" id="main">
 
-<!-- SEARCH -->
-<div class="search-wrap">
-  <div class="s-eyebrow">Freight Configurator — Route Search</div>
-  <div class="s-fields">
-    <div class="s-field">
-      <div class="s-lbl">Origin Port</div>
-      <input class="s-inp" value="JNPT Mumbai, IN" placeholder="Origin port">
-    </div>
-    <div class="s-field">
-      <div class="s-lbl">Destination Port</div>
-      <input class="s-inp" value="Jebel Ali, UAE" placeholder="Destination">
-    </div>
-    <div class="s-field">
-      <div class="s-lbl">Cargo Ready Date</div>
-      <input class="s-inp" type="date" value="2025-07-01">
-    </div>
-    <div class="s-field">
-      <div class="s-lbl">Shipment Type</div>
-      <select class="s-inp">
-        <option>FCL — Full Container</option>
-        <option>LCL — Less Container</option>
-        <option>Air Freight</option>
-      </select>
-    </div>
-    <button class="s-btn" onclick="refreshRates()">Search</button>
-  </div>
-</div>
-
-<!-- RATE BANNER -->
-<div class="rate-banner">
-  <div class="rb-group">
-    <div>
-      <div class="rb-lbl">Estimated Market Range</div>
-      <div class="rb-range" id="rate-range">$1,256 – $1,485</div>
-      <div class="rb-sub">Per 20ft · FOB · 14-day rolling average</div>
-    </div>
-    <div class="rb-trend">
-      <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><polyline points="1,7 5,3 8,5 11,1" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      3.2% vs last week
-    </div>
-  </div>
-  <div class="rb-right">
-    <div class="c-stack">
-      <div class="c-avatar">MSK</div>
-      <div class="c-avatar">CMA</div>
-      <div class="c-avatar">MSC</div>
-      <div class="c-avatar">EVG</div>
-      <div class="c-avatar" style="background:rgba(201,168,76,0.08);color:var(--gold);border-color:rgba(201,168,76,0.2)">70+</div>
-    </div>
-    <div class="c-count">carriers checked</div>
-  </div>
-</div>
-
-<!-- MAP -->
-<div class="map-wrap">
-  <svg class="map-svg" viewBox="0 0 900 200" preserveAspectRatio="xMidYMid slice">
-    <defs>
-      <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
-        <path d="M44 0L0 0 0 44" fill="none" stroke="rgba(201,168,76,0.045)" stroke-width="0.5"/>
-      </pattern>
-      <linearGradient id="rgrad" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.5"/>
-        <stop offset="100%" stop-color="#22c55e" stop-opacity="0.5"/>
-      </linearGradient>
-    </defs>
-    <rect width="900" height="200" fill="url(#grid)"/>
-    <ellipse cx="125" cy="100" rx="90" ry="52" fill="rgba(201,168,76,0.03)" stroke="rgba(201,168,76,0.07)" stroke-width="1"/>
-    <ellipse cx="768" cy="92" rx="82" ry="48" fill="rgba(201,168,76,0.03)" stroke="rgba(201,168,76,0.07)" stroke-width="1"/>
-    <path d="M 190 100 Q 450 48 708 92" stroke="url(#rgrad)" stroke-width="1.5" fill="none" stroke-dasharray="7 5">
-      <animate attributeName="stroke-dashoffset" from="0" to="-120" dur="3s" repeatCount="indefinite"/>
-    </path>
-    <circle cx="190" cy="100" r="16" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
-    <circle cx="708" cy="92" r="16" fill="none" stroke="rgba(34,197,94,0.1)" stroke-width="1"/>
-  </svg>
-  <div class="map-ov">
-    <div class="map-port">
-      <div class="port-dot"></div>
-      <div class="port-name">JNPT Mumbai</div>
-      <div class="port-code">18.95°N · 72.95°E</div>
-    </div>
-    <div class="vessel-box">
-      <div class="vessel-icon-wrap">
-        <!-- vessel SVG icon -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.65)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 17l1.5-9h15L21 17"/>
-          <path d="M3 17c0 2 1.5 3 9 3s9-1 9-3"/>
-          <line x1="12" y1="3" x2="12" y2="8"/>
-          <line x1="8" y1="8" x2="16" y2="8"/>
-        </svg>
-      </div>
-      <div class="vessel-lbl">MSC PALAK V · In Transit</div>
-      <div class="vessel-eta">ETA 12 days · Arabian Sea</div>
-    </div>
-    <div class="map-port">
-      <div class="port-dot dest"></div>
-      <div class="port-name">Jebel Ali</div>
-      <div class="port-code">25.01°N · 55.05°E</div>
-    </div>
-  </div>
-  <div class="map-foot">1,237 NM · Arabian Sea Route · ~12–14 days transit</div>
-</div>
-
-<!-- CARGO -->
-<div class="sec">
-  <div class="sec-head">
-    <div class="sec-title">
-      <div class="sec-icon">
-        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-      </div>
-      Cargo Requirements
-    </div>
-    <span class="sec-badge">Precision Inputs</span>
-  </div>
-  <div class="cargo-grid">
-    <div class="cf">
-      <div class="cf-lbl">Container Type</div>
-      <div class="cf-val">
-        <select onchange="updateCalc()">
-          <option>20ft Standard</option><option>40ft Standard</option>
-          <option>40ft High Cube</option><option>20ft Reefer</option>
-          <option>40ft Reefer</option><option>20ft Open Top</option>
-        </select>
-      </div>
-      <div class="cf-hint ok">Max payload: 28 MT</div>
-    </div>
-    <div class="cf">
-      <div class="cf-lbl">Cargo Weight (MT)</div>
-      <div class="cf-val"><input type="number" value="18" min="1" max="28" oninput="validateWeight(this)"></div>
-      <div class="cf-hint ok" id="weight-hint">Within equipment limit (28 MT)</div>
-    </div>
-    <div class="cf">
-      <div class="cf-lbl">Cargo Value (USD)</div>
-      <div class="cf-val"><input type="number" id="cargo-val" value="14820" oninput="updateCalc()"></div>
-      <div class="cf-hint">For insurance & incentive calc</div>
-    </div>
-    <div class="cf">
-      <div class="cf-lbl">HS Code</div>
-      <div class="cf-val"><input value="30049099" placeholder="8-digit HS code"></div>
-      <div class="cf-hint">Pharma preparations</div>
-    </div>
-  </div>
-  <div class="chips">
-    <div class="chip active" onclick="selChip(this)">20ft Standard</div>
-    <div class="chip" onclick="selChip(this)">40ft Standard</div>
-    <div class="chip" onclick="selChip(this)">40ft High Cube</div>
-    <div class="chip" onclick="selChip(this)">Reefer</div>
-    <div class="chip" onclick="selChip(this)">Open Top</div>
-    <div class="chip" onclick="selChip(this)">Flat Rack</div>
-  </div>
-</div>
-
-<!-- SERVICES -->
-<div class="sec">
-  <div class="sec-head">
-    <div class="sec-title">
-      <div class="sec-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h-2M6 12H4M17.66 18.66l1.41-1.41M4.93 4.93l1.41 1.41"/></svg>
-      </div>
-      Service Configuration
-    </div>
-    <span class="sec-badge">Add-on Menu</span>
-  </div>
-  <div class="svc-cols">
-    <div>
-      <div class="svc-grp-lbl">Origin — Mumbai</div>
-
-      <div class="svc on" onclick="toggleSvc(this,'origin-local',85)" id="svc-origin-local">
-        <div class="svc-left">
-          <div class="svc-ico">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    <!-- ── 1. ROUTE SEARCH ── -->
+    <div class="card" id="card-search">
+      <div class="card-head">
+        <div class="card-title">
+          <div class="card-icon bl">🔍</div>
+          <div>
+            <div>Route Search</div>
+            <div class="card-sub">Find optimal shipping routes</div>
           </div>
-          <div><div class="svc-name">Origin Local Charges</div><div class="svc-desc">THC · Documentation · Port handling</div></div>
         </div>
-        <div class="svc-r"><div class="svc-price">$85</div><div class="tog"></div></div>
       </div>
-
-      <div class="svc" onclick="toggleSvc(this,'origin-customs',120)" id="svc-origin-customs">
-        <div class="svc-left">
-          <div class="svc-ico">
-            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <div class="card-body">
+        <div class="grid3" style="grid-template-columns:1fr 1fr auto;align-items:end">
+          <!-- Origin -->
+          <div class="fg">
+            <label class="fl">Origin Port</label>
+            <div class="port-wrap" id="origin-wrap">
+              <span class="port-ico">🚢</span>
+              <input class="port-input" id="origin-input" placeholder="Search port or city..." autocomplete="off">
+              <div class="port-dd" id="origin-dd"></div>
+            </div>
           </div>
-          <div><div class="svc-name">Origin FCL Customs</div><div class="svc-desc">Export clearance · Shipping Bill filing</div></div>
-        </div>
-        <div class="svc-r"><div class="svc-price">$120</div><div class="tog"></div></div>
-      </div>
-
-      <div class="svc" onclick="toggleSvc(this,'origin-cfs',95)" id="svc-origin-cfs">
-        <div class="svc-left">
-          <div class="svc-ico">
-            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><line x1="3.27" y1="6.96" x2="12" y2="12"/><line x1="12" y1="12" x2="20.73" y2="6.96"/><line x1="12" y1="12" x2="12" y2="22"/></svg>
+          <!-- Destination -->
+          <div class="fg">
+            <label class="fl">Destination Port</label>
+            <div class="port-wrap" id="dest-wrap">
+              <span class="port-ico">📍</span>
+              <input class="port-input" id="dest-input" placeholder="Search port or city..." autocomplete="off">
+              <div class="port-dd" id="dest-dd"></div>
+            </div>
           </div>
-          <div><div class="svc-name">Origin FCL CFS</div><div class="svc-desc">Container stuffing & sealing</div></div>
+          <button class="btn btn-pri btn-lg" id="btn-search" disabled>Search Rates →</button>
         </div>
-        <div class="svc-r"><div class="svc-price">$95</div><div class="tog"></div></div>
-      </div>
-
-      <div class="doc-notice" id="doc-notice-origin" onclick="window.open('wort-doc-engine.html','_blank')">
-        <div class="dn-dot"></div>
-        <span>Wort Doc Engine — Shipping Bill + Packing List required</span>
-        <span class="dn-link">Open →</span>
+        <!-- Rate Range -->
+        <div class="rate-bar hidden" id="rate-bar">
+          <div style="flex:1">
+            <div class="rate-label">Estimated Freight Price Range</div>
+            <div class="rate-prices">
+              <span class="rate-val" id="rate-min"></span>
+              <span class="rate-sep">–</span>
+              <span class="rate-val" id="rate-max"></span>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div id="rate-trend"></div>
+            <div class="fhint mt-2" id="rate-pts"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div>
-      <div class="svc-grp-lbl">Destination — Jebel Ali</div>
-
-      <div class="svc on" onclick="toggleSvc(this,'dest-local',110)" id="svc-dest-local">
-        <div class="svc-left">
-          <div class="svc-ico">
-            <svg viewBox="0 0 24 24"><path d="M3 17l1.5-9h15L21 17"/><path d="M3 17c0 2 1.5 3 9 3s9-1 9-3"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="8" y1="8" x2="16" y2="8"/></svg>
-          </div>
-          <div><div class="svc-name">Destination Local Charges</div><div class="svc-desc">Port dues · THC · Delivery order</div></div>
-        </div>
-        <div class="svc-r"><div class="svc-price">$110</div><div class="tog"></div></div>
-      </div>
-
-      <div class="svc" onclick="toggleSvc(this,'dest-customs',140)" id="svc-dest-customs">
-        <div class="svc-left">
-          <div class="svc-ico">
-            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div><div class="svc-name">Destination FCL Customs</div><div class="svc-desc">Import clearance · DP World Jebel Ali</div></div>
-        </div>
-        <div class="svc-r"><div class="svc-price">$140</div><div class="tog"></div></div>
-      </div>
-
-      <div class="svc" onclick="toggleSvc(this,'dest-transport',180)" id="svc-dest-transport">
-        <div class="svc-left">
-          <div class="svc-ico">
-            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          </div>
-          <div><div class="svc-name">Destination Transportation</div><div class="svc-desc">Container delivery to buyer warehouse</div></div>
-        </div>
-        <div class="svc-r"><div class="svc-price">$180</div><div class="tog"></div></div>
-      </div>
-
-      <div class="doc-notice" id="doc-notice-dest" onclick="window.open('wort-doc-engine.html','_blank')">
-        <div class="dn-dot"></div>
-        <span>Wort Doc Engine — Certificate of Origin required</span>
-        <span class="dn-link">Open →</span>
+    <!-- ── MAP ── -->
+    <div class="map-box hidden" id="map-box">
+      <canvas id="map-canvas"></canvas>
+      <div class="map-chips">
+        <div class="map-chip">📏 <b id="map-dist"></b> NM</div>
+        <div class="map-chip">⏱️ <b id="map-days"></b> days transit</div>
       </div>
     </div>
-  </div>
 
-  <div class="freedays-box">
-    <div class="fdb-head">
-      <div class="fdb-title">Destination Free Days Extension</div>
-      <div class="fdb-sub">Prevents detention charges after port arrival</div>
+    <!-- ── 2. CARGO ── -->
+    <div class="card hidden" id="card-cargo">
+      <div class="card-head">
+        <div class="card-title">
+          <div class="card-icon am">📦</div>
+          <div>
+            <div>Cargo Requirements</div>
+            <div class="card-sub">Container specs &amp; cargo details</div>
+          </div>
+        </div>
+        <span class="card-badge req">Required</span>
+      </div>
+      <div class="card-body">
+        <div class="grid4">
+          <div class="fg">
+            <label class="fl">Container Size</label>
+            <select class="fs" id="c-size">
+              <option value="20ft">20ft Standard</option>
+              <option value="40ft">40ft Standard</option>
+              <option value="40ft-HC">40ft High Cube</option>
+              <option value="45ft-HC">45ft High Cube</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Container Type</label>
+            <select class="fs" id="c-type">
+              <option value="Standard">Standard</option>
+              <option value="Reefer">Reefer</option>
+              <option value="Open-Top">Open-Top</option>
+              <option value="Flat-Rack">Flat-Rack</option>
+              <option value="Tank">Tank</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Quantity</label>
+            <input class="fi" type="number" id="c-qty" value="1" min="1" max="999">
+          </div>
+          <div class="fg">
+            <label class="fl">Gross Weight / Container</label>
+            <div class="row">
+              <input class="fi" type="number" id="c-wt" placeholder="0.0" min="0" step="0.1" style="flex:1">
+              <select class="fs" id="c-wt-unit" style="width:62px">
+                <option value="MT">MT</option>
+                <option value="KG">KG</option>
+                <option value="LBS">LBS</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Weight Validation -->
+        <div class="hidden" id="wv-box"></div>
+        <!-- Cargo Details -->
+        <div class="grid3 mt-3">
+          <div class="fg">
+            <label class="fl">Commodity</label>
+            <input class="fi" id="c-comm" placeholder="e.g., Cotton Textiles">
+          </div>
+          <div class="fg">
+            <label class="fl">HS Code</label>
+            <input class="fi" id="c-hs" placeholder="e.g., 6109.10.00">
+            <span class="fhint">Used for incentive calc</span>
+          </div>
+          <div class="fg">
+            <label class="fl">Cargo Value (USD)</label>
+            <input class="fi" id="c-val" type="number" placeholder="0.00" min="0" step="100">
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="fd-row">
-      <div class="fd-chip active" onclick="selFD(this,'4')">4 days</div>
-      <div class="fd-chip" onclick="selFD(this,'7')">7 days</div>
-      <div class="fd-chip" onclick="selFD(this,'14')">14 days</div>
-      <div class="fd-chip" onclick="selFD(this,'custom')">Custom</div>
-      <input class="fd-custom-inp" id="fd-inp" placeholder="__ days">
+
+    <!-- ── 3. ORIGIN SERVICES ── -->
+    <div class="card hidden" id="card-origin-svc">
+      <div class="card-head">
+        <div class="card-title">
+          <div class="card-icon bl">🚢</div>
+          <div>
+            <div>Origin Services</div>
+            <div class="card-sub">Export-side logistics &amp; documentation</div>
+          </div>
+        </div>
+        <span class="card-badge opt">Add-ons</span>
+      </div>
+      <div class="card-body" id="origin-svc-body"></div>
     </div>
-  </div>
+
+    <!-- ── 3b. DESTINATION SERVICES ── -->
+    <div class="card hidden" id="card-dest-svc">
+      <div class="card-head">
+        <div class="card-title">
+          <div class="card-icon gr">📍</div>
+          <div>
+            <div>Destination Services</div>
+            <div class="card-sub">Import-side logistics &amp; last-mile</div>
+          </div>
+        </div>
+        <span class="card-badge opt">Add-ons</span>
+      </div>
+      <div class="card-body" id="dest-svc-body">
+        <!-- destination services render here -->
+        <div id="dest-svc-list"></div>
+        <!-- Free Days -->
+        <div class="svc-cat" id="fd-section">
+          <div class="svc-cat-head">
+            <span>⏰</span> Destination Free Days Extension
+          </div>
+          <div class="fhint mb-2">Extend free days to prevent detention &amp; demurrage charges</div>
+          <div class="fd-grid" id="fd-grid"></div>
+          <div class="hidden mt-2" id="fd-custom-wrap">
+            <div class="fg" style="max-width:160px">
+              <label class="fl">Custom Days</label>
+              <input class="fi" type="number" id="fd-custom" min="1" max="60" value="10">
+            </div>
+          </div>
+          <div class="hidden mt-2" id="fd-cost" style="font:500 11px var(--mono);color:var(--amber)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 4. CARRIER SELECTION ── -->
+    <div class="card hidden" id="card-carrier">
+      <div class="card-head">
+        <div class="card-title">
+          <div class="card-icon pu">⚓</div>
+          <div>
+            <div>Carrier Selection</div>
+            <div class="card-sub" id="cr-count"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body" id="carrier-body"></div>
+    </div>
+
+    <!-- ── 5. INSURANCE ── -->
+    <div class="card hidden" id="card-insurance">
+      <div class="card-head">
+        <div class="card-title">
+          <div class="card-icon gr">🛡️</div>
+          <div>
+            <div>Cargo Insurance</div>
+            <div class="card-sub">Protect your shipment</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="ins-toggle" id="ins-toggle">
+          <div class="ins-toggle-info">
+            <span style="font-size:20px">🛡️</span>
+            <div>
+              <div class="ins-label">Comprehensive Cargo Coverage</div>
+              <div class="ins-sub">One-click insurance, auto-calculated premiums</div>
+            </div>
+          </div>
+          <div class="tog" id="ins-tog"><div class="tog-knob"></div></div>
+        </div>
+        <div class="hidden" id="ins-body">
+          <div class="cov-grid" id="cov-grid"></div>
+          <div class="ins-detail hidden" id="ins-detail"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 6. DOCUMENTS ── -->
+    <div class="card hidden" id="card-docs">
+      <div class="card-head">
+        <div class="card-title">
+          <div class="card-icon pu">📄</div>
+          <div>
+            <div>Documents &amp; B/L Type</div>
+            <div class="card-sub">Required docs based on selected services</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="fl mb-2">Bill of Lading Type</div>
+        <div class="bl-grid" id="bl-grid"></div>
+        <div class="doc-list mt-3" id="doc-list"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-section" style="background:var(--bg-3)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font:600 12px var(--sans)">💰 Price Breakdown</span>
+        <span id="sb-spec" style="font:400 9px var(--mono);color:var(--text-2)"></span>
+      </div>
+    </div>
+    <div id="sb-content" style="flex:1;overflow-y:auto">
+      <div class="sb-section" style="text-align:center;padding:40px 16px">
+        <div style="font-size:28px;margin-bottom:8px">💰</div>
+        <div style="font:400 11px var(--sans);color:var(--text-2)">Configure your shipment to see<br>the total landing cost</div>
+      </div>
+    </div>
+    <div id="sb-total" class="hidden">
+      <div class="sb-total">
+        <div>
+          <div class="sb-total-label">Total Landing Cost</div>
+          <div class="sb-net hidden" id="sb-net"></div>
+        </div>
+        <div class="sb-total-val" id="sb-total-val">$0</div>
+      </div>
+      <div class="sb-section">
+        <button class="btn btn-suc btn-full btn-lg" id="btn-book">📋 Confirm Booking</button>
+        <div style="font:400 9px var(--mono);color:var(--text-2);text-align:center;margin-top:8px">Rates valid 7 days · No hidden charges</div>
+      </div>
+    </div>
+  </aside>
+
 </div>
-
-<!-- CARRIERS -->
-<div class="sec">
-  <div class="sec-head">
-    <div class="sec-title">
-      <div class="sec-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 17l1.5-9h15L21 17"/><path d="M3 17c0 2 1.5 3 9 3s9-1 9-3"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="8" y1="8" x2="16" y2="8"/></svg>
-      </div>
-      Carrier Selection
-    </div>
-    <span class="sec-badge">70+ Carriers</span>
-  </div>
-  <div class="carrier-grid">
-    <div class="c-card sel" onclick="selCarrier(this,'Maersk','1256')">
-      <div class="c-badge b-assured">Assured</div>
-      <div class="c-monogram">MSK</div>
-      <div class="c-name">Maersk</div>
-      <div class="c-price">$1,256</div>
-      <div class="c-eta">12 days · Weekly</div>
-    </div>
-    <div class="c-card" onclick="selCarrier(this,'CMA CGM','1312')">
-      <div class="c-monogram">CMA</div>
-      <div class="c-name">CMA CGM</div>
-      <div class="c-price">$1,312</div>
-      <div class="c-eta">13 days · 2× week</div>
-    </div>
-    <div class="c-card" onclick="selCarrier(this,'MSC','1285')">
-      <div class="c-badge b-pop">Popular</div>
-      <div class="c-monogram">MSC</div>
-      <div class="c-name">MSC</div>
-      <div class="c-price">$1,285</div>
-      <div class="c-eta">11 days · Weekly</div>
-    </div>
-    <div class="c-card" onclick="selCarrier(this,'Evergreen','1420')">
-      <div class="c-monogram">EVG</div>
-      <div class="c-name">Evergreen</div>
-      <div class="c-price">$1,420</div>
-      <div class="c-eta">14 days · Weekly</div>
-    </div>
-    <div class="c-card" onclick="selCarrier(this,'OOCL','1380')">
-      <div class="c-monogram">OOCL</div>
-      <div class="c-name">OOCL</div>
-      <div class="c-price">$1,380</div>
-      <div class="c-eta">12 days · 2× week</div>
-    </div>
-    <div class="c-card" onclick="selCarrier(this,'Hapag-Lloyd','1295')">
-      <div class="c-monogram">HPL</div>
-      <div class="c-name">Hapag-Lloyd</div>
-      <div class="c-price">$1,295</div>
-      <div class="c-eta">13 days · Weekly</div>
-    </div>
-    <div class="c-card" onclick="selCarrier(this,'PIL','1445')">
-      <div class="c-monogram">PIL</div>
-      <div class="c-name">PIL</div>
-      <div class="c-price">$1,445</div>
-      <div class="c-eta">15 days · Weekly</div>
-    </div>
-    <div class="c-card" onclick="selCarrier(this,'IAL','1360')">
-      <div class="c-monogram">IAL</div>
-      <div class="c-name">IAL</div>
-      <div class="c-price">$1,360</div>
-      <div class="c-eta">12 days · Weekly</div>
-    </div>
-  </div>
-  <div class="more-link" onclick="alert('Showing all 70+ carriers on this route…')">View all 70+ carriers on this route →</div>
-</div>
-
-<!-- INSURANCE -->
-<div class="sec">
-  <div class="sec-head">
-    <div class="sec-title">
-      <div class="sec-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      Cargo Insurance
-    </div>
-    <span class="sec-badge">One-Click Coverage</span>
-  </div>
-  <div class="ins-row">
-    <div class="ins-ico">
-      <svg viewBox="0 0 24 24" stroke="var(--muted)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    </div>
-    <div>
-      <div class="ins-name">Comprehensive Cargo Coverage</div>
-      <div class="ins-desc">All-risk · Loss, damage, theft · Institute Cargo Clauses (A)</div>
-    </div>
-    <div class="ins-price" id="ins-price">$74.10 / shipment</div>
-    <div class="big-tog on" id="ins-tog" onclick="toggleIns()"></div>
-  </div>
-  <div class="ins-note">Premium: 0.5% of cargo value · Underwritten by Bajaj Allianz · Claim TAT: 7 days</div>
-</div>
-
-<!-- DOCUMENTS -->
-<div class="sec">
-  <div class="sec-head">
-    <div class="sec-title">
-      <div class="sec-icon">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      </div>
-      Additional Documents & BL Type
-    </div>
-    <span class="sec-badge">Optional</span>
-  </div>
-  <div class="upload-grid">
-    <div class="upl" onclick="this.classList.toggle('done')">
-      <div class="upl-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-      <div class="upl-name">MSDS Certificate</div>
-      <div class="upl-sub">Material Safety Data Sheet</div>
-    </div>
-    <div class="upl" onclick="this.classList.toggle('done')">
-      <div class="upl-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
-      <div class="upl-name">Cargo Photos</div>
-      <div class="upl-sub">Pre-shipment condition</div>
-    </div>
-    <div class="upl" onclick="this.classList.toggle('done')">
-      <div class="upl-ico"><svg viewBox="0 0 24 24"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-      <div class="upl-name">Quality Certificate</div>
-      <div class="upl-sub">Lab test / Inspection</div>
-    </div>
-    <div class="upl" onclick="this.classList.toggle('done')">
-      <div class="upl-ico"><svg viewBox="0 0 24 24"><path d="M12 2a9 9 0 100 18A9 9 0 0012 2z"/><path d="M12 6v6l4 2"/></svg></div>
-      <div class="upl-name">Phytosanitary Cert</div>
-      <div class="upl-sub">NPPO certificate</div>
-    </div>
-    <div class="upl" onclick="this.classList.toggle('done')">
-      <div class="upl-ico"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-      <div class="upl-name">Health Certificate</div>
-      <div class="upl-sub">FSSAI / CDSCO</div>
-    </div>
-    <div class="upl" onclick="this.classList.toggle('done')">
-      <div class="upl-ico"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-      <div class="upl-name">Other Documents</div>
-      <div class="upl-sub">Upload any custom doc</div>
-    </div>
-  </div>
-  <div style="margin-top:0.72rem">
-    <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.48rem">Bill of Lading Type</div>
-    <div class="bl-row">
-      <div class="bl-opt active" onclick="selBL(this)">Original BL</div>
-      <div class="bl-opt" onclick="selBL(this)">House BL</div>
-      <div class="bl-opt" onclick="selBL(this)">Seaway Bill</div>
-      <div class="bl-opt" onclick="selBL(this)">Telex Release</div>
-    </div>
-  </div>
-</div>
-
-</div><!-- /main-col -->
-
-<!-- SIDEBAR -->
-<div class="side-col">
-  <div class="s-top">
-    <div class="s-eyebrow">Total Landing Cost</div>
-    <div class="s-total" id="total-display">$1,531</div>
-    <div class="s-sub">All-inclusive · Subject to final confirmation</div>
-    <div class="s-route">
-      JNPT Mumbai <span class="arr">→</span> Jebel Ali
-      <span style="opacity:0.45">· 20ft FCL</span>
-    </div>
-  </div>
-
-  <div class="s-sec">
-    <div class="s-sec-title">Price Breakup</div>
-    <div class="bp-row"><span class="bp-name">Ocean Freight (Maersk)</span><span class="bp-val gold" id="bp-ocean">$1,256</span></div>
-    <div class="bp-row"><span class="bp-name">Origin Local</span><span class="bp-val" id="bp-ol">$85</span></div>
-    <div class="bp-row"><span class="bp-name">Origin Customs</span><span class="bp-val off" id="bp-oc">—</span></div>
-    <div class="bp-row"><span class="bp-name">Origin CFS</span><span class="bp-val off" id="bp-cfs">—</span></div>
-    <div class="bp-row"><span class="bp-name">Destination Local</span><span class="bp-val" id="bp-dl">$110</span></div>
-    <div class="bp-row"><span class="bp-name">Destination Customs</span><span class="bp-val off" id="bp-dc">—</span></div>
-    <div class="bp-row"><span class="bp-name">Destination Transport</span><span class="bp-val off" id="bp-dt">—</span></div>
-    <div class="bp-row"><span class="bp-name">Cargo Insurance</span><span class="bp-val" id="bp-ins">$74</span></div>
-    <div class="bp-div"></div>
-    <div class="bp-total"><span class="bpt-n">Total</span><span class="bpt-v" id="bp-total">$1,531</span></div>
-  </div>
-
-  <div class="s-sec">
-    <div class="s-sec-title">Incentive Tracker</div>
-    <div class="incentive">
-      <div class="inc-title">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-        Estimated Refunds
-      </div>
-      <div class="inc-row"><span class="inc-lbl">RoDTEP Benefit (0.5%)</span><span class="inc-val" id="rodtep-val">+$74</span></div>
-      <div class="inc-row"><span class="inc-lbl">IGST Refund (LuT filed)</span><span class="inc-val">₹0 payable</span></div>
-      <div class="inc-row"><span class="inc-lbl">Duty Drawback</span><span class="inc-val" id="dbk-val">+$89</span></div>
-      <div class="inc-net">
-        <span class="inc-net-lbl">Net Effective Cost</span>
-        <span class="inc-net-val" id="net-cost">$1,368</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="s-sec">
-    <div class="s-sec-title">Document Status</div>
-    <div class="ds-list">
-      <div class="ds-row">
-        <div class="ds-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-        <span class="ds-name">Commercial Invoice</span>
-        <span class="ds-badge st-done">Done</span>
-      </div>
-      <div class="ds-row">
-        <div class="ds-ico"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
-        <span class="ds-name">Packing List</span>
-        <span class="ds-badge st-done">Done</span>
-      </div>
-      <div class="ds-row">
-        <div class="ds-ico"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-        <span class="ds-name">Shipping Bill</span>
-        <span class="ds-badge st-linked">Linked</span>
-      </div>
-      <div class="ds-row">
-        <div class="ds-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
-        <span class="ds-name">Certificate of Origin</span>
-        <span class="ds-badge st-need">Needed</span>
-      </div>
-      <div class="ds-row">
-        <div class="ds-ico"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-        <span class="ds-name">Bank Realisation Cert</span>
-        <span class="ds-badge st-need">Post-shipment</span>
-      </div>
-      <div class="ds-row">
-        <div class="ds-ico"><svg viewBox="0 0 24 24"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-        <span class="ds-name">RCMC (PHARMEXCIL)</span>
-        <span class="ds-badge st-done">Valid</span>
-      </div>
-    </div>
-    <div class="ds-link" onclick="window.open('wort-doc-engine.html','_blank')">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Open Wort Document Engine
-    </div>
-  </div>
-
-  <div class="side-cta">
-    <button class="book-btn" onclick="handleBook()">Confirm & Book Shipment</button>
-    <div class="book-note">Assured Fulfillment · Maersk · Price locked 24h</div>
-  </div>
-</div><!-- /side-col -->
-
-</div><!-- /shell -->
 
 <script>
-const svcs = {
-  'origin-local':   {on:true,  price:85},
-  'origin-customs': {on:false, price:120},
-  'origin-cfs':     {on:false, price:95},
-  'dest-local':     {on:true,  price:110},
-  'dest-customs':   {on:false, price:140},
-  'dest-transport': {on:false, price:180},
+/* ═══════════════════════════════════════════════════════════════
+   DATA
+   ═══════════════════════════════════════════════════════════════ */
+const FLAGS = {IN:'🇮🇳',US:'🇺🇸',GB:'🇬🇧',SG:'🇸🇬',AE:'🇦🇪',CN:'🇨🇳',NL:'🇳🇱',DE:'🇩🇪',JP:'🇯🇵'};
+
+const PORTS = [
+  {code:'INNSA',name:'Jawaharlal Nehru Port',city:'Nhava Sheva',country:'India',cc:'IN',lat:18.95,lng:72.95},
+  {code:'INMUN',name:'Mumbai Port',city:'Mumbai',country:'India',cc:'IN',lat:18.93,lng:72.84},
+  {code:'USNYC',name:'Port of New York',city:'New York',country:'United States',cc:'US',lat:40.68,lng:-74.04},
+  {code:'GBFXT',name:'Port of Felixstowe',city:'Felixstowe',country:'UK',cc:'GB',lat:51.95,lng:1.35},
+  {code:'SGSIN',name:'Port of Singapore',city:'Singapore',country:'Singapore',cc:'SG',lat:1.26,lng:103.82},
+  {code:'AEJEA',name:'Jebel Ali Port',city:'Dubai',country:'UAE',cc:'AE',lat:25.01,lng:55.06},
+  {code:'CNSHA',name:'Port of Shanghai',city:'Shanghai',country:'China',cc:'CN',lat:31.36,lng:121.59},
+  {code:'NLRTM',name:'Port of Rotterdam',city:'Rotterdam',country:'Netherlands',cc:'NL',lat:51.90,lng:4.50},
+  {code:'DEHAM',name:'Port of Hamburg',city:'Hamburg',country:'Germany',cc:'DE',lat:53.53,lng:9.96},
+  {code:'JPTYO',name:'Port of Tokyo',city:'Tokyo',country:'Japan',cc:'JP',lat:35.63,lng:139.77},
+];
+
+const CONTAINER_SPECS = {
+  '20ft-Standard':{max:28200,tare:2300},'40ft-Standard':{max:28750,tare:3750},
+  '40ft-HC-Standard':{max:28560,tare:3940},'45ft-HC-Standard':{max:27600,tare:4800},
+  '20ft-Reefer':{max:27400,tare:3100},'40ft-Reefer':{max:27700,tare:4800},
+  '40ft-HC-Reefer':{max:26280,tare:4220},'20ft-Open-Top':{max:28130,tare:2370},
+  '40ft-Open-Top':{max:26630,tare:3870},'40ft-Flat-Rack':{max:39200,tare:5300},
+  '20ft-Flat-Rack':{max:27400,tare:2560},'20ft-Tank':{max:26000,tare:3600},
+  '40ft-Tank':{max:26000,tare:5500},
 };
-let ocean=1256, insOn=true, cargoVal=14820, selCarrierName='Maersk';
 
-function calcTotal(){
-  let t=ocean;
-  Object.values(svcs).forEach(s=>{if(s.on)t+=s.price});
-  if(insOn) t+=Math.round(cargoVal*0.005);
-  return t;
+const CARRIERS = [
+  {id:'maersk',name:'Maersk',code:'MAEU',assured:true,rel:94,days:22,freeDest:4},
+  {id:'msc',name:'MSC',code:'MSCU',assured:true,rel:91,days:24,freeDest:4},
+  {id:'cmacgm',name:'CMA CGM',code:'CMDU',assured:true,rel:92,days:23,freeDest:4},
+  {id:'hapag',name:'Hapag-Lloyd',code:'HLCU',assured:true,rel:93,days:22,freeDest:5},
+  {id:'cosco',name:'COSCO',code:'COSU',assured:true,rel:89,days:25,freeDest:7},
+  {id:'evergreen',name:'Evergreen',code:'EGLV',assured:false,rel:90,days:24,freeDest:4},
+  {id:'one',name:'ONE',code:'ONEY',assured:true,rel:91,days:23,freeDest:4},
+  {id:'hmm',name:'HMM',code:'HDMU',assured:false,rel:88,days:26,freeDest:5},
+  {id:'yangming',name:'Yang Ming',code:'YMLU',assured:false,rel:87,days:25,freeDest:4},
+  {id:'zim',name:'ZIM',code:'ZIMU',assured:true,rel:90,days:21,freeDest:4},
+  {id:'ial',name:'IAL',code:'IALU',assured:true,rel:86,days:28,freeDest:4},
+  {id:'wanhai',name:'Wan Hai',code:'WHLC',assured:false,rel:88,days:26,freeDest:4},
+];
+
+const BASE_PRICES = {'INNSA-USNYC':1350,'INNSA-GBFXT':1180,'INNSA-NLRTM':1220,'INNSA-DEHAM':1250,'INNSA-SGSIN':450,'INNSA-AEJEA':380,'INNSA-CNSHA':680,'INNSA-JPTYO':750,'CNSHA-USNYC':2100,'CNSHA-GBFXT':1850};
+const SIZE_MULT = {'20ft':1,'40ft':1.75,'40ft-HC':1.85,'45ft-HC':2.1};
+const TYPE_MULT = {'Standard':1,'Reefer':2.2,'Open-Top':1.4,'Flat-Rack':1.6,'Tank':1.8};
+
+const SERVICES = [
+  {id:'o-thc',cat:'origin-local',name:'Terminal Handling',desc:'Lift-on/lift-off at origin',price:185,basis:'cntr',req:true,on:true,docs:[]},
+  {id:'o-bl',cat:'origin-local',name:'B/L Fee',desc:'Documentation for B/L issuance',price:50,basis:'bl',req:true,on:true,docs:['bill-of-lading']},
+  {id:'o-seal',cat:'origin-local',name:'Seal Charges',desc:'One-time seal per container',price:15,basis:'cntr',req:true,on:true,docs:[]},
+  {id:'o-ens',cat:'origin-local',name:'ENS Filing',desc:'Entry Summary Declaration (EU)',price:30,basis:'bl',req:false,on:false,docs:[]},
+  {id:'o-cc',cat:'origin-customs',name:'Customs Clearance',desc:'Full export customs clearance',price:120,basis:'ship',req:false,on:false,docs:['shipping-bill','packing-list','commercial-invoice']},
+  {id:'o-exam',cat:'origin-customs',name:'Customs Examination',desc:'Physical / X-ray coordination',price:75,basis:'cntr',req:false,on:false,docs:['shipping-bill']},
+  {id:'o-coo',cat:'origin-customs',name:'Certificate of Origin',desc:'CoO procurement & attestation',price:45,basis:'ship',req:false,on:false,docs:['certificate-of-origin']},
+  {id:'o-stuff',cat:'origin-cfs',name:'CFS Stuffing',desc:'Consolidation & stuffing at CFS',price:95,basis:'cntr',req:false,on:false,docs:['packing-list']},
+  {id:'o-store',cat:'origin-cfs',name:'CFS Storage',desc:'Storage at CFS (3 days free)',price:25,basis:'cntr',req:false,on:false,docs:[]},
+  {id:'o-fum',cat:'origin-cfs',name:'Fumigation',desc:'Pest treatment & certification',price:65,basis:'cntr',req:false,on:false,docs:['fumigation']},
+  {id:'d-thc',cat:'dest-local',name:'Terminal Handling',desc:'Handling at destination terminal',price:210,basis:'cntr',req:true,on:true,docs:[]},
+  {id:'d-do',cat:'dest-local',name:'Delivery Order Fee',desc:'DO issuance & processing',price:45,basis:'bl',req:true,on:true,docs:[]},
+  {id:'d-isps',cat:'dest-local',name:'ISPS Charge',desc:'Port facility security',price:15,basis:'cntr',req:true,on:true,docs:[]},
+  {id:'d-cc',cat:'dest-customs',name:'Import Customs Clearance',desc:'Full import clearance & duty',price:150,basis:'ship',req:false,on:false,docs:['commercial-invoice','packing-list','bill-of-lading']},
+  {id:'d-duty',cat:'dest-customs',name:'Duty Payment',desc:'Customs duty & tax processing',price:35,basis:'ship',req:false,on:false,docs:[]},
+  {id:'d-local',cat:'dest-transport',name:'Local Transportation',desc:'Haulage within 50km',price:285,basis:'cntr',req:false,on:false,docs:[]},
+  {id:'d-long',cat:'dest-transport',name:'Long Haul Transport',desc:'Inland transport beyond 50km',price:450,basis:'cntr',req:false,on:false,docs:[]},
+  {id:'d-destuff',cat:'dest-transport',name:'Destuffing & Delivery',desc:'Container destuffing & final delivery',price:120,basis:'cntr',req:false,on:false,docs:[]},
+];
+
+const FREE_DAYS = [
+  {days:4,label:'4 Days',sub:'Standard',costDay:0},
+  {days:7,label:'7 Days',sub:'+$35/day',costDay:35},
+  {days:14,label:'14 Days',sub:'+$50/day',costDay:50},
+  {days:0,label:'Custom',sub:'+$65/day',costDay:65,custom:true},
+];
+
+const BL_TYPES = [
+  {type:'House-BL',label:'House B/L',desc:'Issued by NVOCC / forwarder'},
+  {type:'Master-BL',label:'Master B/L',desc:'Issued directly by carrier'},
+  {type:'Seaway-Bill',label:'Seaway Bill',desc:'Non-negotiable, faster release'},
+  {type:'Express-BL',label:'Express B/L',desc:'Telex release, no original needed'},
+];
+
+const RODTEP = {'61':4.3,'62':4.3,'63':3.8,'84':1.6,'85':1.8,'29':2.5,'30':3,'72':1.5,'73':2};
+
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════════ */
+const S = {
+  origin: null,
+  dest: null,
+  route: null,
+  rateRange: null,
+  containerSize: '20ft',
+  containerType: 'Standard',
+  qty: 1,
+  weight: 0,
+  weightUnit: 'MT',
+  commodity: '',
+  hsCode: '',
+  cargoValue: 0,
+  services: SERVICES.map(s => ({...s})),
+  freeDays: 4,
+  freeDaysCustom: false,
+  customDays: 10,
+  carrierQuotes: [],
+  selectedCarrier: null,
+  insEnabled: false,
+  coverageType: 'Comprehensive',
+  blType: 'House-BL',
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITY
+   ═══════════════════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+const show = el => { if (typeof el === 'string') el = $(el); el.classList.remove('hidden'); };
+const hide = el => { if (typeof el === 'string') el = $(el); el.classList.add('hidden'); };
+const fmt = n => '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+
+function toKG(w, unit) {
+  if (unit === 'MT') return w * 1000;
+  if (unit === 'LBS') return w * 0.453592;
+  return w;
 }
 
-function updateUI(){
-  const total=calcTotal();
-  const ins=Math.round(cargoVal*0.005);
-  const rod=Math.round(cargoVal*0.005);
-  const dbk=Math.round(cargoVal*0.006);
-  const net=total-rod-dbk;
+function haversine(a, b) {
+  const R = 3440.065;
+  const dLat = (b.lat - a.lat) * Math.PI / 180;
+  const dLng = (b.lng - a.lng) * Math.PI / 180;
+  const x = Math.sin(dLat/2)**2 + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x)) * 1.15);
+}
 
-  document.getElementById('total-display').textContent='$'+total.toLocaleString();
-  document.getElementById('bp-total').textContent='$'+total.toLocaleString();
-  document.getElementById('bp-ocean').textContent='$'+ocean.toLocaleString()+' ('+selCarrierName+')';
-  document.getElementById('bp-ol').textContent =svcs['origin-local'].on  ?'$85':'—';
-  document.getElementById('bp-oc').textContent =svcs['origin-customs'].on?'$120':'—';
-  document.getElementById('bp-cfs').textContent=svcs['origin-cfs'].on    ?'$95':'—';
-  document.getElementById('bp-dl').textContent =svcs['dest-local'].on    ?'$110':'—';
-  document.getElementById('bp-dc').textContent =svcs['dest-customs'].on  ?'$140':'—';
-  document.getElementById('bp-dt').textContent =svcs['dest-transport'].on?'$180':'—';
-  document.getElementById('bp-ins').textContent=insOn?'$'+ins:'—';
-  document.getElementById('rodtep-val').textContent='+$'+rod;
-  document.getElementById('dbk-val').textContent='+$'+dbk;
-  document.getElementById('net-cost').textContent='$'+net.toLocaleString();
-  document.getElementById('ins-price').textContent='$'+ins.toFixed(2)+' / shipment';
+function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate()+n); return r; }
+function fmtDate(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
 
-  ['bp-oc','bp-cfs','bp-dc','bp-dt','bp-ins'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.className='bp-val'+(el.textContent==='—'?' off':'');
+/* ═══════════════════════════════════════════════════════════════
+   PORT SELECTOR
+   ═══════════════════════════════════════════════════════════════ */
+function initPortSelector(inputId, ddId, key) {
+  const input = $(inputId);
+  const dd = $(ddId);
+  let open = false;
+
+  function render(query) {
+    const exclude = key === 'origin' ? S.dest : S.origin;
+    const q = (query || '').toLowerCase();
+    const list = PORTS.filter(p => {
+      if (exclude && p.code === exclude.code) return false;
+      if (!q) return true;
+      return p.name.toLowerCase().includes(q) || p.city.toLowerCase().includes(q) || p.code.toLowerCase().includes(q);
+    });
+    dd.innerHTML = list.map(p => `
+      <div class="port-opt" data-code="${p.code}">
+        <span class="port-opt-flag">${FLAGS[p.cc]||'🏴'}</span>
+        <div>
+          <div class="port-opt-name">${p.name}</div>
+          <div class="port-opt-meta">${p.code} · ${p.city}, ${p.country}</div>
+        </div>
+      </div>
+    `).join('') || '<div class="port-opt" style="justify-content:center;color:var(--text-2)">No ports found</div>';
+  }
+
+  input.addEventListener('focus', () => { open = true; dd.classList.add('open'); input.value = ''; render(''); });
+  input.addEventListener('input', () => render(input.value));
+  dd.addEventListener('click', e => {
+    const opt = e.target.closest('.port-opt');
+    if (!opt || !opt.dataset.code) return;
+    const port = PORTS.find(p => p.code === opt.dataset.code);
+    S[key] = port;
+    input.value = `${port.name} (${port.code})`;
+    dd.classList.remove('open');
+    open = false;
+    updateSearchButton();
   });
-
-  document.getElementById('doc-notice-origin').style.display=svcs['origin-customs'].on?'flex':'none';
-  document.getElementById('doc-notice-dest').style.display=svcs['dest-customs'].on?'flex':'none';
+  document.addEventListener('click', e => {
+    if (open && !input.contains(e.target) && !dd.contains(e.target)) {
+      dd.classList.remove('open');
+      open = false;
+      if (S[key]) input.value = `${S[key].name} (${S[key].code})`;
+    }
+  });
 }
 
-function toggleSvc(el,key){
-  svcs[key].on=!svcs[key].on;
-  el.classList.toggle('on',svcs[key].on);
-  updateUI();
+function updateSearchButton() {
+  $('btn-search').disabled = !(S.origin && S.dest);
 }
 
-function selCarrier(el,name,price){
-  document.querySelectorAll('.c-card').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
-  ocean=parseInt(price);
-  selCarrierName=name;
-  updateUI();
+/* ═══════════════════════════════════════════════════════════════
+   SEARCH & MAP
+   ═══════════════════════════════════════════════════════════════ */
+function doSearch() {
+  if (!S.origin || !S.dest) return;
+
+  const dist = haversine(S.origin, S.dest);
+  const days = Math.max(5, Math.floor(dist / 350));
+  S.route = {dist, days};
+
+  // Rate range
+  const key = `${S.origin.code}-${S.dest.code}`;
+  const base = BASE_PRICES[key] || 1200;
+  const adj = base * (SIZE_MULT[S.containerSize]||1) * (TYPE_MULT[S.containerType]||1);
+  const min = Math.round(adj * 0.88);
+  const max = Math.round(adj * 1.12);
+  const trends = ['rising','falling','stable'];
+  const trend = trends[Math.floor(Math.random()*3)];
+  const trendPct = (Math.random()*5).toFixed(1);
+  const pts = Math.floor(Math.random()*200)+50;
+  S.rateRange = {min, max, median: Math.round(adj), trend, trendPct, pts};
+
+  // Show rate bar
+  $('rate-min').textContent = fmt(min);
+  $('rate-max').textContent = fmt(max);
+  const arrow = trend==='rising'?'↗':trend==='falling'?'↘':'→';
+  const cls = trend==='rising'?'up':trend==='falling'?'down':'flat';
+  $('rate-trend').className = `rate-trend ${cls}`;
+  $('rate-trend').textContent = `${arrow} ${trendPct}%`;
+  $('rate-pts').textContent = `${pts} data points`;
+  show('rate-bar');
+
+  // Draw map
+  show('map-box');
+  $('map-dist').textContent = dist.toLocaleString();
+  $('map-days').textContent = days;
+  drawMap();
+
+  // Generate carrier quotes
+  genCarrierQuotes();
+
+  // Show all panels
+  show('card-cargo');
+  show('card-origin-svc');
+  show('card-dest-svc');
+  show('card-carrier');
+  show('card-insurance');
+  show('card-docs');
+
+  renderServices();
+  renderFreeDays();
+  renderCarriers();
+  renderBL();
+  renderDocs();
+  recalc();
 }
 
-function toggleIns(){
-  insOn=!insOn;
-  document.getElementById('ins-tog').classList.toggle('on',insOn);
-  updateUI();
+function drawMap() {
+  const canvas = $('map-canvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+
+  // BG & grid
+  ctx.fillStyle = '#06090f';
+  ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = '#111a28';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i < W; i += 36) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
+  for (let i = 0; i < H; i += 36) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(W,i); ctx.stroke(); }
+
+  const pts = [S.origin, S.dest];
+  const lats = pts.map(p=>p.lat), lngs = pts.map(p=>p.lng);
+  const pad = 12;
+  const minLat = Math.min(...lats)-pad, maxLat = Math.max(...lats)+pad;
+  const minLng = Math.min(...lngs)-pad, maxLng = Math.max(...lngs)+pad;
+  const mx = lng => ((lng-minLng)/(maxLng-minLng))*(W-60)+30;
+  const my = lat => H - (((lat-minLat)/(maxLat-minLat))*(H-60)+30);
+
+  const x0=mx(S.origin.lng), y0=my(S.origin.lat);
+  const x1=mx(S.dest.lng), y1=my(S.dest.lat);
+  const cpx=(x0+x1)/2, cpy=Math.min(y0,y1)-30;
+
+  // Glow
+  ctx.beginPath(); ctx.strokeStyle='rgba(34,211,238,.12)'; ctx.lineWidth=10;
+  ctx.moveTo(x0,y0); ctx.quadraticCurveTo(cpx,cpy,x1,y1); ctx.stroke();
+
+  // Dashed path
+  ctx.beginPath(); ctx.strokeStyle='#22d3ee'; ctx.lineWidth=2; ctx.setLineDash([8,4]);
+  ctx.moveTo(x0,y0); ctx.quadraticCurveTo(cpx,cpy,x1,y1); ctx.stroke(); ctx.setLineDash([]);
+
+  // Dots & labels
+  [[x0,y0,S.origin,'#3b82f6'],[x1,y1,S.dest,'#10b981']].forEach(([x,y,p,c]) => {
+    const g = ctx.createRadialGradient(x,y,0,x,y,18);
+    g.addColorStop(0, c.replace(')',',0.3)').replace('rgb','rgba'));
+    g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x,y,18,0,Math.PI*2); ctx.fill();
+
+    ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2);
+    ctx.fillStyle=c; ctx.fill();
+    ctx.strokeStyle='#06090f'; ctx.lineWidth=2; ctx.stroke();
+
+    ctx.font='11px Inter, sans-serif'; ctx.fillStyle='#94a3b8'; ctx.textAlign='center';
+    ctx.fillText(p.name, x, y-12);
+    ctx.font='9px JetBrains Mono, monospace'; ctx.fillStyle='#5a6a80';
+    ctx.fillText(`${p.lat.toFixed(2)}°, ${p.lng.toFixed(2)}°`, x, y+16);
+  });
 }
 
-function validateWeight(inp){
-  const w=parseFloat(inp.value);
-  const hint=document.getElementById('weight-hint');
-  if(w>28){
-    inp.style.color='#f59e0b';
-    hint.textContent='Exceeds 28 MT — consider 40ft container';
-    hint.className='cf-hint warn';
+/* ═══════════════════════════════════════════════════════════════
+   WEIGHT VALIDATION
+   ═══════════════════════════════════════════════════════════════ */
+function validateWeight() {
+  const w = parseFloat($('c-wt').value) || 0;
+  const unit = $('c-wt-unit').value;
+  S.weight = w;
+  S.weightUnit = unit;
+  if (w <= 0) { hide('wv-box'); return; }
+
+  const specKey = `${S.containerSize}-${S.containerType}`;
+  const spec = CONTAINER_SPECS[specKey];
+  if (!spec) {
+    $('wv-box').className = 'wv bad';
+    $('wv-box').innerHTML = `<span>❌</span><div>No spec found for ${S.containerSize} ${S.containerType}</div>`;
+    show('wv-box');
+    return;
+  }
+
+  const kg = toKG(w, unit);
+  const pct = Math.min((kg/spec.max)*100, 100);
+  let cls, ico;
+  if (kg > spec.max) { cls='bad'; ico='❌'; }
+  else if (pct > 90) { cls='wrn'; ico='⚠️'; }
+  else if (pct < 20) { cls='wrn'; ico='⚠️'; }
+  else { cls='ok'; ico='✅'; }
+
+  let msg;
+  if (kg > spec.max) msg = `Exceeds max payload by ${(kg-spec.max).toLocaleString()} KG. Max: ${spec.max.toLocaleString()} KG`;
+  else if (pct > 90) msg = `${pct.toFixed(1)}% utilization — near limit, watch for port penalties`;
+  else if (pct < 20) msg = `Low utilization (${pct.toFixed(1)}%) — consider LCL`;
+  else msg = `Within limits. ${pct.toFixed(1)}% of ${spec.max.toLocaleString()} KG max`;
+
+  $('wv-box').className = `wv ${cls} anim`;
+  $('wv-box').innerHTML = `
+    <span>${ico}</span>
+    <div style="flex:1">
+      <div>${msg}</div>
+      <div class="wv-bar"><div class="wv-fill ${cls}" style="width:${pct}%"></div></div>
+      <div class="wv-nums">${kg.toLocaleString()} KG / ${spec.max.toLocaleString()} KG (${pct.toFixed(1)}%)</div>
+    </div>`;
+  show('wv-box');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SERVICES
+   ═══════════════════════════════════════════════════════════════ */
+const ORIGIN_CATS = [
+  {key:'origin-local',label:'Origin Local Charges',icon:'🏭'},
+  {key:'origin-customs',label:'Origin FCL Customs',icon:'📋'},
+  {key:'origin-cfs',label:'Origin FCL CFS',icon:'📦'},
+];
+const DEST_CATS = [
+  {key:'dest-local',label:'Destination Local',icon:'🏗️'},
+  {key:'dest-customs',label:'Destination FCL Customs',icon:'🛃'},
+  {key:'dest-transport',label:'Destination Transportation',icon:'🚛'},
+];
+
+function renderServiceCat(cat, container) {
+  const items = S.services.filter(s => s.cat === cat.key);
+  const selCnt = items.filter(s => s.on).length;
+  let html = `<div class="svc-cat">
+    <div class="svc-cat-head"><span>${cat.icon}</span> ${cat.label} <span class="svc-cat-cnt">${selCnt}/${items.length}</span></div>`;
+  items.forEach(s => {
+    const docTags = s.docs.map(d => `<span class="svc-doc-tag">${d.replace(/-/g,' ')}</span>`).join('');
+    html += `
+    <div class="svc ${s.on?'on':''} ${s.req?'locked':''}" data-sid="${s.id}">
+      <div class="svc-chk">✓</div>
+      <div class="svc-info">
+        <div class="svc-name">${s.name}${s.req?'<span class="svc-req-dot"></span>':''}</div>
+        <div class="svc-desc">${s.desc}</div>
+        ${s.docs.length?`<div class="svc-docs">${docTags}</div>`:''}
+      </div>
+      <div>
+        <div class="svc-price">\$${s.price}</div>
+        <div class="svc-basis">/${s.basis==='cntr'?'cntr':s.basis==='bl'?'B/L':'ship'}</div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderServices() {
+  let originHtml = '';
+  ORIGIN_CATS.forEach(c => originHtml += renderServiceCat(c, 'origin-svc-body'));
+  $('origin-svc-body').innerHTML = originHtml;
+
+  let destHtml = '';
+  DEST_CATS.forEach(c => destHtml += renderServiceCat(c, 'dest-svc-list'));
+  $('dest-svc-list').innerHTML = destHtml;
+
+  // Click handlers
+  document.querySelectorAll('.svc[data-sid]').forEach(el => {
+    el.addEventListener('click', () => {
+      const sid = el.dataset.sid;
+      const svc = S.services.find(s => s.id === sid);
+      if (svc.req) return;
+      svc.on = !svc.on;
+      renderServices();
+      renderDocs();
+      recalc();
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FREE DAYS
+   ═══════════════════════════════════════════════════════════════ */
+function renderFreeDays() {
+  let html = '';
+  FREE_DAYS.forEach((fd, i) => {
+    const isOn = fd.custom ? S.freeDaysCustom : (!S.freeDaysCustom && S.freeDays === fd.days);
+    html += `<div class="fd-opt ${isOn?'on':''}" data-fdi="${i}">
+      <div class="fd-num">${fd.custom?'⚙️':fd.days}</div>
+      <div class="fd-label">${fd.sub}</div>
+      ${fd.costDay?`<div class="fd-cost">+\$${fd.costDay}/day</div>`:''}
+    </div>`;
+  });
+  $('fd-grid').innerHTML = html;
+  if (S.freeDaysCustom) show('fd-custom-wrap'); else hide('fd-custom-wrap');
+
+  const cost = calcDetention();
+  if (cost > 0) { $('fd-cost').textContent = `⚠️ Estimated extension cost: ${fmt(cost)}`; show('fd-cost'); }
+  else hide('fd-cost');
+
+  document.querySelectorAll('.fd-opt[data-fdi]').forEach(el => {
+    el.addEventListener('click', () => {
+      const fd = FREE_DAYS[parseInt(el.dataset.fdi)];
+      if (fd.custom) { S.freeDaysCustom = true; }
+      else { S.freeDaysCustom = false; S.freeDays = fd.days; }
+      renderFreeDays();
+      recalc();
+    });
+  });
+}
+
+function calcDetention() {
+  const baseFree = S.selectedCarrier ? S.selectedCarrier.carrier.freeDest : 4;
+  const days = S.freeDaysCustom ? (parseInt($('fd-custom')?.value)||10) : S.freeDays;
+  if (days <= baseFree) return 0;
+  const costDay = days > 7 ? 50 : 35;
+  return (days - baseFree) * costDay;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARRIERS
+   ═══════════════════════════════════════════════════════════════ */
+function genCarrierQuotes() {
+  if (!S.rateRange) return;
+  const now = new Date();
+  S.carrierQuotes = CARRIERS.slice(0, 10).map((c, i) => {
+    const base = S.rateRange.min + Math.random() * (S.rateRange.max - S.rateRange.min);
+    const baf = Math.round(base * 0.08);
+    const caf = Math.round(base * 0.03);
+    const pss = Math.round(base * 0.05);
+    const total = Math.round(base + baf + caf + pss);
+    const etd = addDays(now, 3 + i);
+    const eta = addDays(etd, c.days);
+    const avail = Math.random() > 0.3 ? 'Confirmed' : 'Subject';
+    return {carrier: c, base: Math.round(base), surcharges:[{desc:'BAF',amt:baf},{desc:'CAF',amt:caf},{desc:'PSS',amt:pss}], total, etd, eta, avail};
+  }).sort((a,b) => a.total - b.total);
+}
+
+function renderCarriers() {
+  $('cr-count').textContent = `${S.carrierQuotes.length} carriers with capacity`;
+  let html = '';
+  S.carrierQuotes.forEach((q,i) => {
+    const sel = S.selectedCarrier && S.selectedCarrier.carrier.id === q.carrier.id;
+    const relCls = q.carrier.rel >= 90 ? 'high' : q.carrier.rel >= 85 ? 'medium' : 'low';
+    const relColor = relCls==='high'?'var(--green)':relCls==='medium'?'var(--amber)':'var(--red)';
+    html += `<div class="cr ${sel?'on':''}" data-cri="${i}">
+      <div class="cr-logo">${q.carrier.code}</div>
+      <div>
+        <div class="cr-name">${q.carrier.name}${q.carrier.assured?'<span class="cr-badge">✓ Assured</span>':''}</div>
+        <div class="cr-meta">
+          <span>⏱️ ${q.carrier.days}d</span>
+          <span>📅 ETD ${fmtDate(q.etd)}</span>
+          <span>📅 ETA ${fmtDate(q.eta)}</span>
+          <span><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${relColor};vertical-align:middle"></span> ${q.carrier.rel}%</span>
+        </div>
+      </div>
+      <div>
+        <div class="cr-rate">${fmt(q.total)}</div>
+        <div class="cr-per">per container</div>
+        <div class="cr-avail ${q.avail==='Confirmed'?'yes':'maybe'}">${q.avail==='Confirmed'?'✓ Confirmed':'⏳ Subject'}</div>
+      </div>
+    </div>`;
+  });
+  $('carrier-body').innerHTML = html;
+
+  document.querySelectorAll('.cr[data-cri]').forEach(el => {
+    el.addEventListener('click', () => {
+      S.selectedCarrier = S.carrierQuotes[parseInt(el.dataset.cri)];
+      renderCarriers();
+      recalc();
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INSURANCE
+   ═══════════════════════════════════════════════════════════════ */
+function calcInsurance(val, type) {
+  const rates = {Basic:0.003, Standard:0.005, Comprehensive:0.008};
+  const deducts = {Basic:0.03, Standard:0.02, Comprehensive:0.01};
+  const covAmt = val * 1.1;
+  const prem = covAmt * rates[type];
+  const ded = covAmt * deducts[type];
+  const inclusions = {
+    Basic:['Total Loss','General Average','Salvage'],
+    Standard:['Total Loss','Partial Loss','General Average','Fire','Collision','Jettison'],
+    Comprehensive:['All Risks','Theft','Contamination','Breakage','War/SRCC','Non-Delivery'],
+  };
+  const exclusions = {
+    Basic:['Partial Loss','Delay','Inherent Vice','War'],
+    Standard:['Delay','Inherent Vice','War','Leakage'],
+    Comprehensive:['Delay','Inherent Vice','Nuclear'],
+  };
+  return {type, prem: Math.round(prem*100)/100, rate: rates[type]*100, covAmt: Math.round(covAmt), ded: Math.round(ded), inc: inclusions[type], exc: exclusions[type]};
+}
+
+function renderInsurance() {
+  const val = parseFloat($('c-val')?.value) || 0;
+  if (!S.insEnabled) { hide('ins-body'); return; }
+  show('ins-body');
+
+  if (val <= 0) {
+    $('ins-body').innerHTML = '<div class="wv wrn mt-3"><span>⚠️</span><div>Enter cargo value to calculate premiums</div></div>';
+    return;
+  }
+
+  const types = ['Basic','Standard','Comprehensive'];
+  let html = '<div class="cov-grid">';
+  types.forEach(t => {
+    const q = calcInsurance(val, t);
+    html += `<div class="cov-opt ${S.coverageType===t?'on':''}" data-cov="${t}">
+      <div class="cov-name">${t}</div>
+      <div class="cov-rate">${q.rate.toFixed(1)}% rate</div>
+      <div class="cov-prem">${fmt(q.prem)}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  const q = calcInsurance(val, S.coverageType);
+  html += `<div class="ins-detail mt-3">
+    <div class="ins-stat">
+      <div><div class="ins-stat-label">Coverage</div><div class="ins-stat-val">${fmt(q.covAmt)}</div></div>
+      <div><div class="ins-stat-label">Deductible</div><div class="ins-stat-val" style="color:var(--text-0)">${fmt(q.ded)}</div></div>
+      <div><div class="ins-stat-label">Premium</div><div class="ins-stat-val" style="color:var(--green)">${fmt(q.prem)}</div></div>
+    </div>
+    <div class="mt-3"><div class="fl mb-2">Inclusions</div><div class="ins-tags">${q.inc.map(i=>`<span class="ins-tag inc">✓ ${i}</span>`).join('')}</div></div>
+    <div class="mt-3"><div class="fl mb-2">Exclusions</div><div class="ins-tags">${q.exc.map(e=>`<span class="ins-tag exc">✗ ${e}</span>`).join('')}</div></div>
+  </div>`;
+
+  $('ins-body').innerHTML = html;
+
+  document.querySelectorAll('.cov-opt[data-cov]').forEach(el => {
+    el.addEventListener('click', () => {
+      S.coverageType = el.dataset.cov;
+      renderInsurance();
+      recalc();
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOCUMENTS & B/L
+   ═══════════════════════════════════════════════════════════════ */
+function renderBL() {
+  let html = '';
+  BL_TYPES.forEach(bl => {
+    html += `<div class="bl-opt ${S.blType===bl.type?'on':''}" data-bl="${bl.type}">
+      <div class="bl-name">${bl.label}</div>
+      <div class="bl-desc">${bl.desc}</div>
+    </div>`;
+  });
+  $('bl-grid').innerHTML = html;
+  document.querySelectorAll('.bl-opt[data-bl]').forEach(el => {
+    el.addEventListener('click', () => { S.blType = el.dataset.bl; renderBL(); });
+  });
+}
+
+function renderDocs() {
+  const allDocs = new Set();
+  S.services.filter(s=>s.on).forEach(s => s.docs.forEach(d => allDocs.add(d)));
+  const configs = {
+    'shipping-bill':{label:'Shipping Bill',req:true},
+    'packing-list':{label:'Packing List',req:true},
+    'commercial-invoice':{label:'Commercial Invoice',req:true},
+    'bill-of-lading':{label:'Bill of Lading',req:true},
+    'certificate-of-origin':{label:'Certificate of Origin',req:false},
+    'fumigation':{label:'Fumigation Certificate',req:false},
+  };
+  const extras = [{name:'MSDS Certificate',req:false},{name:'Cargo Photos',req:false},{name:'Phytosanitary Certificate',req:false}];
+
+  let html = '';
+  if (allDocs.size > 0) {
+    html += `<div class="fl mb-2">Document Status (${allDocs.size})</div>`;
+    allDocs.forEach(d => {
+      const c = configs[d] || {label:d, req:false};
+      html += `<div class="doc-item">
+        <div class="doc-dot pending"></div>
+        <div class="doc-name">${c.label}</div>
+        ${c.req?'<span class="doc-req">Required</span>':''}
+        <div class="doc-status">Not Started</div>
+      </div>`;
+    });
+  }
+  html += `<div class="fl mb-2 mt-3">Additional Documents</div>`;
+  extras.forEach(e => {
+    html += `<div class="doc-item">
+      <div class="doc-dot pending"></div>
+      <div class="doc-name">${e.name}</div>
+      <div class="doc-status" style="font-size:9px">Optional</div>
+    </div>`;
+  });
+  $('doc-list').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRICE BREAKDOWN (SIDEBAR)
+   ═══════════════════════════════════════════════════════════════ */
+function recalc() {
+  const qty = parseInt($('c-qty')?.value) || 1;
+  S.qty = qty;
+  S.containerSize = $('c-size')?.value || '20ft';
+  S.containerType = $('c-type')?.value || 'Standard';
+  S.cargoValue = parseFloat($('c-val')?.value) || 0;
+  S.hsCode = $('c-hs')?.value || '';
+
+  $('sb-spec').textContent = `${qty}× ${S.containerSize} ${S.containerType}`;
+
+  // Ocean freight
+  const oceanRate = S.selectedCarrier ? S.selectedCarrier.total : 0;
+  const oceanTotal = oceanRate * qty;
+
+  // Origin charges
+  const originSvcs = S.services.filter(s => s.cat.startsWith('origin') && s.on);
+  const originCharges = originSvcs.map(s => ({name: s.name, amt: s.basis==='cntr'? s.price*qty : s.price}));
+  const originTotal = originCharges.reduce((s,c)=>s+c.amt, 0);
+
+  // Dest charges
+  const destSvcs = S.services.filter(s => s.cat.startsWith('dest') && s.on);
+  const destCharges = destSvcs.map(s => ({name: s.name, amt: s.basis==='cntr'? s.price*qty : s.price}));
+  const detention = calcDetention();
+  if (detention > 0) destCharges.push({name: `Free Days Extension`, amt: detention});
+  const destTotal = destCharges.reduce((s,c)=>s+c.amt, 0);
+
+  // Surcharges
+  const surcharges = S.selectedCarrier ? S.selectedCarrier.surcharges.map(sc => ({name:sc.desc, amt:sc.amt*qty})) : [];
+  const surTotal = surcharges.reduce((s,c)=>s+c.amt, 0);
+
+  // Insurance
+  let insPrem = 0;
+  if (S.insEnabled && S.cargoValue > 0) {
+    insPrem = calcInsurance(S.cargoValue, S.coverageType).prem;
+  }
+
+  const totalBefore = oceanTotal + originTotal + destTotal + surTotal + insPrem;
+
+  // Incentives
+  const incentives = [];
+  if (S.hsCode && S.cargoValue > 0) {
+    const ch = S.hsCode.substring(0,2);
+    const rodtep = RODTEP[ch] || 1.5;
+    incentives.push({type:'RoDTEP', amt: Math.round(S.cargoValue*(rodtep/100)*100)/100, pct:rodtep, note:`@ ${rodtep}% on FOB for HS ${ch}`});
+    const gst = 18;
+    incentives.push({type:'GST Refund', amt: Math.round(S.cargoValue*(gst/100)*0.9*100)/100, pct:gst, note:`IGST ${gst}% (90% ITC)`});
+  }
+  const totalIncentives = incentives.reduce((s,i)=>s+i.amt, 0);
+  const netCost = totalBefore - totalIncentives;
+
+  // Render sidebar
+  let html = '';
+
+  // Ocean
+  if (oceanTotal > 0) {
+    html += `<div class="sb-section"><div class="sb-title">Ocean Freight</div>
+      <div class="sb-line"><span class="sb-label">Base + Surcharges × ${qty}</span><span class="sb-amt">${fmt(oceanTotal)}</span></div></div>`;
+  }
+
+  // Origin
+  if (originCharges.length) {
+    html += `<div class="sb-section"><div class="sb-title">Origin Charges</div>`;
+    originCharges.forEach(c => html += `<div class="sb-line"><span class="sb-label">${c.name}</span><span class="sb-amt">${fmt(c.amt)}</span></div>`);
+    html += `<div class="sb-line sub"><span class="sb-label">Subtotal</span><span class="sb-amt">${fmt(originTotal)}</span></div></div>`;
+  }
+
+  // Destination
+  if (destCharges.length) {
+    html += `<div class="sb-section"><div class="sb-title">Destination Charges</div>`;
+    destCharges.forEach(c => html += `<div class="sb-line"><span class="sb-label">${c.name}</span><span class="sb-amt">${fmt(c.amt)}</span></div>`);
+    html += `<div class="sb-line sub"><span class="sb-label">Subtotal</span><span class="sb-amt">${fmt(destTotal)}</span></div></div>`;
+  }
+
+  // Surcharges
+  if (surcharges.length) {
+    html += `<div class="sb-section"><div class="sb-title">Carrier Surcharges</div>`;
+    surcharges.forEach(c => html += `<div class="sb-line"><span class="sb-label">${c.name}</span><span class="sb-amt">${fmt(c.amt)}</span></div>`);
+    html += `<div class="sb-line sub"><span class="sb-label">Subtotal</span><span class="sb-amt">${fmt(surTotal)}</span></div></div>`;
+  }
+
+  // Insurance
+  if (insPrem > 0) {
+    html += `<div class="sb-section"><div class="sb-title">Insurance</div>
+      <div class="sb-line"><span class="sb-label">🛡️ ${S.coverageType}</span><span class="sb-amt">${fmt(insPrem)}</span></div></div>`;
+  }
+
+  // Incentives
+  if (incentives.length) {
+    html += `<div class="sb-section"><div class="sb-title">📊 Estimated Incentives</div>`;
+    incentives.forEach(inc => {
+      html += `<div class="sb-incent">
+        <div><div class="sb-incent-type">${inc.type}</div><div class="sb-incent-note">${inc.note}</div></div>
+        <div class="sb-incent-amt">-${fmt(inc.amt)}</div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  $('sb-content').innerHTML = html || `<div class="sb-section" style="text-align:center;padding:40px 16px"><div style="font-size:28px;margin-bottom:8px">💰</div><div style="font:400 11px var(--sans);color:var(--text-2)">Configure your shipment to see<br>the total landing cost</div></div>`;
+
+  // Total
+  if (totalBefore > 0) {
+    $('sb-total-val').textContent = fmt(totalBefore);
+    if (totalIncentives > 0) {
+      $('sb-net').textContent = `Net after incentives: ${fmt(netCost)}`;
+      show('sb-net');
+    } else {
+      hide('sb-net');
+    }
+    show('sb-total');
   } else {
-    inp.style.color='';
-    hint.textContent='Within equipment limit (28 MT)';
-    hint.className='cf-hint ok';
+    hide('sb-total');
   }
 }
 
-function updateCalc(){
-  const v=parseFloat(document.getElementById('cargo-val').value);
-  if(!isNaN(v)&&v>0) cargoVal=v;
-  updateUI();
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════ */
+function init() {
+  // Clock
+  function tick() { $('clock').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
+  tick(); setInterval(tick, 1000);
+
+  // Port selectors
+  initPortSelector('origin-input','origin-dd','origin');
+  initPortSelector('dest-input','dest-dd','dest');
+
+  // Search button
+  $('btn-search').addEventListener('click', doSearch);
+
+  // Cargo listeners
+  ['c-size','c-type','c-qty','c-wt','c-wt-unit','c-hs','c-val','c-comm'].forEach(id => {
+    const el = $(id);
+    if (!el) return;
+    el.addEventListener('change', () => { validateWeight(); recalc(); renderInsurance(); });
+    el.addEventListener('input', () => { validateWeight(); recalc(); });
+  });
+
+  // Insurance toggle
+  $('ins-toggle').addEventListener('click', () => {
+    S.insEnabled = !S.insEnabled;
+    $('ins-tog').classList.toggle('on', S.insEnabled);
+    $('ins-toggle').classList.toggle('on', S.insEnabled);
+    renderInsurance();
+    recalc();
+  });
+
+  // Free days custom
+  $('fd-custom')?.addEventListener('input', () => { renderFreeDays(); recalc(); });
+
+  // Book button
+  $('btn-book').addEventListener('click', () => {
+    alert('Booking submitted! 🎉\n\nThis is a demo — in production this would create a live booking.');
+  });
 }
 
-function selChip(el){
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-}
-
-function selFD(el,v){
-  document.querySelectorAll('.fd-chip').forEach(d=>d.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('fd-inp').style.display=v==='custom'?'block':'none';
-}
-
-function selBL(el){
-  document.querySelectorAll('.bl-opt').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-}
-
-function refreshRates(){
-  const btn=document.querySelector('.s-btn');
-  btn.textContent='Searching…';btn.style.opacity='0.7';
-  setTimeout(()=>{
-    btn.textContent='Search';btn.style.opacity='1';
-    const lo=1200+Math.floor(Math.random()*100);
-    const hi=lo+180+Math.floor(Math.random()*80);
-    document.getElementById('rate-range').textContent='$'+lo.toLocaleString()+' – $'+hi.toLocaleString();
-  },1200);
-}
-
-function handleBook(){
-  const btn=document.querySelector('.book-btn');
-  btn.textContent='Booking Confirmed';
-  btn.style.background='#22c55e';btn.style.color='#fff';
-  setTimeout(()=>{
-    btn.textContent='Confirm & Book Shipment';
-    btn.style.background='';btn.style.color='';
-  },3000);
-}
-
-updateUI();
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
